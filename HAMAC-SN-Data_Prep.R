@@ -35,27 +35,41 @@ workd1<-"./1_Data_clean_and_merge"
 ################################################################################
 
 ################################################################################
-# A.1. Lecture, concatenation et mise en forme des donn?es GPS 
+# A.1. Lecture, concatenation et mise en forme des données GPS
 
+# Concaténation
 filename<- list.files(workd0,full.names = TRUE)
 filename
-GPSACQ<-read.csv(filename[1],sep=";",header=F,skip=1,na.strings = "NA")
-for(i in 2:length(filename)) { 
-gpsacq=read.csv(filename[i],sep=";",header=F, skip=1,na.strings = "N/A")
-GPSACQ=rbind(GPSACQ, gpsacq)
+GPSACQorig<-read.csv(filename[1],sep=";",header=F,skip=1,na.strings = "NA")
+for(i in 2:length(filename)) {
+  gpsacq=read.csv(filename[i],sep=";",header=F, skip=1,na.strings = "NA") #N/A pas bon
+  GPSACQorig=rbind(GPSACQorig, gpsacq)
 }
-head(GPSACQ)
-GPSACQ <- GPSACQ[,c(2,3,4,14,13)] # selection des colonnes d'int?r?t
+head(GPSACQorig)
 
-names(GPSACQ)=c("IDCOL","DACQ","HACQ","LON","LAT")  # Attribution d'un nom aux colonnes
+# selection des colonnes d'intéret
+GPSACQ <- GPSACQorig[,c(2,3,4,14,13,15,48,7,16)]
+names(GPSACQ)=c("IDCOL","DACQ","HACQ","LON","LAT","HEI","TEMP","ORI","DOP")  # Attribution d'un nom aux colonnes
+head(GPSACQ)
+
+# Horodatage en une seule colonne
 GPSACQ$DHACQ<-paste(GPSACQ$DACQ,GPSACQ$HACQ)
 GPSACQ$DHACQ <- ifelse (str_length(GPSACQ$DHACQ)==10,paste(GPSACQ$DHACQ," 00:00:00",sep=""),GPSACQ$DHACQ)
-GPSACQ$DHACQ<-as.POSIXct(strptime(GPSACQ$DHACQ,format="%d/%m/%Y %H:%M"),tz="GMT")
-GPSACQ <- GPSACQ[,c(1,6,4,5)]
+GPSACQ$DHACQ<-as.POSIXct(strptime(GPSACQ$DHACQ,format="%d/%m/%Y %H:%M:%S"),tz="GMT")
+GPSACQ <- GPSACQ[,c(1,10,4,5,6,7,8,9)]
+
+# Formatage des données
 GPSACQ$LAT<-str_replace_all(as.character(GPSACQ$LAT),",", ".")
-GPSACQ$LON<-str_replace_all(as.character(GPSACQ$LON),",", ".") 
+GPSACQ$LON<-str_replace_all(as.character(GPSACQ$LON),",", ".")
+GPSACQ$HEI<-str_replace_all(as.character(GPSACQ$HEI),",", ".")
+GPSACQ$DOP<-str_replace_all(as.character(GPSACQ$DOP),",", ".")
 GPSACQ$LON<-as.numeric(GPSACQ$LON)
 GPSACQ$LAT<-as.numeric(GPSACQ$LAT)
+GPSACQ$HEI<-as.numeric(GPSACQ$HEI)
+GPSACQ$DOP<-as.numeric(GPSACQ$DOP)
+GPSACQ$ORI<-as.logical(GPSACQ$ORI == "Collar")
+
+# NA omit et formatage
 dim(GPSACQ)
 GPSACQ<-na.omit(GPSACQ)
 dim(GPSACQ)
