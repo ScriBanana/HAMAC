@@ -78,10 +78,10 @@ table(GPSACQ$IDCOL)
 summary(GPSACQ)
 
 ##############################################################################
-# A.2. Check doublons ?ventuels
+# A.2. Check doublons éventuels
 
 dim(GPSACQ)
-dupli<-duplicated(GPSACQ[,c(1:2)]) #
+dupli<-duplicated(GPSACQ[,c(1:2)])
 summary(dupli)
 GPSACQ<-GPSACQ[dupli==F,]
 table(GPSACQ$IDCOL)
@@ -91,16 +91,19 @@ summary(GPSACQ)
 
 
 ###############################################################################
-# A.3. Exclusion des localisations aberantes
+# A.3. Fenêtres temporelle et spatiale
 
 #plot(GPSACQ$LON,GPSACQ$LAT,asp=1)
 dim(GPSACQ)
-GPSACQ<-GPSACQ[GPSACQ$LON<(-10),] # retire les  donnees abberantes
-GPSACQ<-GPSACQ[GPSACQ$LON>(-17),] # retire les  donnees abberantes
-GPSACQ<-GPSACQ[GPSACQ$LAT<20,] # retire les  donnees abberantes
-GPSACQ<-GPSACQ[GPSACQ$LAT>(0),] # retire les  donnees abberantes
+GPSACQ<-GPSACQ[GPSACQ$DHACQ>=as.POSIXct("2021-05-09"),]
+
+GPSACQ<-GPSACQ[GPSACQ$LON<(-10),] # retire les  donnees aberrantes
+GPSACQ<-GPSACQ[GPSACQ$LON>(-17.3),] # retire les  donnees aberrantes
+GPSACQ<-GPSACQ[GPSACQ$LAT<20,] # retire les  donnees aberrantes
+GPSACQ<-GPSACQ[GPSACQ$LAT>(10),] # retire les  donnees aberrantes
 dim(GPSACQ)
 summary(GPSACQ)
+#plot(GPSACQ$LON,GPSACQ$LAT,asp=1)
 
 
 ################################################################################
@@ -154,8 +157,8 @@ head(GPSACQ)
 #A.5. Conversion des coordonnees en UTM
 
 #library(MASS)
-library(rgdal)
-options(digits = 10)
+# library(rgdal)        => Déjà au dessus
+# options(digits = 10)  => Déjà au dessus
 
 coordinates(GPSACQ) <- ~ LON + LAT
 proj4string(GPSACQ) <- CRS("+proj=longlat +datum=WGS84")
