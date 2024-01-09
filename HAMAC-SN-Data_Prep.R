@@ -2,20 +2,21 @@
 #  SENEGAL CATTLE GPS DATA
 #  DATA CLEAN AND MERGE CODE 
 #  Daniel CORNELIS - JUILLET 2023
+#  Revu par A. SCRIBAN - Janvier 2024
 
 
 #Stipuler le repertoire de travail
+setwd("/home/scriban/Dropbox/Th√®se/DonneesEtSauvegardes/WorkspaceR")
 
 library(MASS)
 library(chron)
 library(adehabitatHR)
 library(adehabitatHS)
-library(adehabitat)
-library(rgdal)
+library(adehabitat) # N'existe pas??
+library(rgdal) # Deprecated
 options(digits = 10)
 library(raster)
 library(StreamMetabolism)
-library(MASS)
 library(SOAR)
 library(openxlsx)
 library(readxl)
@@ -26,15 +27,15 @@ library(sf)
 rm(list=ls()) # fonction qui permet de virer tous les objets generes anterieurements
 date()
 
-workd0<-"D:/Mes Donnees/AAA-DOSSIERS COURANTS/R/GPS_Processing/Senegal/0_raw_data/GPS"
-workd1<-"D:/Mes Donnees/AAA-DOSSIERS COURANTS/R/GPS_Processing/Senegal/1_Data_clean_and_merge"
+workd0<-"./0_raw_data/GPS"
+workd1<-"./1_Data_clean_and_merge"
 
 ################################################################################
 ## A. Concatenation et mise en forme des donnees GPS acquises
 ################################################################################
 
 ################################################################################
-# A.1. Lecture, concatenation et mise en forme des donnÈes GPS 
+# A.1. Lecture, concatenation et mise en forme des donn?es GPS 
 
 filename<- list.files(workd0,full.names = TRUE)
 filename
@@ -44,7 +45,7 @@ gpsacq=read.csv(filename[i],sep=";",header=F, skip=1,na.strings = "N/A")
 GPSACQ=rbind(GPSACQ, gpsacq)
 }
 head(GPSACQ)
-GPSACQ <- GPSACQ[,c(2,3,4,14,13)] # selection des colonnes d'intÈrÍt
+GPSACQ <- GPSACQ[,c(2,3,4,14,13)] # selection des colonnes d'int?r?t
 
 names(GPSACQ)=c("IDCOL","DACQ","HACQ","LON","LAT")  # Attribution d'un nom aux colonnes
 GPSACQ$DHACQ<-paste(GPSACQ$DACQ,GPSACQ$HACQ)
@@ -63,7 +64,7 @@ table(GPSACQ$IDCOL)
 summary(GPSACQ)
 
 ##############################################################################
-# A.2. Check doublons Èventuels
+# A.2. Check doublons ?ventuels
 
 dim(GPSACQ)
 dupli<-duplicated(GPSACQ[,c(1:2)]) #
@@ -106,7 +107,7 @@ GPSACQ<-na.omit(GPSACQ)
 
 
 ###############################################################################
-# A.4. Ajout d'un champ Day / Night intÈgrant les variations horaires du lever et coucher du soleil
+# A.4. Ajout d'un champ Day / Night int?grant les variations horaires du lever et coucher du soleil
 
   # Calcul des heures de lever et coucher du soleil
 lat<-mean(GPSACQ$LAT)
@@ -115,8 +116,8 @@ begin<-paste(substr(min(GPSACQ$DHACQ),1,4),substr(min(GPSACQ$DHACQ),6,7),substr(
 XX<-as.numeric(round((max(GPSACQ$DHACQ)-min(GPSACQ$DHACQ)),0))
 
 SUNTABLE<-sunrise.set(lat,lon,begin,timezone="UTC", num.days = XX)
-#SUNTABLE$sunrise<-SUNTABLE$sunrise+(0*3600) # les donnÈes AWT sont exprimÈes en UTC+2 -> je rajouter 2 heures ‡ l'heure de lever UTC
-#SUNTABLE$sunset<-SUNTABLE$sunset+(2*3600) # les donnÈes AWT sont exprimÈes en UTC+2 -> je rajouter 2 heures ‡ l'heure de coucher UTC
+#SUNTABLE$sunrise<-SUNTABLE$sunrise+(0*3600) # les donn?es AWT sont exprim?es en UTC+2 -> je rajouter 2 heures ? l'heure de lever UTC
+#SUNTABLE$sunset<-SUNTABLE$sunset+(2*3600) # les donn?es AWT sont exprim?es en UTC+2 -> je rajouter 2 heures ? l'heure de coucher UTC
 
 day<-substr((SUNTABLE$sunrise),1,10)
 day<-as.POSIXct(strptime(day,format="%Y-%m-%d"),tz="GMT")
