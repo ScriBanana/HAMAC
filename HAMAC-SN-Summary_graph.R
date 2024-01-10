@@ -13,11 +13,11 @@ library(dplyr)
 
 rm(list=ls()) # fonction qui permet de virer tous les objets generes anterieurements
 date()
-workd4<-"D:/Mes Donnees/AAA-DOSSIERS COURANTS/R/GPS_Processing/Senegal/1_Data_clean_and_merge"
+workd4<-"D:/USERS/SergeEtArthur/WorkspaceR/hamac/1_Data_clean_and_merge"
 
 
 ################################################################################
-## A. EXPLORATION DES DONNEES ELEPHANTS
+## A. EXPLORATION DES DONNEES ZEBUS
 ################################################################################
 
 

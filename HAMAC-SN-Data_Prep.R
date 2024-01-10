@@ -5,6 +5,10 @@
 #  Revu par A. SCRIBAN - Janvier 2024
 
 
+#Stipuler le repertoire de travail
+setwd("/home/scriban/Dropbox/Thèse/DonneesEtSauvegardes/WorkspaceR/HAMAC")
+setwd("D:/USERS/SergeEtArthur/WorkspaceR/hamac")
+
 library(MASS)
 library(chron)
 library(adehabitatHR)
@@ -20,9 +24,6 @@ library(readxl)
 library(stringr)
 library(sf)
 
-
-#Stipuler le repertoire de travail
-setwd("/home/scriban/Dropbox/Thèse/DonneesEtSauvegardes/WorkspaceR/HAMAC")
 
 rm(list=ls()) # fonction qui permet de virer tous les objets generes anterieurements
 date()
@@ -80,14 +81,14 @@ summary(GPSACQ)
 ##############################################################################
 # A.2. Check doublons éventuels
 
-# dim(GPSACQ)
-# dupli<-duplicated(GPSACQ[,c(1:2)])  A REMETTRE POUR UN NOUVEAU JEU DE DONNEES
-# summary(dupli)
-# GPSACQ<-GPSACQ[dupli==F,]
-# table(GPSACQ$IDCOL)
-# dim(GPSACQ)
-# head(GPSACQ)
-# summary(GPSACQ)
+dim(GPSACQ)
+dupli<-duplicated(GPSACQ[,c(1:2)])
+summary(dupli)
+GPSACQ<-GPSACQ[dupli==F,]
+table(GPSACQ$IDCOL)
+dim(GPSACQ)
+head(GPSACQ)
+summary(GPSACQ)
 
 
 ###############################################################################
@@ -149,8 +150,6 @@ GPSACQ<-GPSACQ[,-c(1,10,11,12)]
 head(GPSACQ)
 
 
-### CHARGER JUSQU'ICI
-
 ################################################################################
 #A.5. Conversion des coordonnees en UTM
 
@@ -163,9 +162,9 @@ proj4string(GPSACQ) <- CRS("+proj=longlat +datum=WGS84")
 GPSACQ <- spTransform(GPSACQ, CRS("+proj=utm +zone=28 +north +datum=WGS84"))
 GPSACQ<-as.data.frame(GPSACQ)
 
-# Vraiment nécessaire?
 GPSACQ$DHACQ <- as.character(GPSACQ$DHACQ)
 GPSACQ$DHACQ <- ifelse (str_length(GPSACQ$DHACQ)==10,paste(GPSACQ$DHACQ," 00:00:00",sep=""),GPSACQ$DHACQ)
+head(GPSACQ)
 GPSACQ$DHACQ<-as.POSIXct(strptime(GPSACQ$DHACQ,"%Y-%m-%d %H:%M:%S"))
 
 head(GPSACQ)
