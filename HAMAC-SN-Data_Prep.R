@@ -80,14 +80,14 @@ summary(GPSACQ)
 ##############################################################################
 # A.2. Check doublons éventuels
 
-dim(GPSACQ)
-dupli<-duplicated(GPSACQ[,c(1:2)])
-summary(dupli)
-GPSACQ<-GPSACQ[dupli==F,]
-table(GPSACQ$IDCOL)
-dim(GPSACQ)
-head(GPSACQ)
-summary(GPSACQ)
+# dim(GPSACQ)
+# dupli<-duplicated(GPSACQ[,c(1:2)])  A REMETTRE POUR UN NOUVEAU JEU DE DONNEES
+# summary(dupli)
+# GPSACQ<-GPSACQ[dupli==F,]
+# table(GPSACQ$IDCOL)
+# dim(GPSACQ)
+# head(GPSACQ)
+# summary(GPSACQ)
 
 
 ###############################################################################
@@ -117,22 +117,6 @@ GPSACQ<-GPSACQ[GPSACQ$DOP<3,]
 dim(GPSACQ)
 summary(GPSACQ)
 
-################################################################################
-#A.6. recherche et retrait d'outliers 
-
- 
-ltr <- as.ltraj(xy = GPSACQ[, c("LON", "LAT")], date = GPSACQ$DHACQ, id=GPSACQ$IDCOL)
-ltr <-ld(ltr)
-ltr$speed_KMH <- (ltr$dist/ltr$dt)*3.6
-dim(ltr[ltr$speed_KMH>4.5,]) # nombre de locs > 4,5 km/h
-ltr<-ltr[ltr$speed_KMH<=4.5,] # retrait des locs > 4,5 km/h
-ltr<-ltr[c(11,3,1,2)]
-colnames(ltr)<-c("IDCOL","DHACQ","LON","LAT")
-dim(ltr)
-GPSACQ<-ltr
-GPSACQ<-na.omit(GPSACQ)
-
-
 
 ###############################################################################
 # A.4. Ajout d'un champ Day / Night int?grant les variations horaires du lever et coucher du soleil
@@ -156,11 +140,12 @@ day<-substr((GPSACQ$DHACQ),1,10)
 day<-as.POSIXct(strptime(day,format="%Y-%m-%d"),tz="GMT")
 GPSACQ<-cbind(day,GPSACQ)
 
+GPSACQ$id  <- 1:nrow(GPSACQ)
 GPSACQ<-merge(GPSACQ,SUNTABLE,by="day", all.x=T ,all.y=F)
+GPSACQ <- GPSACQ[order(GPSACQ$id),]
 GPSACQ$DN<-ifelse(GPSACQ$DHACQ>=GPSACQ$sunrise & GPSACQ$DHACQ<=GPSACQ$sunset, "DAY","NIGHT")
 head(GPSACQ)
-GPSACQ<-GPSACQ[,-c(1,6,7)]
-#GPSACQ<-GPSACQ[order(GPSACQ$DHACQ),]
+GPSACQ<-GPSACQ[,-c(1,10,11,12)]
 head(GPSACQ)
 
 
@@ -184,6 +169,22 @@ GPSACQ$DHACQ<-as.POSIXct(strptime(GPSACQ$DHACQ,"%Y-%m-%d %H:%M:%S"))
 head(GPSACQ)
 dim(GPSACQ)
 summary(GPSACQ)
+GPSACQ<-na.omit(GPSACQ)
+
+
+################################################################################
+#A.6. recherche et retrait d'outliers 
+
+
+ltr <- as.ltraj(xy = GPSACQ[, c("LON", "LAT")], date = GPSACQ$DHACQ, id=GPSACQ$IDCOL)
+ltr <-ld(ltr)
+ltr$speed_KMH <- (ltr$dist/ltr$dt)*3.6
+dim(ltr[ltr$speed_KMH>4.5,]) # nombre de locs > 4,5 km/h
+ltr<-ltr[ltr$speed_KMH<=4.5,] # retrait des locs > 4,5 km/h
+ltr<-ltr[c(11,3,1,2)]
+colnames(ltr)<-c("IDCOL","DHACQ","LON","LAT")
+dim(ltr)
+GPSACQ<-ltr
 GPSACQ<-na.omit(GPSACQ)
 
 
