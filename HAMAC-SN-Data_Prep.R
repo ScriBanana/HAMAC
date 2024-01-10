@@ -6,7 +6,7 @@
 
 
 #Stipuler le repertoire de travail
-setwd("/home/scriban/Dropbox/Thèse/DonneesEtSauvegardes/WorkspaceR")
+setwd("/home/scriban/Dropbox/Thèse/DonneesEtSauvegardes/WorkspaceR/HAMAC")
 
 library(MASS)
 library(chron)
@@ -49,7 +49,7 @@ head(GPSACQorig)
 
 # selection des colonnes d'intéret
 GPSACQ <- GPSACQorig[,c(2,3,4,14,13,15,48,7,16)]
-names(GPSACQ)=c("IDCOL","DACQ","HACQ","LON","LAT","HEI","TEMP","ORI","DOP")  # Attribution d'un nom aux colonnes
+names(GPSACQ)=c("IDCOL","DACQ","HACQ","LON","LAT","HEI","TMP","ORI","DOP")  # Attribution d'un nom aux colonnes
 head(GPSACQ)
 
 # Horodatage en une seule colonne
@@ -101,10 +101,21 @@ GPSACQ<-GPSACQ[GPSACQ$LON<(-10),] # retire les  donnees aberrantes
 GPSACQ<-GPSACQ[GPSACQ$LON>(-17.3),] # retire les  donnees aberrantes
 GPSACQ<-GPSACQ[GPSACQ$LAT<20,] # retire les  donnees aberrantes
 GPSACQ<-GPSACQ[GPSACQ$LAT>(10),] # retire les  donnees aberrantes
-dim(GPSACQ)
-summary(GPSACQ)
 #plot(GPSACQ$LON,GPSACQ$LAT,asp=1)
 
+# boxplot(GPSACQ$HEI)
+# dim(GPSACQ[GPSACQ$HEI<(-100),])
+# dim(GPSACQ[GPSACQ$HEI>(650),]) # 650 m point le plus haut du Sénégal
+
+# hist(GPSACQ$TMP)
+GPSACQ<-GPSACQ[GPSACQ$TMP!=0,]
+
+# boxplot(GPSACQ$DOP)
+# dim(GPSACQ[GPSACQ$DOP>3,])
+GPSACQ<-GPSACQ[GPSACQ$DOP<3,]
+
+dim(GPSACQ)
+summary(GPSACQ)
 
 ################################################################################
 #A.6. recherche et retrait d'outliers 
