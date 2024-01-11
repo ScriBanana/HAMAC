@@ -29,6 +29,6 @@ ACT <- read.table(
   sep=";",header=T, skip=0,na.strings = "N/A")
 
 # Segmentation
-
+# Avoir un bool transhumants
 
 

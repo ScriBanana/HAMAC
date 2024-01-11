@@ -42,8 +42,10 @@ workd1<-"./1_Data_clean_and_merge"
 filename<- list.files(workd0,full.names = TRUE)
 filename
 GPSACQorig<-read.csv(filename[1],sep=";",header=F,skip=1,na.strings = "NA")
-for(i in 2:length(filename)) {
+cat(GPSACQorig[1,2], ncol(GPSACQorig),"\n")
+for(i in 2:(length(filename))) {
   gpsacq=read.csv(filename[i],sep=";",header=F, skip=1,na.strings = "NA") #N/A pas bon
+  cat(gpsacq[1,2], ncol(gpsacq),"\n")
   GPSACQorig=rbind(GPSACQorig, gpsacq)
 }
 head(GPSACQorig)
@@ -157,8 +159,8 @@ head(GPSACQ)
 
 # au format txt
 GPSACQ$DHACQ<-as.character(GPSACQ$DHACQ)
-write.table(GPSACQ,paste0(workd1,"HAMAC-SN-GPS.csv"),sep=";", row.names=FALSE)
-write.table(GPSACQ,paste0(workd1,"HAMAC-SN-GPS.txt"),sep=";", row.names=FALSE)
+write.table(GPSACQ,paste0(workd1,"/HAMAC-SN-GPS.csv"),sep=";", row.names=FALSE)
+write.table(GPSACQ,paste0(workd1,"/HAMAC-SN-GPS.txt"),sep=";", row.names=FALSE)
 
 
 

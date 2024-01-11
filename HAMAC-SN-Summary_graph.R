@@ -13,27 +13,27 @@ library(dplyr)
 
 rm(list=ls()) # fonction qui permet de virer tous les objets generes anterieurements
 date()
-workd4<-"D:/USERS/SergeEtArthur/WorkspaceR/hamac/1_Data_clean_and_merge"
+workd4<-"./1_Data_clean_and_merge"
 
-
-################################################################################
-## A. EXPLORATION DES DONNEES ZEBUS
-################################################################################
-
+#### Choisir ACT ou GPS ####
+dataType <- "GPS"
+############################
 
 ## A.0. Parameters
 
 UTM <- "+proj=utm +zone=28 +north +datum=WGS84"
-STUDY_DURATION <- 900  # days  (fin décembre 2014)
+STUDY_DURATION <- 950  # days  (fin d?cembre 2014)
 
 ## A.1. Reads and prepares data
 
 ## A.1.1. Reads loc data
 
-setwd(workd4)
-LOC<-read.table("SENEGAL_CATTLE.txt",sep=";",header=T, skip=0,na.strings = "N/A")
+# Choisir :
+LOC<-read.table(paste0(workd4,"/HAMAC-SN-",dataType,".csv"),sep=";",header=T, skip=0,na.strings = "N/A")
+
+
 #LOC$DHACQ <- as.POSIXct(strptime(LOC$DHACQ, "%Y-%m-%d %H:%M:%S"))
-LOC<-na.omit(LOC) #  PB : je vire les NAs générés à l'importation des dates qui tombent à 00:00:00
+LOC<-na.omit(LOC) #  PB : je vire les NAs g?n?r?s ? l'importation des dates qui tombent ? 00:00:00
 
 LOC$DACQ <- substr(LOC$DHACQ,1,10)
 LOC$DACQ <- as.POSIXct(strptime(LOC$DACQ, "%Y-%m-%d"))
@@ -110,8 +110,8 @@ x<-time(SUB1$DACQ)
 y<-seq(1,length(LIST_NAME),1)
 #myPal <- colorRampPalette( c("red","green") )
 
-filename<-paste(getwd(),"/Out_Graphs/","Synoptic representation of tracking design.jpg",sep="")
-jpeg(file=filename,height=21,width=29,units="cm",quality=300,res=300)
+filename<-paste0(workd4,"/Out_Graphs/","Synoptic",dataType,".jpg")
+jpeg(file=filename,height=21,width=29,units="cm",res=300)
 
 par(mar=c(3,6,5,3))
 image(x,y,GRAPH,col=c("white","darkgrey"),frame.plot=TRUE,axes=F,xlab="",ylab="",main="",xaxt="n",yaxt="n",breaks=c(0,0.5,1))
@@ -120,7 +120,10 @@ label.index1<-which(day==1)
 axis(side=3,at=(time(SUB1$DACQ)[label.index1]),labels=c(paste(format(SUB1$DACQ[label.index1],"%b"),format(SUB1$DACQ[label.index1],"%y"))),cex.axis=0.8)
 axis(side=1,at=(time(SUB1$DACQ)[label.index1]),labels=c(paste(format(SUB1$DACQ[label.index1],"%b"),format(SUB1$DACQ[label.index1],"%y"))),cex.axis=0.8)
 axis(side=2,at=y,labels=colnames(GRAPH),cex.axis=0.8,las=1)
-title(main="Suivi GPS de bovins transhumants et sédentaires dans le Ferlo et le Bassin Arachidier du Sénégal (2021-2023)",line=4,cex.main=1)
+title(main=paste0(
+    "Suivi GPS de bovins transhumants et sÃ©dentaires dans le Ferlo et le Bassin Arachidier du SÃ©nÃ©gal (2021-2023) - Couverture ",
+    dataType),
+  line=4,cex.main=1)
 
 dev.off()
 
