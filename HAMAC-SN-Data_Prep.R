@@ -24,6 +24,7 @@ library(readxl)
 library(stringr)
 library(sf)
 
+# commentaire
 
 rm(list=ls()) # fonction qui permet de virer tous les objets generes anterieurements
 date()
