@@ -2,5 +2,6 @@
 .RData
 0_raw_data/ACT/
 0_raw_data/GPS/
-0_raw_data/METADATA/
 0_raw_data/MOR/
+0_raw_data/METADATA/230718-TabAnimauxGPS.xlsx
+0_raw_data/METADATA/2305051225-BackupCGPS.txt
