@@ -122,7 +122,7 @@ summary(GPSACQ)
 ###############################################################################
 # A.4. Ajout d'un champ Day / Night int?grant les variations horaires du lever et coucher du soleil
 
-  # Calcul des heures de lever et coucher du soleil
+# Calcul des heures de lever et coucher du soleil
 lat<-mean(GPSACQ$LAT)
 lon<-mean(GPSACQ$LON)
 begin<-paste(substr(min(GPSACQ$DHACQ),1,4),substr(min(GPSACQ$DHACQ),6,7),substr(min(GPSACQ$DHACQ),9,10),sep="/")
@@ -156,10 +156,9 @@ head(GPSACQ)
 # A.8. Exportation des donnees
 
 # au format txt
-setwd(workd1)
 GPSACQ$DHACQ<-as.character(GPSACQ$DHACQ)
-write.table(GPSACQ,"SENEGAL_CATTLE.csv",sep=";", row.names=FALSE)
-write.table(GPSACQ,"SENEGAL_CATTLE.txt",sep=";", row.names=FALSE)
+write.table(GPSACQ,paste0(workd1,"HAMAC-SN-GPS.csv"),sep=";", row.names=FALSE)
+write.table(GPSACQ,paste0(workd1,"HAMAC-SN-GPS.txt"),sep=";", row.names=FALSE)
 
 
 

@@ -81,7 +81,15 @@ ACTACQ<-ACTACQ[ACTACQ$DHACQ>=as.POSIXct("2021-05-09"),]
 ACTACQ<-ACTACQ[ACTACQ$TMP>0,]
 ACTACQ<-ACTACQ[ACTACQ$TMP<60,]
 
-
 dim(ACTACQ)
 summary(ACTACQ)
+
+
+################################################################################
+# A.8. Exportation des donnees
+
+# au format txt
+ACTACQ$DHACQ<-as.character(ACTACQ$DHACQ)
+write.table(ACTACQ,paste0(workd1,"/HAMAC-SN-ACT.csv"),sep=";", row.names=FALSE)
+write.table(ACTACQ,paste0(workd1,"/HAMAC-SN-ACT.txt"),sep=";", row.names=FALSE)
 
