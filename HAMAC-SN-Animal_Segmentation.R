@@ -4,10 +4,10 @@
 #  Arthur SCRIBAN - JANVIER 2024
 
 
+library(lubridate)
+
 setwd("/home/scriban/Dropbox/Thèse/DonneesEtSauvegardes/WorkspaceR/HAMAC")
 setwd("D:/USERS/SergeEtArthur/WorkspaceR/hamac")
-
-library(lubridate)
 
 rm(list=ls())
 date()
@@ -61,6 +61,10 @@ for (i in 1:nrow(ANX)) {
   GPS_par_anx <- rbind(GPS_par_anx, subset_data)
   cat("\n")
 }
+
+# GPS_par_anx$DHACQ<-as.character(GPS_par_anx$DHACQ)
+workd1<-"./1_Data_clean_and_merge"
+write.table(GPS_par_anx,paste0(workd1,"/HAMAC-SN-GPSpANX.csv"),sep=";", row.names=FALSE)
 
 # Segmentation ACT
 ACT_par_anx <- list()
