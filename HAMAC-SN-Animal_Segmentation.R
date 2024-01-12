@@ -38,13 +38,14 @@ actSourceDir <- "./1_Data_clean_and_merge/"
 ACT <- read.table(
   paste0(actSourceDir, "HAMAC-SN-ACT.csv"),
   sep=";",header=T, skip=0,na.strings = "N/A")
+ACT$DHACQ<-ymd_hms(ACT$DHACQ)
 
 cat("\nACT Table:\n")
 print(head(ACT))
 
 
 # Segmentation GPS
-GPS_par_anx <- list()
+GPS_par_anx <- data.frame()
 
 for (i in 1:nrow(ANX)) {
   IDANL <- ANX$IDANL[i]
@@ -54,12 +55,12 @@ for (i in 1:nrow(ANX)) {
   end_date <- ANX$DHFIN[i]
   
   subset_data <- subset(GPS, IDCOL == idcol & DHACQ >= start_date & DHACQ <= end_date)
+  subset_data <- mutate(subset_data, ID = IDANL)
+  print(summary(subset_data))
   
-  GPS_par_anx[[IDANL]] <- subset_data
-  print(summary(GPS_par_anx[[IDANL]]))
+  GPS_par_anx <- rbind(GPS_par_anx, subset_data)
   cat("\n")
 }
-
 
 # Segmentation ACT
 ACT_par_anx <- list()
