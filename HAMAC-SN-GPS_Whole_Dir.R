@@ -7,9 +7,9 @@ setwd("/home/scriban/Dropbox/Thèse/DonneesEtSauvegardes/WorkspaceR/HAMAC")
 setwd("D:/USERS/SergeEtArthur/WorkspaceR/hamac")
 
 # Function to concatenate CSV files with a specific prefix
-concatenate_csv_files <- function(directory, prefix) {
+concatenate_csv_files <- function(directory, prefix, nbCol) {
   # Get the list of files with the specified prefix
-  files <- list.files(directory, pattern = paste0("^", prefix), recursive = TRUE, full.names = TRUE)
+  files <- list.files(directory, pattern = paste0("^", prefix, ".*\\.csv$"), recursive = TRUE, full.names = TRUE)
   
   # Initialize an empty data frame
   concatenated_data <- data.frame()
@@ -17,7 +17,13 @@ concatenate_csv_files <- function(directory, prefix) {
   # Loop through each file and concatenate data
   for (file in files) {
     # Read CSV file
-    current_data <- read.csv(file, header = TRUE)
+    
+    current_data <- read.csv(file,sep=";",header=F, skip=1,na.strings = "NA")
+    cat(file, ncol(current_data),"\n")
+    
+    if (ncol(current_data) == (nbCol - 2)) {
+      current_data <- cbind(current_data, V51 = NA, V52 = NA)
+    }
     
     # Concatenate data
     concatenated_data <- rbind(concatenated_data, current_data)
@@ -27,17 +33,22 @@ concatenate_csv_files <- function(directory, prefix) {
 }
 
 # Specify the root directory where the CSV files are located
-root_directory <- "./1_Data_clean_and_merge"
-
-# Concatenate files starting with "ACT-"
-act_table <- concatenate_csv_files(root_directory, "ACT-")
+search_directory <- "../../ToutesLesDonneesDepuisLeDebut"
 
 # Concatenate files starting with "GPS-"
-gps_table <- concatenate_csv_files(root_directory, "GPS-")
+gps_table <- concatenate_csv_files(search_directory, "GPS_", 52)
+
+cat("\nGPS Table:\n")
+print(head(gps_table))
+
+GPSACQorig <- gps_table
+## Transition vers HAMAC-SN-GPS_Data_Prep.R
+
+
+# Concatenate files starting with "ACT-"
+act_table <- concatenate_csv_files(search_directory, "ACT_")
 
 # Print the first few rows of each table
 cat("ACT Table:\n")
 print(head(act_table))
 
-cat("\nGPS Table:\n")
-print(head(gps_table))

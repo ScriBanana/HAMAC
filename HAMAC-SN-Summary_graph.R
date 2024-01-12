@@ -16,6 +16,7 @@ date()
 workd4<-"./1_Data_clean_and_merge"
 
 #### Choisir ACT ou GPS ####
+# (ACT pas fonctionnel pour l'instant)
 dataType <- "GPS"
 ############################
 
