@@ -33,14 +33,15 @@ for(i in 2:length(filename)) {
 head(ACTACQorig)
 
 # selection des colonnes d'intéret
-ACTACQ <- ACTACQorig[,c(2,3,4,12,13,14,15)] # Enlevé DT et Act. Mode, qui ne varient pas
+ACTACQ <- ACTACQorig[,c(2,3,4,12,13,14,15)]
 names(ACTACQ)=c("IDCOL","DACQ","HACQ","AcX","AcY","AcZ","TMP")
 head(ACTACQ)
 
 # Horodatage en une seule colonne
 ACTACQ$DHACQ<-paste(ACTACQ$DACQ,ACTACQ$HACQ)
-ACTACQ$DHACQ <- ifelse (str_length(ACTACQ$DHACQ)==10,paste(ACTACQ$DHACQ," 00:00:00",sep=""),ACTACQ$DHACQ)
-ACTACQ$DHACQ<-as.POSIXct(strptime(ACTACQ$DHACQ,format="%d/%m/%Y %H:%M:%S"),tz="GMT")
+# ACTACQ$DHACQ <- ifelse (str_length(ACTACQ$DHACQ)==10,paste(ACTACQ$DHACQ," 00:00:00",sep=""),ACTACQ$DHACQ)
+# ACTACQ$DHACQ<-as.POSIXct(strptime(ACTACQ$DHACQ,format="%d/%m/%Y %H:%M:%S"),tz="GMT")
+ACTACQ$DHACQ<-dmy_hms(ACTACQ$DHACQ)
 ACTACQ <- ACTACQ[,c(1,8,4,5,6,7)]
 
 # Formatage des données

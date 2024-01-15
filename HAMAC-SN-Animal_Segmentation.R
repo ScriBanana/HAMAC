@@ -39,6 +39,7 @@ actSourceDir <- "./1_Data_clean_and_merge/"
 ACT <- read.table(
   paste0(actSourceDir, "HAMAC-SN-ACT.csv"),
   sep=";",header=T, skip=0,na.strings = "N/A")
+# parse_ymd_hms(ACT$DHACQ)
 ACT$DHACQ<-ymd_hms(ACT$DHACQ)
 
 cat("\nACT Table:\n")
@@ -79,11 +80,27 @@ for (i in 1:nrow(ANX)) {
   
   subset_data <- subset(ACT, IDCOL == idcol & DHACQ >= start_date & DHACQ <= end_date)
   
-  ACT_par_anx[[IDANL]] <- subset_data
+  if (length(ACT_par_anx[[IDANL]]) == 0) {
+    ACT_par_anx[[IDANL]] <- subset_data
+  } else {
+    # Condition pour gérer les deux colliers de VSR11
+    ACT_par_anx[[IDANL]] <- rbind(ACT_par_anx[[IDANL]], subset_data)
+  }
+  
   print(summary(ACT_par_anx[[IDANL]]))
   cat("\n")
 }
 
 
+########################################################
 
-
+## Fonction utilitaire pour déterminer les erreurs avec lubridate
+# 
+# parse_ymd_hms = function(x){
+#   d=lubridate::ymd_hms(x, quiet=TRUE)
+#   errors = x[!is.na(x) & is.na(d)]
+#   if(length(errors)>0){
+#     cli::cli_warn("Failed to parse some dates: {.val {errors}}")
+#   }
+#   d
+# }
