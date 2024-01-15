@@ -21,7 +21,7 @@ concatenate_csv_files <- function(directory, prefix, nbCol) {
     current_data <- read.csv(file,sep=";",header=F, skip=1,na.strings = "NA")
     cat(file, ncol(current_data),"\n")
     
-    if (ncol(current_data) == (nbCol - 2)) {
+    if (prefix == "GPS_" & ncol(current_data) == (nbCol - 2)) {
       current_data <- cbind(current_data, V51 = NA, V52 = NA)
     }
     
@@ -46,9 +46,11 @@ GPSACQorig <- gps_table
 
 
 # Concatenate files starting with "ACT-"
-act_table <- concatenate_csv_files(search_directory, "ACT_")
+act_table <- concatenate_csv_files(search_directory, "ACT_", 17)
 
 # Print the first few rows of each table
 cat("ACT Table:\n")
 print(head(act_table))
 
+ACTACQorig <- act_table
+## Transition vers HAMAC-SN-GPS_Data_Prep.R

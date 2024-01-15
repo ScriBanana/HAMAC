@@ -6,3 +6,5 @@
 0_raw_data/METADATA/230718-TabAnimauxGPS.xlsx
 0_raw_data/METADATA/2305051225-BackupCGPS.txt
 1_Data_clean_and_merge/
+.RDataTmp
+0_raw_data.zip

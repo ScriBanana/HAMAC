@@ -23,14 +23,16 @@ workd1<-"./1_Data_clean_and_merge"
 # A.1. Lecture, concatenation et mise en forme des donnÃ©es ACT
 
 # ConcatÃ©nation
-filename<- list.files(workd0,full.names = TRUE)
-filename
-ACTACQorig<-read.csv(filename[1],sep=";",header=F,skip=1,na.strings = "NA")
-for(i in 2:length(filename)) {
-  actacq=read.csv(filename[i],sep=";",header=F, skip=1,na.strings = "NA")
-  ACTACQorig=rbind(ACTACQorig, actacq)
-}
-head(ACTACQorig)
+# filename<- list.files(workd0,full.names = TRUE)
+# filename
+# ACTACQorig<-read.csv(filename[1],sep=";",header=F,skip=1,na.strings = "NA")
+# for(i in 2:length(filename)) {
+#   actacq=read.csv(filename[i],sep=";",header=F, skip=1,na.strings = "NA")
+#   ACTACQorig=rbind(ACTACQorig, actacq)
+# }
+# head(ACTACQorig)
+
+# N'a pas toutes les dernières données, utiliser Whole_Dir
 
 # selection des colonnes d'intÃ©ret
 ACTACQ <- ACTACQorig[,c(2,3,4,12,13,14,15)]
