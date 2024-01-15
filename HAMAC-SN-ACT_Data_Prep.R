@@ -44,7 +44,7 @@ ACTACQ$DHACQ<-as.POSIXct(strptime(ACTACQ$DHACQ,format="%d/%m/%Y %H:%M:%S"),tz="G
 ACTACQ <- ACTACQ[,c(1,8,4,5,6,7)]
 
 # Formatage des données
-ACTACQ$ORI<-as.logical(ACTACQ$ORI == "Collar")
+# ACTACQ$ORI<-as.logical(ACTACQ$ORI == "Collar")
 
 # NA omit et formatage
 dim(ACTACQ)
