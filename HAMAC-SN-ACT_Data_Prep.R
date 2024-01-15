@@ -3,7 +3,7 @@
 #  ACT DATA CLEAN AND MERGE CODE 
 #  A. SCRIBAN - Janvier 2024
 
-
+library(lubridate)
 library(stringr)
 
 setwd("/home/scriban/Dropbox/Th√®se/DonneesEtSauvegardes/WorkspaceR/HAMAC")
@@ -33,6 +33,7 @@ workd1<-"./1_Data_clean_and_merge"
 # head(ACTACQorig)
 
 # N'a pas toutes les derniËres donnÈes, utiliser Whole_Dir
+ACTACQorig <- act_table
 
 # selection des colonnes d'int√©ret
 ACTACQ <- ACTACQorig[,c(2,3,4,12,13,14,15)]
