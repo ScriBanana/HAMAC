@@ -39,6 +39,7 @@ actSourceDir <- "./1_Data_clean_and_merge/"
 ACT <- read.table(
   paste0(actSourceDir, "HAMAC-SN-ACT.csv"),
   sep=";",header=T, skip=0,na.strings = "N/A")
+ACT$DHACQ <- ifelse (str_length(ACT$DHACQ)==10,paste(ACT$DHACQ," 00:00:00",sep=""),ACT$DHACQ)
 # parse_ymd_hms(ACT$DHACQ)
 ACT$DHACQ<-ymd_hms(ACT$DHACQ)
 
