@@ -3,10 +3,11 @@
 #  ACT DATA CLEAN AND MERGE CODE 
 #  A. SCRIBAN - Janvier 2024
 
+
+library(stringr)
+
 setwd("/home/scriban/Dropbox/Thèse/DonneesEtSauvegardes/WorkspaceR/HAMAC")
 setwd("D:/USERS/SergeEtArthur/WorkspaceR/hamac")
-
-
 
 rm(list=ls())
 date()
@@ -32,15 +33,15 @@ for(i in 2:length(filename)) {
 head(ACTACQorig)
 
 # selection des colonnes d'intéret
-ACTACQ <- ACTACQorig[,c(2,3,4,12,13,14,15,7,10,11)]
-names(ACTACQ)=c("IDCOL","DACQ","HACQ","AcX","AcY","AcZ","TMP","ORI","MOD","DT")
+ACTACQ <- ACTACQorig[,c(2,3,4,12,13,14,15,7)] # Enlevé DT et Act. Mode, qui ne varient pas
+names(ACTACQ)=c("IDCOL","DACQ","HACQ","AcX","AcY","AcZ","TMP","ORI")
 head(ACTACQ)
 
 # Horodatage en une seule colonne
 ACTACQ$DHACQ<-paste(ACTACQ$DACQ,ACTACQ$HACQ)
 ACTACQ$DHACQ <- ifelse (str_length(ACTACQ$DHACQ)==10,paste(ACTACQ$DHACQ," 00:00:00",sep=""),ACTACQ$DHACQ)
 ACTACQ$DHACQ<-as.POSIXct(strptime(ACTACQ$DHACQ,format="%d/%m/%Y %H:%M:%S"),tz="GMT")
-ACTACQ <- ACTACQ[,c(1,11,4,5,6,7,8,9,10)]
+ACTACQ <- ACTACQ[,c(1,9,4,5,6,7,8)]
 
 # Formatage des données
 ACTACQ$ORI<-as.logical(ACTACQ$ORI == "Collar")
