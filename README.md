@@ -12,7 +12,7 @@ _Depending on what you are making, it can be a good idea to include screenshots 
 2. Faire tourner GPS_Data_Prep et ACT_Data_Prep pour lire les CSV bruts, concaténer les données et faire un premier nettoyage grossier
 3. Summary_Graph permet faire le graph de couverture des données de Daniel.
 4. Animal_Segmentation permet d'associer à chaque point (GPS et ACT) son animal, en fonction des dates et du numéro de collier.
-5.
+5. ACT2GPS_attribution attribue à chaque point GPS la moyenne des données accéléro dans une fenêtre de temps donnée
 
 ## Authors and acknowledgment
 - Daniel
