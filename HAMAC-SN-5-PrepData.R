@@ -14,26 +14,26 @@ rm(list=ls())
 
 #### Importation données classées par animal
 repDonnees <- "./1_Data_clean_and_merge/"
-GPS_par_anx <- read.table(
+GPS_ACT_par_anx <- read.table(
   paste0(repDonnees, "HAMAC-SN-GPSnACTpANX.csv"),
   sep=";",header=T, skip=0,na.strings = "N/A")
-GPS_par_anx$DHACQ<-ymd_hms(GPS_par_anx$DHACQ)
-head(GPS_par_anx)
+GPS_ACT_par_anx$DHACQ<-ymd_hms(GPS_ACT_par_anx$DHACQ)
+head(GPS_ACT_par_anx)
+
+#### Retrait Iridium
+dim(GPS_ACT_par_anx)
+dim(GPS_ACT_par_anx[GPS_ACT_par_anx$ORI!=T,])
+GPS_ACT_par_anx<-GPS_ACT_par_anx[GPS_ACT_par_anx$ORI==T,]
+dim(GPS_ACT_par_anx)
 
 #### Calcul des steps et des angles
-hmmdata <- prepData(GPS_par_anx, type = "LL",coordNames=c("LON","LAT"))
+hmmdata <- prepData(GPS_ACT_par_anx, type = "LL",coordNames=c("LON","LAT"))
 # Step sort en km pour LL, dépend de l'unité d'entrée en UTM
 
 #### Retrait des derniers outliers
 # NA omit
 nrow(hmmdata)
 # hmmdata <- na.omit(hmmdata)  # Pas certain que ce soit nécessaire, en fait
-
-# Retrait Iridium
-dim(GPS_par_anx)
-dim(GPS_par_anx[GPS_par_anx$ORI!=T,])
-GPS_par_anx<-GPS_par_anx[GPS_par_anx$ORI==T,]
-dim(GPS_par_anx)
 
 # Suppression d'outliers sur la vitesse
 whichzero <- which(hmmdata$step == 0)
@@ -54,4 +54,4 @@ hist(hmmdata$angle, breaks = seq(-pi, pi, length = 15), xlab = "angle", main = "
 
 #### Sauvegarde en CSV
 repDonnees<-"./1_Data_clean_and_merge"
-write.table(GPS_par_anx,paste0(repDonnees,"/HAMAC-SN-HMMDATA.csv"),sep=";", row.names=FALSE)
+write.table(hmmdata,paste0(repDonnees,"/HAMAC-SN-HMMDATA.csv"),sep=";", row.names=FALSE)
