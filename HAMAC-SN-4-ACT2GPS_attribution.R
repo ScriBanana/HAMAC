@@ -51,7 +51,7 @@ for (i in 1:nrow(GPS_ACT_par_anx)) {
 }
 head(GPS_ACT_par_anx)
 
-# Enregistre
+# Enregistrement
 workd1<-"./1_Data_clean_and_merge"
 write.table(GPS_par_anx,paste0(workd1,"/HAMAC-SN-GPSnACTpANX.csv"),sep=";", row.names=FALSE)
 

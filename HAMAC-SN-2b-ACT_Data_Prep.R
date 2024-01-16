@@ -9,7 +9,7 @@ library(stringr)
 setwd("/home/scriban/Dropbox/Th√®se/DonneesEtSauvegardes/WorkspaceR/HAMAC")
 setwd("D:/USERS/SergeEtArthur/WorkspaceR/hamac")
 
-rm(list=ls())
+# rm(list=ls())
 date()
 
 workd0<-"./0_raw_data/ACT"
@@ -32,7 +32,7 @@ workd1<-"./1_Data_clean_and_merge"
 # }
 # head(ACTACQorig)
 
-# N'a pas toutes les derniËres donnÈes, utiliser Whole_Dir
+# N'a pas toutes les derni?res donn?es, utiliser Whole_Dir
 ACTACQorig <- act_table
 
 # selection des colonnes d'int√©ret
@@ -95,6 +95,6 @@ summary(ACTACQ)
 
 # au format txt
 ACTACQ$DHACQ<-as.character(ACTACQ$DHACQ)
-write.table(ACTACQ,paste0(workd1,"/HAMAC-SN-ACT.csv"),sep=";", row.names=FALSE)
-write.table(ACTACQ,paste0(workd1,"/HAMAC-SN-ACT.txt"),sep=";", row.names=FALSE)
+write.table(ACTACQ,paste0(workd1,"/HAMAC-SN-ACT_brutes.csv"),sep=";", row.names=FALSE)
+write.table(ACTACQ,paste0(workd1,"/HAMAC-SN-ACT_brutes.txt"),sep=";", row.names=FALSE)
 

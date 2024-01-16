@@ -30,7 +30,7 @@ STUDY_DURATION <- 950  # days  (fin d?cembre 2014)
 ## A.1.1. Reads loc data
 
 # Choisir :
-LOC<-read.table(paste0(workd4,"/HAMAC-SN-",dataType,".csv"),sep=";",header=T, skip=0,na.strings = "N/A")
+LOC<-read.table(paste0(workd4,"/HAMAC-SN-",dataType,"_brutes.csv"),sep=";",header=T, skip=0,na.strings = "N/A")
 
 
 #LOC$DHACQ <- as.POSIXct(strptime(LOC$DHACQ, "%Y-%m-%d %H:%M:%S"))

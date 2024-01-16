@@ -28,7 +28,7 @@ print(head(ANX))
 
 gpsSourceDir <- "./1_Data_clean_and_merge/"
 GPS <- read.table(
-  paste0(gpsSourceDir, "HAMAC-SN-GPS.csv"),
+  paste0(gpsSourceDir, "HAMAC-SN-GPS_brutes.csv"),
   sep=";",header=T, skip=0,na.strings = "N/A")
 GPS$DHACQ<-ymd_hms(GPS$DHACQ)
 
@@ -37,7 +37,7 @@ print(head(GPS))
 
 actSourceDir <- "./1_Data_clean_and_merge/"
 ACT <- read.table(
-  paste0(actSourceDir, "HAMAC-SN-ACT.csv"),
+  paste0(actSourceDir, "HAMAC-SN-ACT_brutes.csv"),
   sep=";",header=T, skip=0,na.strings = "N/A")
 ACT$DHACQ <- ifelse (str_length(ACT$DHACQ)==10,paste(ACT$DHACQ," 00:00:00",sep=""),ACT$DHACQ)
 # parse_ymd_hms(ACT$DHACQ)
