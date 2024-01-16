@@ -65,10 +65,6 @@ for (i in 1:nrow(ANX)) {
   cat("\n")
 }
 
-# GPS_par_anx$DHACQ<-as.character(GPS_par_anx$DHACQ)
-workd1<-"./1_Data_clean_and_merge"
-write.table(GPS_par_anx,paste0(workd1,"/HAMAC-SN-GPSpANX.csv"),sep=";", row.names=FALSE)
-
 # Segmentation ACT
 ACT_par_anx <- list()
 
@@ -90,6 +86,13 @@ for (i in 1:nrow(ANX)) {
   
   print(summary(ACT_par_anx[[IDANL]]))
   cat("\n")
+}
+
+# Sauvegardes CSV
+workd1<-"./1_Data_clean_and_merge"
+write.table(GPS_par_anx,paste0(workd1,"/HAMAC-SN-GPSpANX.csv"),sep=";", row.names=FALSE)
+for (i in names(ACT_par_anx)) {
+  write.table(ACT_par_anx[[i]],paste0(workd1,"/ACTpANX/HAMAC-SN-ACTpANX-", i, ".csv"),sep=";", row.names=FALSE)
 }
 
 
