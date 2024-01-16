@@ -38,7 +38,7 @@ calcul_moyenne_accelero <- function(ligne_GPS) {
 }
 
 # Apply the function to calculate mean_data for each row in table1
-# GPS_ACT_par_anx <- head(GPS_par_anx)
+# GPS_ACT_par_anx <- GPS_par_anx[1:100,]
 GPS_ACT_par_anx <- GPS_par_anx
 colnames(GPS_ACT_par_anx)[colnames(GPS_ACT_par_anx) == 'TMP'] <- "GPS_TMP"
 for (col_name in noms_col_2_add) {
@@ -46,7 +46,12 @@ for (col_name in noms_col_2_add) {
 }
 head(GPS_ACT_par_anx)
 
-for (i in 1:nrow(GPS_ACT_par_anx)) {
+n <- nrow(GPS_ACT_par_anx)
+for (i in 1:n) {
+  if (i %% round(n/10) == 0) {
+    percentage_completion <- (i / n) * 100
+    cat(sprintf("Association en cours... %d%%\n", percentage_completion))
+  }
   GPS_ACT_par_anx[i,noms_col_2_add] <- calcul_moyenne_accelero(GPS_ACT_par_anx[i,])
 }
 head(GPS_ACT_par_anx)

@@ -6,6 +6,7 @@
 
 library(lubridate)
 library(dplyr)
+library(stringr)
 
 setwd("/home/scriban/Dropbox/Thèse/DonneesEtSauvegardes/WorkspaceR/HAMAC")
 setwd("D:/USERS/SergeEtArthur/WorkspaceR/hamac")
