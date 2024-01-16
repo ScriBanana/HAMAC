@@ -19,6 +19,15 @@ GPS_par_anx <- read.table(
 GPS_par_anx$DHACQ<-ymd_hms(GPS_par_anx$DHACQ)
 head(GPS_par_anx)
 
+
+# Retrait Iridium
+# A BOUGER DANS DATA PREP
+dim(GPS_par_anx)
+dim(GPS_par_anx[GPS_par_anx$ORI!=T,])
+GPS_par_anx<-GPS_par_anx[GPS_par_anx$ORI==T,]
+dim(GPS_par_anx)
+
+
 # # Concaténation de tous les animaux
 # for (i in 1:length(GPS_par_anx)) {
 #   GPS_par_anx[[i]] <- mutate(GPS_par_anx[[i]], ID = names(GPS_par_anx)[i])
@@ -32,11 +41,19 @@ head(GPS_par_anx)
 hmmdata <- prepData(GPS_par_anx, type = "LL",coordNames=c("LON","LAT"))
 # Step sort en km pour LL, dépend de l'unité d'entrée en UTM
 
+# NA omit
 nrow(hmmdata)
 hmmdata <- na.omit(hmmdata)  # Vérifier ce qui a des NA
 nrow(hmmdata)
+
+# Suppression d'outliers sur la vitesse
 whichzero <- which(hmmdata$step == 0)
 length(whichzero)/nrow(hmmdata)
+dim(hmmdata)
+dim(hmmdata[hmmdata$step>2.25,]) # nombre de locs > 4,5 km/h
+hmmdata<-hmmdata[hmmdata$step<=2.25,]
+dim(hmmdata)
+
 
 # Assessments visuels
 plot(hmmdata, compact=T)
@@ -45,6 +62,7 @@ summary(hmmdata$step)
 hist(hmmdata$step, xlab = "step length (km)", main = "",breaks = 1000, xlim = c(0,2000),ylim=c(0,100000))
 
 hist(hmmdata$angle, breaks = seq(-pi, pi, length = 15), xlab = "angle", main = "")
+
 
 # Première régression
 
