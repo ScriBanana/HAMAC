@@ -47,7 +47,7 @@ for (col_name in noms_col_2_add) {
 head(GPS_ACT_par_anx)
 
 n <- nrow(GPS_ACT_par_anx)
-for (i in 1:n) {
+for (i in 1:n) { # Super long, mais pas réussis à faire un lapply
   if (i %% round(n/10) == 0) {
     percentage_completion <- (i / n) * 100
     cat(sprintf("Association en cours... %d%%\n", percentage_completion))

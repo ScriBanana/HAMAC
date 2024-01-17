@@ -14,12 +14,13 @@ rm(list=ls())
 
 
 #### Importation données sorties de prepData
+
 repDonnees <- "./1_Data_clean_and_merge/"
-GPS_par_anx <- read.table(
+hmmdata <- read.table(
   paste0(repDonnees, "HAMAC-SN-HMMDATA.csv"),
   sep=";",header=T, skip=0,na.strings = "N/A")
-GPS_par_anx$DHACQ<-ymd_hms(GPS_par_anx$DHACQ)
-head(GPS_par_anx)
+hmmdata$DHACQ<-ymd_hms(hmmdata$DHACQ)
+head(hmmdata)
 
 
 #### Première régression
@@ -28,8 +29,8 @@ head(GPS_par_anx)
 #stepMean0 <- c(15, 350) # initial means (one for each state)
 #stepSD0 <- c(14,340)# initial standard deviations (one for each state)
 
-stepMean0 <-c(50, 300) # initial means (one for each state)
-stepSD0 <- c(45,200)
+stepMean0 <-c(0.050, 0.300) # initial means (one for each state)
+stepSD0 <- c(0.045,0.200)
 #
 
 #stepMean0 <- c(15, 400) # initial means (one for each state)
@@ -73,12 +74,12 @@ allm <- list()
 for(i in 1:niter) {
   # Step length mean
   stepMean0 <- runif(3,
-                     min = c(10, 50,300),
-                     max = c(100, 250,1000))
+                     min = c(0.01, 0.05,0.300),
+                     max = c(0.100, 0.250,1.000))
   # Step length standard deviation
   stepSD0 <- runif(3,
-                   min = c(10,30,100),
-                   max = c(200,200,300))
+                   min = c(0.010,0.030,0.100),
+                   max = c(0.200,0.200,0.300))
   # Turning angle mean
   angleMean0 <- c(0, 0,0)
   # Turning angle concentration
