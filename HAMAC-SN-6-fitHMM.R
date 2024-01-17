@@ -6,6 +6,8 @@
 
 library(moveHMM)
 library(dplyr)
+library(lubridate)
+
 
 setwd("/home/scriban/Dropbox/Thèse/DonneesEtSauvegardes/WorkspaceR/HAMAC")
 setwd("D:/USERS/SergeEtArthur/WorkspaceR/hamac")
@@ -21,6 +23,7 @@ hmmdata <- read.table(
   sep=";",header=T, skip=0,na.strings = "N/A")
 hmmdata$DHACQ<-ymd_hms(hmmdata$DHACQ)
 head(hmmdata)
+summary(hmmdata)
 
 
 #### Première régression
