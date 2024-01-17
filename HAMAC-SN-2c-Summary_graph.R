@@ -9,6 +9,7 @@ library(adehabitatHR)
 library(futile.matrix)
 library(rgdal)
 library(dplyr)
+library(lubridate)
 
 
 rm(list=ls()) # fonction qui permet de virer tous les objets generes anterieurements
@@ -30,17 +31,23 @@ STUDY_DURATION <- 950  # days  (fin d?cembre 2014)
 ## A.1.1. Reads loc data
 
 # Choisir :
-LOC<-read.table(paste0(workd4,"/HAMAC-SN-",dataType,"_brutes.csv"),sep=";",header=T, skip=0,na.strings = "N/A")
+# LOC<-read.table(paste0(workd4,"/HAMAC-SN-",dataType,"_brutes.csv"),sep=";",header=T, skip=0,na.strings = "N/A")
+LOC<-read.table(paste0(workd4,"/HAMAC-SN-HMMDATA.csv"),sep=";",header=T, skip=0,na.strings = "N/A")
 
 
 #LOC$DHACQ <- as.POSIXct(strptime(LOC$DHACQ, "%Y-%m-%d %H:%M:%S"))
 LOC<-na.omit(LOC) #  PB : je vire les NAs g?n?r?s ? l'importation des dates qui tombent ? 00:00:00
 
-LOC$DACQ <- substr(LOC$DHACQ,1,10)
+# LOC$DACQ <- substr(LOC$DHACQ,1,10)
+# LOC$DACQ <- as.POSIXct(strptime(LOC$DACQ, "%Y-%m-%d"))
+
+LOC$DACQ <- ymd_hms(LOC$DHACQ)
+LOC<-na.omit(LOC)
+LOC$DACQ <- ymd_hms(LOC$DHACQ)
 LOC$DACQ <- as.POSIXct(strptime(LOC$DACQ, "%Y-%m-%d"))
 
-
-LIST_NAME<-unique(LOC$IDCOL)
+# LIST_NAME<-unique(LOC$IDCOL)
+LIST_NAME<-unique(LOC$ID)
 
 
 ## A.1.2. TRAME preparation
@@ -49,7 +56,8 @@ STUDY_TERM <- min(LOC$DACQ)+ (STUDY_DURATION*86400)
 STUDY_TERM
 PERIOD<-as.data.frame(seq(min(LOC$DACQ),STUDY_TERM, by = 86400))
 colnames(PERIOD)<- "DACQ"
-PERIOD$DACQ <- as.POSIXct(strptime(PERIOD$DACQ, "%Y-%m-%d"))
+# PERIOD$DACQ <- as.POSIXct(strptime(PERIOD$DACQ, "%Y-%m-%d"))
+PERIOD$DACQ <- ymd_hms(PERIOD$DACQ)
 head(PERIOD)
 
 ## Summary graph preparation
@@ -72,27 +80,30 @@ head(GRAPH)
 
 for(i in 1:length(LIST_NAME)){
 #i=1
-
-SUB<- subset(LOC, subset = IDCOL == LIST_NAME[i])
-str(SUB)
-
-SUB$COUNT<- rep(1,nrow(SUB))
-
-## A.1.1.  synthetic dataframe  (daily rather than hourly)
-
-DACQ<-na.omit(as.data.frame(unique(SUB$DACQ)))
-LON<-as.data.frame(tapply(SUB$LON,SUB$DACQ, mean))
-LAT<-as.data.frame(tapply(SUB$LAT,SUB$DACQ, mean))
-SUCESS_ABS<-as.data.frame(tapply(SUB$COUNT,SUB$DACQ, sum))
-
-SUB1<-cbind(DACQ,LON,LAT,SUCESS_ABS)
-colnames(SUB1)<-c("DACQ","LON","LAT","SUCESS_ABS")
-
-SUB1<-merge(PERIOD,SUB1,by.x="DACQ",by.y="DACQ",all.x=T,all.y=F)
-SUB1$SUCESS_ABS<-ifelse(is.na(SUB1$SUCESS_ABS),0,1)
-head(SUB1)
-
-GRAPH[,i]<-SUB1$SUCESS_ABS
+  
+  # SUB<- subset(LOC, subset = IDCOL == LIST_NAME[i])
+  SUB<- subset(LOC, subset = ID == LIST_NAME[i])
+  str(SUB)
+  
+  SUB$COUNT<- rep(1,nrow(SUB))
+  
+  ## A.1.1.  synthetic dataframe  (daily rather than hourly)
+  
+  DACQ<-na.omit(as.data.frame(unique(SUB$DACQ)))
+  # LON<-as.data.frame(tapply(SUB$LON,SUB$DACQ, mean))
+  # LAT<-as.data.frame(tapply(SUB$LAT,SUB$DACQ, mean))
+  LON<-as.data.frame(tapply(SUB$x,SUB$DACQ, mean))
+  LAT<-as.data.frame(tapply(SUB$y,SUB$DACQ, mean))
+  SUCESS_ABS<-as.data.frame(tapply(SUB$COUNT,SUB$DACQ, sum))
+  
+  SUB1<-cbind(DACQ,LON,LAT,SUCESS_ABS)
+  colnames(SUB1)<-c("DACQ","LON","LAT","SUCESS_ABS")
+  
+  SUB1<-merge(PERIOD,SUB1,by.x="DACQ",by.y="DACQ",all.x=T,all.y=F)
+  SUB1$SUCESS_ABS<-ifelse(is.na(SUB1$SUCESS_ABS),0,1)
+  head(SUB1)
+  
+  GRAPH[,i]<-SUB1$SUCESS_ABS
 }
 
 ### Production of the COMPLETE synthetic graph
