@@ -33,10 +33,10 @@ summary(hmmdata)
 
 ### Paramètres de départ
 ## Step
-stepMean0 <-c(0.050, 0.300) # initial means (one for each state) dans [0, +∞[
-stepSD0 <- c(0.045,0.200) # dans [0, +∞[
+stepMean0 <-c(0.001, 0.300) # initial means (one for each state) dans [0, +∞[
+stepSD0 <- c(0.050,0.200) # dans [0, +∞[
 whichzero <- which(hmmdata$step == 0)
-zeroMass0 <- c(length(whichzero)/nrow(hmmdata), 0.0001)
+zeroMass0 <- c(length(whichzero)/nrow(hmmdata), 0.00001)
 # 0.0001 estimation perso (peu de step à zero dans l'état 2 qui est du mouvement)
 
 ## Angle
@@ -44,7 +44,7 @@ angleMean0 <- c(pi, 0) # initial means (one for each state) dans [-π, π]
 angleCon0 <- c(1, 10) # initial concentrations (one for each state) dans [0, +∞[
 
 ### Fitting du modèle
-stepPar0 <- c(stepMean0, stepSD0, zeroMass0)
+stepPar0 <- c(stepMean0, stepSD0,zeroMass0)
 anglePar0 <- c(angleMean0, angleCon0)
 modhmm2etats <- fitHMM(data = hmmdata, nbStates = 2, stepPar0 = stepPar0, anglePar0 = anglePar0)
 
@@ -74,7 +74,7 @@ plotStates(modhmm2etats)
 plotStates(modhmm2etats, animals = "VBT11")
 
 ## Probabilité de rester dans chaque état en fonction des covariables
-plotStationary(modhmm2etats, plotCI = T)
+# plotStationary(modhmm2etats, plotCI = T)
 
 # compute the pseudo-residuals
 pr <- pseudoRes(modhmm2etats)
@@ -89,20 +89,20 @@ plotPR(modhmm2etats)
 
 ### Paramètres de départ
 ## Step
-stepMean0 <-c(0.01, 0.05, 0.300) # initial means (one for each state)
-stepSD0 <- c(0.05, 0.1, 0.200)
+stepMean0 <-c(0.001, 0.2, 0.500) # initial means (one for each state)
+stepSD0 <- c(0.05, 0.1, 0.300)
 whichzero <- which(hmmdata$step == 0)
 zeroMass0 <- c(length(whichzero)/nrow(hmmdata), 0.0001, 0.0001)
 # 0.0001 estimation perso (peu de step à zero dans l'état 2 qui est du mouvement)
 
 ## Angle
-angleMean0 <- c(0, 0, 0) # initial means (one for each state)
+angleMean0 <- c(pi, 0, 0) # initial means (one for each state)
 angleCon0 <- c(1, 5, 10) # initial concentrations (one for each state)
 
 ### Fitting du modèle
 stepPar0 <- c(stepMean0, stepSD0, zeroMass0)
 anglePar0 <- c(angleMean0, angleCon0)
-modhmm3etats <- fitHMM(data = hmmdata, nbStates = 2, stepPar0 = stepPar0, anglePar0 = anglePar0)
+modhmm3etats <- fitHMM(data = hmmdata, nbStates = 3, stepPar0 = stepPar0, anglePar0 = anglePar0)
 
 ### Sorties
 ## Estimations des maxima de vraisemblance des paramètres
