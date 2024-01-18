@@ -37,8 +37,7 @@ nrow(hmmdata)
 # hmmdata <- na.omit(hmmdata)  # Pas certain que ce soit nécessaire, en fait
 
 # Suppression d'outliers sur la vitesse
-whichzero <- which(hmmdata$step == 0)
-length(whichzero)/nrow(hmmdata)
+
 dim(hmmdata)
 dim(hmmdata[hmmdata$step>2.25,]) # nombre de locs > 4,5 km/h
 hmmdata<-hmmdata[hmmdata$step<=2.25,]

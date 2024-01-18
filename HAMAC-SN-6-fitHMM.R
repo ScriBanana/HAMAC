@@ -34,12 +34,14 @@ summary(hmmdata)
 
 stepMean0 <-c(0.050, 0.300) # initial means (one for each state)
 stepSD0 <- c(0.045,0.200)
+whichzero <- which(hmmdata$step == 0)
+zeromass0<-c(length(whichzero)/nrow(hmmdata),0)
 #
 
 #stepMean0 <- c(15, 400) # initial means (one for each state)
 #stepSD0 <- c(5,200) # initial standard deviations (one for each state)
 
-stepPar0 <- c(stepMean0, stepSD0)
+stepPar0 <- c(stepMean0, stepSD0,zeromass0)
 
 angleMean0 <- c(pi, 0) # initial means (one for each state)
 angleCon0 <- c(1, 10) # initial concentrations (one for each state)
