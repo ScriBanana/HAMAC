@@ -26,48 +26,56 @@ head(hmmdata)
 summary(hmmdata)
 
 
-#### Première régression
+#### Premier essai : 2 états
 
-# try 2 states
-#stepMean0 <- c(15, 350) # initial means (one for each state)
-#stepSD0 <- c(14,340)# initial standard deviations (one for each state)
-
+### Paramètres de départ
+## Step
 stepMean0 <-c(0.050, 0.300) # initial means (one for each state)
 stepSD0 <- c(0.045,0.200)
 whichzero <- which(hmmdata$step == 0)
-zeromass0<-c(length(whichzero)/nrow(hmmdata),0)
-#
+zeroMass0 <- c(length(whichzero)/nrow(hmmdata), 0.0001)
+# 0.0001 estimation perso (peu de step à zero dans l'état 2 qui est du mouvement)
 
-#stepMean0 <- c(15, 400) # initial means (one for each state)
-#stepSD0 <- c(5,200) # initial standard deviations (one for each state)
-
-stepPar0 <- c(stepMean0, stepSD0,zeromass0)
-
+## Angle
 angleMean0 <- c(pi, 0) # initial means (one for each state)
 angleCon0 <- c(1, 10) # initial concentrations (one for each state)
-anglePar0 <- c(angleMean0, angleCon0)
 
-m <- fitHMM(data = hmmdata, nbStates = 2, stepPar0 = stepPar0, anglePar0 = anglePar0)
-m
-#intervalle confiance 95%
-CI(m)
-plot(m,plotCI=TRUE)
+### Fitting du modèle
+stepPar0 <- c(stepMean0, stepSD0, zeroMass0)
+anglePar0 <- c(angleMean0, angleCon0)
+modhmm2etats <- fitHMM(data = hmmdata, nbStates = 2, stepPar0 = stepPar0, anglePar0 = anglePar0)
+
+### Sorties
+## Estimations des maxima de vraisemblance des paramètres
+modhmm2etats
+
+## Intervalle confiance (95%)
+CI(modhmm2etats)
+plot(modhmm2etats,plotCI = TRUE) # Densités de probabilité vs histogrammes
+# + prob de transition en fonction des covariables
+
+## Etats à chaque point
+# Séquence décodée
+states <- viterbi(modhmm2etats)
+states[1:25]
+# A rbinder et à concaténer pour enregistrement et valo ??
+# Probabilités locales (! moins bien que Viterbi)
+sp <- stateProbs(modhmm2etats)
+head(sp)
+# Plot
+plotStates(modhmm2etats)
+plotStates(modhmm2etats, animals = "VBT11")
+
+## Probabilité de rester dans chaque état en fonction des covariables
+plotStationary(modhmm2etats, plotCI = T)
 
 # compute the pseudo-residuals
-pr <- pseudoRes(m)
+pr <- pseudoRes(modhmm2etats)
 
 # time series, qq-plots, and ACF of the pseudo-residuals
-plotPR(m)
+plotPR(modhmm2etats)
 
-#Décodage des états
-states <- viterbi(m)
-#Etats des 25 premieres observation
-states[1:25]
-
-sp <- stateProbs(m)
-head(sp)
-
-#Try many starting values
+#### Deuxième essai : trois states + loop analyse sensi one at a time
 
 # For reproducibility
 set.seed(12345)
@@ -86,7 +94,7 @@ for(i in 1:niter) {
                    min = c(0.010,0.030,0.100),
                    max = c(0.200,0.200,0.300))
   # Turning angle mean
-  angleMean0 <- c(0, 0,0)
+  angleMean0 <- c(0, 0, 0)
   # Turning angle concentration
   angleCon0 <- runif(3,
                      min = c(0.5, 3,5),
