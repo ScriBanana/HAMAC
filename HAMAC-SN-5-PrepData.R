@@ -37,14 +37,16 @@ nrow(hmmdata)
 # hmmdata <- na.omit(hmmdata)  # Pas certain que ce soit nécessaire, en fait
 
 # Suppression d'outliers sur la vitesse
+# Désactivé pour l'heure, pour ne pas créer de trous dans la bd
 
-dim(hmmdata)
-dim(hmmdata[hmmdata$step>2.25,]) # nombre de locs > 4,5 km/h
-hmmdata<-hmmdata[hmmdata$step<=2.25,]
-dim(hmmdata)
+# dim(hmmdata)
+# dim(hmmdata[hmmdata$step>2.25,]) # nombre de locs > 4,5 km/h
+# hmmdata<-hmmdata[hmmdata$step<=2.25,]
+# dim(hmmdata)
 
 
 #### Assessments visuels
+summary(hmmdata)
 plot(hmmdata, compact=T)
 
 summary(hmmdata$step)

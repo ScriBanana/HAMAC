@@ -23,7 +23,6 @@ hmmdata <- read.table(
   paste0(repDonnees, "HAMAC-SN-HMMDATA.csv"),
   sep=";",header=T, skip=0,na.strings = "N/A")
 hmmdata$DHACQ<-ymd_hms(hmmdata$DHACQ)
-hmmdata <- moveData(hmmdata) # Marche pas ???
 head(hmmdata)
 summary(hmmdata)
 
@@ -51,24 +50,20 @@ modhmm2etats <- fitHMM(data = hmmdata, nbStates = 2, stepPar0 = stepPar0, angleP
 ### Sorties
 ## Estimations des maxima de vraisemblance des paramètres
 modhmm2etats
-# Sorties de la fonction d'optimisation :
-modhmm2etats$mod
-# AIC du modèle :
-AIC(modhmm2etats)
 
 ## Intervalle confiance (95%)
 CI(modhmm2etats)
-plot(modhmm2etats, plotCI = TRUE) # Densités de probabilité vs histogrammes
+plot(modhmm2etats,plotCI = TRUE) # Densités de probabilité vs histogrammes
 # + prob de transition en fonction des covariables
 
 ## Etats à chaque point
+# Séquence décodée
+states <- viterbi(modhmm2etats)
+states[1:25]
 # A rbinder et à concaténer pour enregistrement et valo ??
 # Probabilités locales (! moins bien que Viterbi)
 sp <- stateProbs(modhmm2etats)
 head(sp)
-# Séquence décodée
-states <- viterbi(modhmm2etats)
-states[1:25]
 # Plot
 plotStates(modhmm2etats)
 plotStates(modhmm2etats, animals = "VBT11")
@@ -107,10 +102,6 @@ modhmm3etats <- fitHMM(data = hmmdata, nbStates = 2, stepPar0 = stepPar0, angleP
 ### Sorties
 ## Estimations des maxima de vraisemblance des paramètres
 modhmm3etats
-# Sorties de la fonction d'optimisation :
-modhmm3etats$mod
-# AIC du modèle :
-AIC(modhmm3etats)
 
 ## Intervalle confiance (95%)
 CI(modhmm3etats)
@@ -118,13 +109,13 @@ plot(modhmm3etats,plotCI = TRUE) # Densités de probabilité vs histogrammes
 # + prob de transition en fonction des covariables
 
 ## Etats à chaque point
+# Séquence décodée
+states <- viterbi(modhmm3etats)
+states[1:25]
 # A rbinder et à concaténer pour enregistrement et valo ??
 # Probabilités locales (! moins bien que Viterbi)
 sp <- stateProbs(modhmm3etats)
 head(sp)
-# Séquence décodée
-states <- viterbi(modhmm3etats)
-states[1:25]
 # Plot
 plotStates(modhmm3etats)
 plotStates(modhmm3etats, animals = "VBT11")
