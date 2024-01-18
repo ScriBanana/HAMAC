@@ -88,7 +88,9 @@ for(i in 1:niter) {
   # Step length mean
   stepMean0 <- runif(3,
                      min = c(0.01, 0.05,0.300),
-                     max = c(0.100, 0.250,1.000))
+                     max = c(0.100, 0.250,0.400))
+  whichzero <- which(hmmdata$step == 0)
+  zeromass0<-c(length(whichzero)/nrow(hmmdata),0,0)
   # Step length standard deviation
   stepSD0 <- runif(3,
                    min = c(0.010,0.030,0.100),
@@ -100,7 +102,7 @@ for(i in 1:niter) {
                      min = c(0.5, 3,5),
                      max = c(2, 10,15))
   # Fit model
-  stepPar0 <- c(stepMean0, stepSD0)
+  stepPar0 <- c(stepMean0, stepSD0,zeromass0)
   anglePar0 <- c(angleMean0, angleCon0)
   allm[[i]] <- fitHMM(data = hmmdata, nbStates = 3, stepPar0 = stepPar0,
                       anglePar0 = anglePar0)
