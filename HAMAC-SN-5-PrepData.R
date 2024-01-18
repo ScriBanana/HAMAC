@@ -50,9 +50,9 @@ summary(hmmdata)
 plot(hmmdata, compact=T)
 
 summary(hmmdata$step)
-hist(hmmdata$step, xlab = "step length (km)", main = "",breaks = 1000, xlim = c(0,2000),ylim=c(0,100000))
+hist(hmmdata$step, xlab = "step length (km)", main = "",breaks = 50) #, xlim = c(0,2000),ylim=c(0,100000))
 
-hist(hmmdata$angle, breaks = seq(-pi, pi, length = 15), xlab = "angle", main = "")
+hist(hmmdata$angle, breaks = seq(-pi, pi, length = 30), xlab = "angle (rad)", main = "")
 
 #### Sauvegarde en CSV
 # NE MARCHE PAS; ne garde pas le type hmmdata que nécessite la fonction de fit
