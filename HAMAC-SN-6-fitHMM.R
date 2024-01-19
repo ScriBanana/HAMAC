@@ -22,7 +22,7 @@ if (!file.exists(logFile)) {
   header <- c(
     "timestamp", "nbStates",
     "modhmm$mod$minimum", "AIC", "modhmm$mod$iterations",
-    "Paramètres : angleMean0, angleCon0, stepMean0, stepSD0, zeroMass0 évnt."
+    "Fit (état par état) : angleMean, angleCon, stepMean, stepSD, zeroMass évnt."
   )
   write.table(matrix(header, ncol = length(header)),
               file = paste0(outDir, logFile), sep = ";", col.names = FALSE, row.names = FALSE)
@@ -34,8 +34,16 @@ fitHMM_Log <- function (data, nbStates, stepPar0, anglePar0, logFile) {
   
   modhmm <- fitHMM(data = data, verbose = 1, nbStates = nbStates, anglePar0 = anglePar0, stepPar0 = stepPar0)
   
-  outputs <- c(modhmm$mod$minimum, AIC(modhmm), modhmm$mod$iterations)
-  ligneLog <- c(timestamp, nbStates, outputs, anglePar0, stepPar0)
+  indicateurs <- c(modhmm$mod$minimum, AIC(modhmm), modhmm$mod$iterations)
+  anglePar <- c(modhmm$mle$anglePar[1,], modhmm$mle$anglePar[2,])
+
+  if (nrow(modhmm2etats0Cov$mle$stepPar) == 2) { # si pas de zeromass
+    stepPar <- c(modhmm$mle$stepPar[1,], modhmm$mle$stepPar[2,])
+  } else {
+    stepPar <- c(modhmm$mle$stepPar[1,], modhmm$mle$stepPar[2,], modhmm$mle$stepPar[3,])
+  }
+
+  ligneLog <- c(timestamp, nbStates, indicateurs, anglePar, stepPar)
   
   write.table(
     matrix(ligneLog, ncol = length(ligneLog)), file = logFile,
