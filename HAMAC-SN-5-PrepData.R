@@ -54,7 +54,6 @@ hist(hmmdata$step, xlab = "step length (km)", main = "",breaks = 50) #, xlim = c
 
 hist(hmmdata$angle, breaks = seq(-pi, pi, length = 30), xlab = "angle (rad)", main = "")
 
-#### Sauvegarde en CSV
-# NE MARCHE PAS; ne garde pas le type hmmdata que nécessite la fonction de fit
+#### Sauvegarde en RDS
 repDonnees<-"./1_Data_clean_and_merge"
-write.table(hmmdata,paste0(repDonnees,"/HAMAC-SN-HMMDATA.csv"),sep=";", row.names=FALSE)
+saveRDS(hmmdata, paste0(repDonnees,"/HAMAC-SN-HMMDATA.rds"))
