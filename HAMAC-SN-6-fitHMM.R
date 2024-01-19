@@ -14,10 +14,10 @@ setwd("D:/USERS/SergeEtArthur/WorkspaceR/hamac")
 
 rm(list=ls())
 
-
-#### Fit avec le log
 outDir <- "./2_Fits_outputs/"
 logFile <- "HAMAC-SN-Log.csv"
+
+#### Fit avec le log
 if (!file.exists(logFile)) {
   header <- c(
     "timestamp", "nbStates",
@@ -37,7 +37,7 @@ fitHMM_Log <- function (data, nbStates, stepPar0, anglePar0, logFile) {
   indicateurs <- c(modhmm$mod$minimum, AIC(modhmm), modhmm$mod$iterations)
   anglePar <- c(modhmm$mle$anglePar[1,], modhmm$mle$anglePar[2,])
 
-  if (nrow(modhmm2etats0Cov$mle$stepPar) == 2) { # si pas de zeromass
+  if (nrow(modhmm$mle$stepPar) == 2) { # si pas de zeromass
     stepPar <- c(modhmm$mle$stepPar[1,], modhmm$mle$stepPar[2,])
   } else {
     stepPar <- c(modhmm$mle$stepPar[1,], modhmm$mle$stepPar[2,], modhmm$mle$stepPar[3,])
@@ -57,11 +57,7 @@ fitHMM_Log <- function (data, nbStates, stepPar0, anglePar0, logFile) {
 # NE MARCHE PAS (soucis de format), rerunner prepData
 
 repDonnees <- "./1_Data_clean_and_merge/"
-hmmdata <- read.table(
-  paste0(repDonnees, "HAMAC-SN-HMMDATA.csv"),
-  sep=";",header=T, skip=0,na.strings = "N/A")
-hmmdata$DHACQ<-ymd_hms(hmmdata$DHACQ)
-hmmdata <- moveData(hmmdata) # Marche pas ???
+hmmdata <- readRDS(paste0(repDonnees,"/HAMAC-SN-HMMDATA.rds"))
 head(hmmdata)
 summary(hmmdata)
 
@@ -83,7 +79,7 @@ angleCon0 <- c(1, 10) # initial concentrations (one for each state) dans [0, +�
 ### Fitting du modèle
 stepPar0 <- c(stepMean0, stepSD0, zeroMass0)
 anglePar0 <- c(angleMean0, angleCon0)
-modhmm2etats0Cov <- fitHMM_Log(
+modhmm2Et0Cov <- fitHMM_Log(
     data = hmmdata,
     nbStates = 2, stepPar0 = stepPar0,
     anglePar0 = anglePar0, logFile = paste0(outDir, logFile)
@@ -91,37 +87,37 @@ modhmm2etats0Cov <- fitHMM_Log(
 
 ### Sorties
 ## Estimations des maxima de vraisemblance des paramètres
-modhmm2etats0Cov
+modhmm2Et0Cov
 # Sorties de la fonction d'optimisation :
-modhmm2etats0Cov$mod
+modhmm2Et0Cov$mod
 # AIC du modèle :
-AIC(modhmm2etats0Cov)
+AIC(modhmm2Et0Cov)
 
 ## Intervalle confiance (95%)
-CI(modhmm2etats0Cov)
-plot(modhmm2etats0Cov, plotCI = TRUE) # Densités de probabilité vs histogrammes
+CI(modhmm2Et0Cov)
+plot(modhmm2Et0Cov, plotCI = TRUE) # Densités de probabilité vs histogrammes
 # + prob de transition en fonction des covariables
 
 ## Etats à chaque point
 # A rbinder et à concaténer pour enregistrement et valo ??
 # Probabilités locales (! moins bien que Viterbi)
-sp <- stateProbs(modhmm2etats0Cov)
+sp <- stateProbs(modhmm2Et0Cov)
 head(sp)
 # Séquence décodée
-states <- viterbi(modhmm2etats0Cov)
+states <- viterbi(modhmm2Et0Cov)
 states[1:25]
 # Plot
-plotStates(modhmm2etats0Cov)
-plotStates(modhmm2etats0Cov, animals = "VBT11")
+plotStates(modhmm2Et0Cov)
+plotStates(modhmm2Et0Cov, animals = "VBT11")
 
 ## Probabilité de rester dans chaque état en fonction des covariables
-# plotStationary(modhmm2etats0Cov, plotCI = T)
+# plotStationary(modhmm2Et0Cov, plotCI = T)
 
 # compute the pseudo-residuals
-pr <- pseudoRes(modhmm2etats0Cov)
+pr <- pseudoRes(modhmm2Et0Cov)
 
 # time series, qq-plots, and ACF of the pseudo-residuals
-plotPR(modhmm2etats0Cov)
+plotPR(modhmm2Et0Cov)
 
 
 
@@ -143,45 +139,46 @@ angleCon0 <- c(1, 5, 10) # initial concentrations (one for each state)
 ### Fitting du modèle
 stepPar0 <- c(stepMean0, stepSD0, zeroMass0)
 anglePar0 <- c(angleMean0, angleCon0)
-modhmm3etats <- fitHMM(data = hmmdata, nbStates = 3, stepPar0 = stepPar0, anglePar0 = anglePar0)
+modhmm3Et0Cov <- fitHMM_Log(data = hmmdata, nbStates = 3, stepPar0 = stepPar0,
+                           anglePar0 = anglePar0, logFile = paste0(outDir, logFile))
 
 ### Sorties
 ## Estimations des maxima de vraisemblance des paramètres
-modhmm3etats
+modhmm3Et0Cov
 # Sorties de la fonction d'optimisation :
-modhmm3etats$mod
+modhmm3Et0Cov$mod
 # AIC du modèle :
-AIC(modhmm3etats)
+AIC(modhmm3Et0Cov)
 
 ## Intervalle confiance (95%)
-CI(modhmm3etats)
-plot(modhmm3etats,plotCI = TRUE) # Densités de probabilité vs histogrammes
+CI(modhmm3Et0Cov)
+plot(modhmm3Et0Cov,plotCI = TRUE) # Densités de probabilité vs histogrammes
 # + prob de transition en fonction des covariables
 
 ## Etats à chaque point
 # A rbinder et à concaténer pour enregistrement et valo ??
 # Probabilités locales (! moins bien que Viterbi)
-sp <- stateProbs(modhmm3etats)
+sp <- stateProbs(modhmm3Et0Cov)
 head(sp)
 # Séquence décodée
-states <- viterbi(modhmm3etats)
+states <- viterbi(modhmm3Et0Cov)
 states[1:25]
 # Plot
-plotStates(modhmm3etats)
-plotStates(modhmm3etats, animals = "VBT11")
+plotStates(modhmm3Et0Cov)
+plotStates(modhmm3Et0Cov, animals = "VBT11")
 
 ## Probabilité de rester dans chaque état en fonction des covariables
-plotStationary(modhmm3etats, plotCI = T)
+plotStationary(modhmm3Et0Cov, plotCI = T)
 
 # compute the pseudo-residuals
-pr <- pseudoRes(modhmm3etats)
+pr <- pseudoRes(modhmm3Et0Cov)
 
 # time series, qq-plots, and ACF of the pseudo-residuals
-plotPR(modhmm3etats)
+plotPR(modhmm3Et0Cov)
 
 
 
 #### Comparaison des modèles
 ############################
 
-AIC(modhmm2etats, modhmm3etats)
+AIC(modhmm2Et0Cov, modhmm3Et0Cov)

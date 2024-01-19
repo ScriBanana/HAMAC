@@ -1,13 +1,8 @@
 # HAMAC Routine
 The Herds Activity Mapping and Analytical Classification (HAMAC) routine was designed to format, clean, concatenate and classify GPS and accelerometer data gathered from tracking livestock.
 
-## Description
-_Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors._
-
-## Visuals
-_Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method._
-
 ## Usage
+#### A. Nettoyage des données
 1. Whole_Dir permet de scanner toutes les données extraites depuis le début de la manip. Il est optionnel pour GPS, nécessaire pour ACT.
 2. Faire tourner GPS_Data_Prep et ACT_Data_Prep pour lire les CSV bruts, concaténer les données et faire un premier nettoyage grossier.
 3. Summary_Graph permet faire le graph de couverture des données. Marche avec les données GPS brutes et les données nettoyées.
@@ -15,7 +10,9 @@ _Depending on what you are making, it can be a good idea to include screenshots 
 5. ACT2GPS_attribution attribue à chaque point GPS la moyenne des données accéléro dans une fenêtre de temps donnée.
 6. Calcul des distances entre chaque point et des angles à chaque pas avec prepData de moveHMM.
 7. Suppression des outliers sur la vitesse.
-8.
+#### B. Détermination du meilleur modèle de Markov caché sans covariable
+8. fitHMM : Fit du HMM sur la base de jeux de paramètres rentrés à la main.
+9. Explo_noCovariate : boucle large sur des jeux de paramètres pour éviter les optima locaux (pas dans l'algo de base)
 
 ## Authors and acknowledgment
 - Daniel
