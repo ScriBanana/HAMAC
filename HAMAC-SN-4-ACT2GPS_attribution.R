@@ -31,7 +31,8 @@ calcul_moyenne_accelero <- function(ligne_GPS) {
   lower_bound <- ligne_GPS$DHACQ - delta_t * 60
   upper_bound <- ligne_GPS$DHACQ + delta_t * 60
   
-  pts_dans_fenetre <- subset(ACT_par_anx[[ligne_GPS$ID]], DHACQ >= lower_bound & DHACQ <= upper_bound)
+  pts_dans_fenetre <- subset(ACT_par_anx[[ligne_GPS$ID]],
+                             DHACQ >= lower_bound & DHACQ <= upper_bound)
   mean_data <- colMeans(pts_dans_fenetre[,noms_col_2_add])
   
   return(mean_data)
@@ -47,9 +48,9 @@ for (col_name in noms_col_2_add) {
 head(GPS_ACT_par_anx)
 
 n <- nrow(GPS_ACT_par_anx)
-for (i in 1:n) { # Super long, mais pas réussis à faire un lapply
+for (i in 1:n) { # Super long, mais pas r?ussis ? faire un lapply
   if (i %% round(n/10) == 0) {
-    percentage_completion <- (i / n) * 100
+    percentage_completion <- round((i / n) * 100)
     cat(sprintf("Association en cours... %d%%\n", percentage_completion))
   }
   GPS_ACT_par_anx[i,noms_col_2_add] <- calcul_moyenne_accelero(GPS_ACT_par_anx[i,])
