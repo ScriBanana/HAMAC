@@ -4,11 +4,18 @@
 #  Serge NABENEZA - JANVIER 2024
 
 
+library(moveHMM)
+library(dplyr)
+
+### ATTENTION : faire tourner le script Préliminaires_Fits au préalable
+
+head(hmmdata)
+summary(hmmdata)
 
 #### Loop analyse sensi one at a time
 
 # For reproducibility
-set.seed(12345)
+# set.seed(12345) Pas besoin, au contraire, à mon avis
 # Number of tries with different starting values
 niter <- 25
 # Save list of fitted models
@@ -34,7 +41,7 @@ for(i in 1:niter) {
   # Fit model
   stepPar0 <- c(stepMean0, stepSD0,zeromass0)
   anglePar0 <- c(angleMean0, angleCon0)
-  allm[[i]] <- fitHMM(data = hmmdata, nbStates = 3, stepPar0 = stepPar0,
+  allm[[i]] <- fitHMM_Log(data = hmmdata, nbStates = 3, stepPar0 = stepPar0,
                       anglePar0 = anglePar0)
 }
 #"allm" est la liste des 25 modèles, pour extraire le meilleur modèle nous comparons leurs probabilités
