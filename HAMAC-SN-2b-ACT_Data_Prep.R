@@ -91,6 +91,17 @@ summary(ACTACQ)
 
 
 ################################################################################
+# A.Maintien de l'ordre chronologique. 
+
+ACTACQ <- ACTACQ %>% arrange(IDCOL, DHACQ)
+
+# ggplot(subset(ACTACQ, IDCOL == 44159), aes(x = (1:nrow(subset(ACTACQ, IDCOL == 44159))), y = DHACQ)) +
+ggplot(ACTACQ, aes(x = (1:nrow(ACTACQ)), y = DHACQ)) +
+  geom_point() +
+  labs(title = "Chronological Order Check", x = "id", y = "date") +
+  theme_minimal()
+
+################################################################################
 # A.8. Exportation des donnees
 
 # au format txt

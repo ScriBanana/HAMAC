@@ -23,6 +23,8 @@ library(openxlsx)
 library(readxl)
 library(stringr)
 library(sf)
+library(dplyr)
+library(ggplot2)
 
 
 rm(list=ls()) # fonction qui permet de virer tous les objets generes anterieurements
@@ -134,24 +136,34 @@ SUNTABLE<-sunrise.set(lat,lon,begin,timezone="UTC", num.days = XX)
 #SUNTABLE$sunrise<-SUNTABLE$sunrise+(0*3600) # les donn?es AWT sont exprim?es en UTC+2 -> je rajouter 2 heures ? l'heure de lever UTC
 #SUNTABLE$sunset<-SUNTABLE$sunset+(2*3600) # les donn?es AWT sont exprim?es en UTC+2 -> je rajouter 2 heures ? l'heure de coucher UTC
 
-day<-substr((SUNTABLE$sunrise),1,10)
-day<-as.POSIXct(strptime(day,format="%Y-%m-%d"),tz="GMT")
-SUNTABLE<-cbind(day,SUNTABLE)
+day <- substr((SUNTABLE$sunrise),1,10)
+day <- as.POSIXct(strptime(day,format="%Y-%m-%d"),tz="GMT")
+SUNTABLE <- cbind(day,SUNTABLE)
 head(SUNTABLE)
 
-day<-substr((GPSACQ$DHACQ),1,10)
-day<-as.POSIXct(strptime(day,format="%Y-%m-%d"),tz="GMT")
-GPSACQ<-cbind(day,GPSACQ)
+day <- substr((GPSACQ$DHACQ),1,10)
+day <- as.POSIXct(strptime(day,format="%Y-%m-%d"),tz="GMT")
+GPSACQ <- cbind(day,GPSACQ)
 
 GPSACQ$id  <- 1:nrow(GPSACQ)
-GPSACQ<-merge(GPSACQ,SUNTABLE,by="day", all.x=T ,all.y=F)
+GPSACQ <- merge(GPSACQ,SUNTABLE,by="day", all.x=T ,all.y=F)
 GPSACQ <- GPSACQ[order(GPSACQ$id),]
-GPSACQ$DN<-ifelse(GPSACQ$DHACQ>=GPSACQ$sunrise & GPSACQ$DHACQ<=GPSACQ$sunset, "DAY","NIGHT")
+GPSACQ$DN <- ifelse(GPSACQ$DHACQ>=GPSACQ$sunrise & GPSACQ$DHACQ<=GPSACQ$sunset, "DAY","NIGHT")
 head(GPSACQ)
-GPSACQ<-GPSACQ[,-c(1,10,11,12)]
+GPSACQ <- GPSACQ[,-c(1,10,11,12)]
 head(GPSACQ)
 
 
+################################################################################
+# A.Maintien de l'ordre chronologique. 
+
+GPSACQ <- GPSACQ %>% arrange(IDCOL, DHACQ)
+
+# ggplot(subset(GPSACQ, IDCOL == 44159), aes(x = (1:nrow(subset(GPSACQ, IDCOL == 44159))), y = DHACQ)) +
+ggplot(GPSACQ, aes(x = (1:nrow(GPSACQ)), y = DHACQ)) +
+  geom_point() +
+  labs(title = "Chronological Order Check", x = "id", y = "date") +
+  theme_minimal()
 
 
 ################################################################################
