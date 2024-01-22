@@ -19,7 +19,7 @@ summary(hmmdata)
 ## Step
 stepMean0 <-c(0.050, 0.300) # initial means (one for each state) dans [0, +∞[
 stepSD0 <- c(0.045,0.200) # dans [0, +∞[
-propzero <- which(hmmdata$step == 0)/nrow(hmmdata)
+propzero <- length(which(hmmdata$step == 0))/nrow(hmmdata)
 zeroMass0 <- c(propzero, propzero/100)
 # 0.0001 estimation perso (peu de step à zero dans l'état 2 qui est du mouvement)
 
@@ -75,7 +75,7 @@ plotPR(modhmm2Et0Cov)
 ## Step
 stepMean0 <-c(0.001, 0.2, 0.500) # initial means (one for each state)
 stepSD0 <- c(0.05, 0.1, 0.300)
-propzero <- which(hmmdata$step == 0)/nrow(hmmdata)
+propzero <- length(which(hmmdata$step == 0))/nrow(hmmdata)
 zeroMass0 <- c(propzero, propzero/100, propzero/100)
 # 0.0001 estimation perso (peu de step à zero dans l'état 2 qui est du mouvement)
 

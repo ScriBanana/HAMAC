@@ -27,7 +27,7 @@ for(i in 1:niter) {
                      min = c(0.01, 0.05,0.300),
                      max = c(0.100, 0.250,0.400))
   whichzero <- which(hmmdata$step == 0)
-  zeromass0<-c(length(whichzero)/nrow(hmmdata),0,0)
+  zeromass0<-c(length(whichzero)/nrow(hmmdata),0,0) ###### A MODIF
   # Step length standard deviation
   stepSD0 <- runif(3,
                    min = c(0.010,0.030,0.100),
