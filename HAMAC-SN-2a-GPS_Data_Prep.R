@@ -40,17 +40,26 @@ workd1<-"./1_Data_clean_and_merge"
 ################################################################################
 # A.1. Lecture, concatenation et mise en forme des données GPS
 
-# Concaténation
-filename<- list.files(workd0,full.names = TRUE)
-filename
-GPSACQorig<-read.csv(filename[1],sep=";",header=F,skip=1,na.strings = "NA")
-cat(GPSACQorig[1,2], ncol(GPSACQorig),"\n")
-for(i in 2:(length(filename))) {
-  gpsacq=read.csv(filename[i],sep=";",header=F, skip=1,na.strings = "NA") #N/A pas bon
-  cat(gpsacq[1,2], ncol(gpsacq),"\n")
-  GPSACQorig=rbind(GPSACQorig, gpsacq)
-}
-head(GPSACQorig)
+## Choisir :
+# Fichiers Serge initiaux
+# filename<- list.files(workd0,full.names = TRUE)
+# filename
+# GPSACQorig<-read.csv(filename[1],sep=";",header=F,skip=1,na.strings = "NA")
+# cat(GPSACQorig[1,2], ncol(GPSACQorig),"\n")
+# for(i in 2:(length(filename))) {
+#   gpsacq=read.csv(filename[i],sep=";",header=F, skip=1,na.strings = "NA") #N/A pas bon
+#   cat(gpsacq[1,2], ncol(gpsacq),"\n")
+#   GPSACQorig=rbind(GPSACQorig, gpsacq)
+# }
+# head(GPSACQorig)
+
+# Scan automatique whole dir
+gpsSourceDir <- "./1_Data_clean_and_merge/"
+GPSACQorig <- read.table(
+  paste0(gpsSourceDir, "HAMAC-SN-GPS_WholeDir.csv"),
+  sep=";",header=T, skip=0,na.strings = "N/A")
+cat("\nGPS Table:\n")
+print(head(GPSACQorig))
 
 # selection des colonnes d'intéret
 GPSACQ <- GPSACQorig[,c(2,3,4,14,13,15,48,7,16)]

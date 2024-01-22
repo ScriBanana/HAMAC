@@ -14,28 +14,29 @@ setwd("D:/USERS/SergeEtArthur/WorkspaceR/hamac")
 rm(list=ls())
 date()
 
-# Importation donn√©es
+#### Importation donn√©es
+## Animaux
 metaSourceDir <- "./0_raw_data/METADATA/"
 ANX <- read.table(
   paste0(metaSourceDir, "AnimalSegmentationTable.csv"),
   sep=";",header=T, skip=0,na.strings = "N/A")
 ANX$debutPortColl <- dmy_hm(ANX$debutPortColl)
 ANX$finPortColl <- dmy_hm(ANX$finPortColl)
-
 ANX <- ANX[, c(1, 3, 4, 7, 8, 5, 6)]
 names(ANX) <- c("IDANL", "IDCOL", "IDELV", "TRANS", "IDVIL", "DHDEB", "DHFIN")
 cat("ANX Table:\n")
 print(head(ANX))
 
+## GPS
 gpsSourceDir <- "./1_Data_clean_and_merge/"
 GPS <- read.table(
   paste0(gpsSourceDir, "HAMAC-SN-GPS_brutes.csv"),
   sep=";",header=T, skip=0,na.strings = "N/A")
 GPS$DHACQ<-ymd_hms(GPS$DHACQ)
-
 cat("\nGPS Table:\n")
 print(head(GPS))
 
+## AccÈlÈro
 actSourceDir <- "./1_Data_clean_and_merge/"
 ACT <- read.table(
   paste0(actSourceDir, "HAMAC-SN-ACT_brutes.csv"),
@@ -43,12 +44,11 @@ ACT <- read.table(
 ACT$DHACQ <- ifelse (str_length(ACT$DHACQ)==10,paste(ACT$DHACQ," 00:00:00",sep=""),ACT$DHACQ)
 # parse_ymd_hms(ACT$DHACQ)
 ACT$DHACQ<-ymd_hms(ACT$DHACQ)
-
 cat("\nACT Table:\n")
 print(head(ACT))
 
 
-# Segmentation GPS
+#### Segmentation GPS
 GPS_par_anx <- data.frame()
 
 for (i in 1:nrow(ANX)) {

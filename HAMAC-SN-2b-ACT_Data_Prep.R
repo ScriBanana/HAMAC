@@ -5,6 +5,7 @@
 
 library(lubridate)
 library(stringr)
+library(ggplot2)
 
 setwd("/home/scriban/Dropbox/Thèse/DonneesEtSauvegardes/WorkspaceR/HAMAC")
 setwd("D:/USERS/SergeEtArthur/WorkspaceR/hamac")
@@ -32,8 +33,14 @@ workd1<-"./1_Data_clean_and_merge"
 # }
 # head(ACTACQorig)
 
-# N'a pas toutes les derni?res donn?es, utiliser Whole_Dir
-ACTACQorig <- act_table
+
+# Scan automatique whole dir
+gpsSourceDir <- "./1_Data_clean_and_merge/"
+ACTACQorig <- read.table(
+  paste0(gpsSourceDir, "HAMAC-SN-ACT_WholeDir.csv"),
+  sep=";",header=T, skip=0,na.strings = "N/A")
+cat("\nGPS Table:\n")
+print(head(ACTACQorig))
 
 # selection des colonnes d'intéret
 ACTACQ <- ACTACQorig[,c(2,3,4,12,13,14,15)]
@@ -95,8 +102,8 @@ summary(ACTACQ)
 
 ACTACQ <- ACTACQ %>% arrange(IDCOL, DHACQ)
 
-# ggplot(subset(ACTACQ, IDCOL == 44159), aes(x = (1:nrow(subset(ACTACQ, IDCOL == 44159))), y = DHACQ)) +
-ggplot(ACTACQ, aes(x = (1:nrow(ACTACQ)), y = DHACQ)) +
+ggplot(subset(ACTACQ, IDCOL == 44159), aes(x = (1:nrow(subset(ACTACQ, IDCOL == 44159))), y = DHACQ)) +
+# ggplot(ACTACQ, aes(x = (1:nrow(ACTACQ)), y = DHACQ)) +
   geom_point() +
   labs(title = "Chronological Order Check", x = "id", y = "date") +
   theme_minimal()

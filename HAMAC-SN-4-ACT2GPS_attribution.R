@@ -5,6 +5,9 @@
 
 library(dplyr)
 
+setwd("/home/scriban/Dropbox/Thèse/DonneesEtSauvegardes/WorkspaceR/HAMAC")
+setwd("D:/USERS/SergeEtArthur/WorkspaceR/hamac")
+
 
 # rm(list=ls())
 
