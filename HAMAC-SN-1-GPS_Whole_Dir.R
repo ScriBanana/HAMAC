@@ -66,3 +66,5 @@ write.table(act_table,paste0(workd1,"/HAMAC-SN-ACT_WholeDir.csv"),sep=";", row.n
 
 ACTACQorig <- act_table
 ## Transition vers HAMAC-SN-GPS_Data_Prep.R
+
+rm(gps_table, act_table)

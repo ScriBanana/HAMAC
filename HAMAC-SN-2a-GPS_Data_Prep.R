@@ -40,6 +40,7 @@ workd1<-"./1_Data_clean_and_merge"
 ################################################################################
 # A.1. Lecture, concatenation et mise en forme des données GPS
 
+#### Importation
 ## Choisir :
 # Fichiers Serge initiaux
 # filename<- list.files(workd0,full.names = TRUE)
@@ -61,6 +62,21 @@ GPSACQorig <- read.table(
 cat("\nGPS Table:\n")
 print(head(GPSACQorig))
 
+# Remplace 44159 et 44170 par des donn�es qui marchent.
+GPSACQorig <- GPSACQorig %>% subset(GPSACQorig[, 2] != 44159 & GPSACQorig[, 2] != 44170)
+GPS59 <- read.table(
+  "./0_raw_data/GPS/GPS_Collar44159_20230706143528.csv",
+  sep=";",header=F, skip=1,na.strings = "N/A")
+GPS59 <- cbind(GPS59, V51 = NA, V52 = NA)
+GPS70 <- read.table(
+  "./0_raw_data/GPS/GPS_Collar44170_20230706144441.csv",
+  sep=";",header=F, skip=1,na.strings = "N/A")
+GPS70 <- cbind(GPS70, V51 = NA, V52 = NA)
+GPSACQorig <- GPSACQorig %>% rbind(GPS59, GPS70)
+rm(GPS59, GPS70)
+
+
+#### Formatage
 # selection des colonnes d'intéret
 GPSACQ <- GPSACQorig[,c(2,3,4,14,13,15,48,7,16)]
 names(GPSACQ)=c("IDCOL","DACQ","HACQ","LON","LAT","HEI","TMP","ORI","DOP")  # Attribution d'un nom aux colonnes
@@ -161,18 +177,20 @@ GPSACQ$DN <- ifelse(GPSACQ$DHACQ>=GPSACQ$sunrise & GPSACQ$DHACQ<=GPSACQ$sunset, 
 head(GPSACQ)
 GPSACQ <- GPSACQ[,-c(1,10,11,12)]
 head(GPSACQ)
-
+rm(SUNTABLE)
 
 ################################################################################
 # A.Maintien de l'ordre chronologique. 
 
 GPSACQ <- GPSACQ %>% arrange(IDCOL, DHACQ)
 
+table(GPSACQ$IDCOL)
 # ggplot(subset(GPSACQ, IDCOL == 44159), aes(x = (1:nrow(subset(GPSACQ, IDCOL == 44159))), y = DHACQ)) +
-ggplot(GPSACQ, aes(x = (1:nrow(GPSACQ)), y = DHACQ)) +
-  geom_point() +
-  labs(title = "Chronological Order Check", x = "id", y = "date") +
-  theme_minimal()
+# ggplot(GPSACQ, aes(x = (1:nrow(GPSACQ)), y = DHACQ)) +
+#   geom_point() +
+#   labs(title = "Chronological Order Check", x = "id", y = "date") +
+#   theme_minimal()
+# plot(GPSACQ$DHACQ)
 
 
 ################################################################################
