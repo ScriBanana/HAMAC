@@ -39,10 +39,10 @@ nrow(hmmdata)
 # Suppression d'outliers sur la vitesse
 # Désactivé pour l'heure, pour ne pas créer de trous dans la bd
 
-dim(hmmdata)
-dim(hmmdata[hmmdata$step>2.25,]) # nombre de locs > 4,5 km/h
-hmmdata<-hmmdata[hmmdata$step<=2.25,]
-dim(hmmdata)
+# dim(hmmdata)
+# dim(hmmdata[hmmdata$step>2.25,]) # nombre de locs > 4,5 km/h
+# hmmdata<-hmmdata[hmmdata$step<=2.25,]
+# dim(hmmdata)
 
 
 #### Assessments visuels

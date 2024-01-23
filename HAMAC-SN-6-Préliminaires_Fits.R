@@ -29,7 +29,7 @@ fitHMM_Log <- function (data, nbStates, stepPar0, anglePar0) {
     stepPar <- c(modhmm$mle$stepPar[1,], modhmm$mle$stepPar[2,], modhmm$mle$stepPar[3,])
   }
   
-  ligneLog <- c(timestamp, nbStates, indicateurs, anglePar, stepPar)
+  ligneLog <- c(as.numeric(timestamp), nbStates, indicateurs, anglePar, stepPar)
   
   write.table(
     matrix(ligneLog, ncol = length(ligneLog)), file = paste0(outDir, logFile),
