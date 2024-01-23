@@ -122,11 +122,11 @@ GPSACQ<-GPSACQ[GPSACQ$LAT>(10),] # retire les  donnees aberrantes
 # dim(GPSACQ[GPSACQ$HEI>(650),]) # 650 m point le plus haut du Sénégal
 
 # hist(GPSACQ$TMP)
-GPSACQ<-GPSACQ[GPSACQ$TMP!=0,]
+# GPSACQ<-GPSACQ[GPSACQ$TMP!=0,]
 
 # boxplot(GPSACQ$DOP)
 # dim(GPSACQ[GPSACQ$DOP>3,])
-GPSACQ<-GPSACQ[GPSACQ$DOP<3,]
+# GPSACQ<-GPSACQ[GPSACQ$DOP<3,]
 
 dim(GPSACQ)
 summary(GPSACQ)

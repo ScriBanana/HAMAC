@@ -39,10 +39,14 @@ nrow(hmmdata)
 # Suppression d'outliers sur la vitesse
 # Désactivé pour l'heure, pour ne pas créer de trous dans la bd
 
-# dim(hmmdata)
-# dim(hmmdata[hmmdata$step>2.25,]) # nombre de locs > 4,5 km/h
-# hmmdata<-hmmdata[hmmdata$step<=2.25,]
-# dim(hmmdata)
+dim(hmmdata)
+dim(hmmdata[hmmdata$step>2.25,]) # nombre de locs > 4,5 km/h
+hmmdata<-hmmdata[hmmdata$step<=2.25,]
+dim(hmmdata)
+
+
+## Enlever les colliers qui merdent
+hmmdata <- subset(hmmdata, IDCOL != 44159 & IDCOL != 44170)
 
 
 #### Assessments visuels
