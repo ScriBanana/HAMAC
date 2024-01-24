@@ -53,7 +53,8 @@ for (col_name in noms_col_2_add) {
 }
 head(GPS_ACT_par_anx)
 
-plan(multisession, workers = 22) # Début parallelisation sur workers threads
+date()
+plan(multisession, workers = 22) # Début parallelisation
 
 n <- nrow(GPS_ACT_par_anx)
 result_list <- future_map(1:n, function(i) {
@@ -65,6 +66,7 @@ result_list <- future_map(1:n, function(i) {
 })
 
 plan(sequential) # Fin parallelisation
+date()
 
 for (i in 1:n) {
   GPS_ACT_par_anx[i, noms_col_2_add] <- result_list[[i]]
