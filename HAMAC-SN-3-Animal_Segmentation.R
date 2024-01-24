@@ -84,6 +84,7 @@ for (i in 1:nrow(ANX)) {
     # Condition pour gérer les deux colliers de VSR11
     ACT_par_anx[[IDANL]] <- rbind(ACT_par_anx[[IDANL]], subset_data)
   }
+  rm(subset_data)
   
   print(summary(ACT_par_anx[[IDANL]]))
   cat("\n")
