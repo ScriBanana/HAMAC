@@ -67,14 +67,14 @@ print(head(GPSACQorig))
 ################################################################################
 # A. Corrections sur la BD brute
 
-#### Suppression des plages de données avec les données surnuméraires
+#### Suppression des plages de donn?es avec les donn?es surnum?raires
 GPSACQorig <- GPSACQorig %>%
   filter(
     !(V2 == 44159 & as.POSIXct(strptime(V3,format="%d/%m/%Y"),tz="GMT") < as.POSIXct("2023-08-14")) &
     !(V2 == 44170 & as.POSIXct(strptime(V3,format="%d/%m/%Y"),tz="GMT") < as.POSIXct("2022-05-25"))
   )
 
-# Remplace les parties foireuses de 44159 et 44170 par des données qui marchent.
+# Remplace les parties foireuses de 44159 et 44170 par des donn?es qui marchent.
 GPS59 <- read.table(
   "./0_raw_data/GPS/GPS_Collar44159_20230706143528.csv",
   sep=";",header=F, skip=1,na.strings = "N/A")
@@ -88,8 +88,8 @@ rm(GPS59, GPS70)
 
 
 
-#### Suppression des plages où deltaT n'est pas constant
-# Fait à la main. runner les plots pour confirmer :
+#### Suppression des plages o? deltaT n'est pas constant
+# Fait ? la main. runner les plots pour confirmer :
 # plot(GPSACQ[GPSACQ$IDCOL == 44173, 1:2][, "DHACQ"])
 # plot(GPSACQ[GPSACQ$IDCOL == 44172, 1:2][(
 #   GPSACQ[GPSACQ$IDCOL == 44172, 1:2]$DHACQ > as.POSIXct("2022-12-04") &
@@ -97,7 +97,7 @@ rm(GPS59, GPS70)
 # ), "DHACQ"])
 
 GPSACQorig <- GPSACQorig %>%
-  filter( # Intervalles à enlever
+  filter( # Intervalles ? enlever
     !(V2 == 44159 &
           as.POSIXct(strptime(V3,format="%d/%m/%Y"),tz="GMT") > as.POSIXct("2022-11-20") &
           as.POSIXct(strptime(V3,format="%d/%m/%Y"),tz="GMT") < as.POSIXct("2023-08-10") 
@@ -111,6 +111,10 @@ GPSACQorig <- GPSACQorig %>%
       ) &
       !(V2 == 44164 &
           as.POSIXct(strptime(V3,format="%d/%m/%Y"),tz="GMT") > as.POSIXct("2023-07-28")
+      ) &
+      !(V2 == 44171 &
+          as.POSIXct(strptime(V3,format="%d/%m/%Y"),tz="GMT") > as.POSIXct("2021-02-09") &
+          as.POSIXct(strptime(V3,format="%d/%m/%Y"),tz="GMT") < as.POSIXct("2021-29-09")
       ) &
       !(V2 == 44172 &
           as.POSIXct(strptime(V3,format="%d/%m/%Y"),tz="GMT") > as.POSIXct("2022-12-04")
