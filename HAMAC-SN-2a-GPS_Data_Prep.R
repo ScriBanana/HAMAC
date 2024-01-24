@@ -63,7 +63,18 @@ GPSACQorig <- read.table(
 cat("\nGPS Table:\n")
 print(head(GPSACQorig))
 
-GPSACQorig <- GPSACQorig %>% subset(GPSACQorig[, 2] != 44159 & GPSACQorig[, 2] != 44170)
+
+################################################################################
+# A. Corrections sur la BD brute
+
+#### Suppression des plages de données avec les données surnuméraires
+GPSACQ <- GPSACQ %>%
+  filter(
+    !(IDCOL == 44159 & DHACQ < as.POSIXct("2023-08-14")) &
+    !(IDCOL == 44170 & DHACQ < as.POSIXct("2022-05-25"))
+  )
+
+# Remplace les parties foireuses de 44159 et 44170 par des données qui marchent.
 GPS59 <- read.table(
   "./0_raw_data/GPS/GPS_Collar44159_20230706143528.csv",
   sep=";",header=F, skip=1,na.strings = "N/A")
@@ -76,8 +87,19 @@ GPSACQorig <- GPSACQorig %>% rbind(GPS59, GPS70)
 rm(GPS59, GPS70)
 
 
+
+#### Suppression des plages où deltaT n'est pas constant
+# Pour l'instant à la main. Pourrait être précisé avec une automatisation subtile.
+
+GPSACQ <- GPSACQ %>%
+  filter(
+    !(IDCOL == 44172 & DHACQ > as.POSIXct("2023-01-25"))
+  )
+
+
+################################################################################
 #### Formatage
-# selection des colonnes d'intÃƒÂ©ret
+# selection des colonnes d'intÃ©ret
 GPSACQ <- GPSACQorig[,c(2,3,4,14,13,15,48,7,16)]
 names(GPSACQ)=c("IDCOL","DACQ","HACQ","LON","LAT","HEI","TMP","ORI","DOP")  # Attribution d'un nom aux colonnes
 head(GPSACQ)
@@ -121,6 +143,7 @@ summary(GPSACQ)
 
 
 ###############################################################################
+# A.3. FenÃªtres temporelle et spatiale + retrait iridium
 
 #plot(GPSACQ$LON,GPSACQ$LAT,asp=1)
 dim(GPSACQ)
@@ -196,20 +219,6 @@ table(GPSACQ$IDCOL)
 #   labs(title = "Chronological Order Check", x = "id", y = "date") +
 #   theme_minimal()
 # plot(GPSACQ$DHACQ)
-
-
-################################################################################
-
-
-GPSACQ <- GPSACQ %>%
-  filter(
-      !(IDCOL == 44159) &
-      !(IDCOL == 44170 & DHACQ < as.POSIXct("2022-05-25")) &
-      !(IDCOL == 44172 & DHACQ > as.POSIXct("2023-01-25"))
-  )
-
-
-
 
 
 
