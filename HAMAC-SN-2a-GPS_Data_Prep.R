@@ -89,11 +89,32 @@ rm(GPS59, GPS70)
 
 
 #### Suppression des plages où deltaT n'est pas constant
-# Pour l'instant à la main. Pourrait être précisé avec une automatisation subtile.
+# Fait à la main. runner les plots pour confirmer :
+# plot(GPSACQ[GPSACQ$IDCOL == 44173, 1:2][, "DHACQ"])
+# plot(GPSACQ[GPSACQ$IDCOL == 44172, 1:2][(
+#   GPSACQ[GPSACQ$IDCOL == 44172, 1:2]$DHACQ > as.POSIXct("2022-12-04") &
+#     GPSACQ[GPSACQ$IDCOL == 44172, 1:2]$DHACQ < as.POSIXct("2025-10-01")
+# ), "DHACQ"])
 
 GPSACQorig <- GPSACQorig %>%
-  filter(
-    !(V2 == 44172 & as.POSIXct(strptime(V3,format="%d/%m/%Y"),tz="GMT") > as.POSIXct("2023-01-25"))
+  filter( # Intervalles à enlever
+    !(V2 == 44159 &
+          as.POSIXct(strptime(V3,format="%d/%m/%Y"),tz="GMT") > as.POSIXct("2022-11-20") &
+          as.POSIXct(strptime(V3,format="%d/%m/%Y"),tz="GMT") < as.POSIXct("2023-08-10") 
+      ) &
+      !(V2 == 44161 &
+          as.POSIXct(strptime(V3,format="%d/%m/%Y"),tz="GMT") > as.POSIXct("2023-02-15")
+      ) &
+      !(V2 == 44164 &
+          as.POSIXct(strptime(V3,format="%d/%m/%Y"),tz="GMT") > as.POSIXct("2022-10-28") &
+          as.POSIXct(strptime(V3,format="%d/%m/%Y"),tz="GMT") < as.POSIXct("2022-12-10")
+      ) &
+      !(V2 == 44164 &
+          as.POSIXct(strptime(V3,format="%d/%m/%Y"),tz="GMT") > as.POSIXct("2023-07-28")
+      ) &
+      !(V2 == 44172 &
+          as.POSIXct(strptime(V3,format="%d/%m/%Y"),tz="GMT") > as.POSIXct("2022-12-04")
+      )
   )
 
 
