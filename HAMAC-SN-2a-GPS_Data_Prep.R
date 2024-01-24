@@ -68,10 +68,10 @@ print(head(GPSACQorig))
 # A. Corrections sur la BD brute
 
 #### Suppression des plages de données avec les données surnuméraires
-GPSACQ <- GPSACQ %>%
+GPSACQorig <- GPSACQorig %>%
   filter(
-    !(IDCOL == 44159 & DHACQ < as.POSIXct("2023-08-14")) &
-    !(IDCOL == 44170 & DHACQ < as.POSIXct("2022-05-25"))
+    !(V2 == 44159 & as.POSIXct(strptime(V3,format="%d/%m/%Y"),tz="GMT") < as.POSIXct("2023-08-14")) &
+    !(V2 == 44170 & as.POSIXct(strptime(V3,format="%d/%m/%Y"),tz="GMT") < as.POSIXct("2022-05-25"))
   )
 
 # Remplace les parties foireuses de 44159 et 44170 par des données qui marchent.
@@ -91,9 +91,9 @@ rm(GPS59, GPS70)
 #### Suppression des plages où deltaT n'est pas constant
 # Pour l'instant à la main. Pourrait être précisé avec une automatisation subtile.
 
-GPSACQ <- GPSACQ %>%
+GPSACQorig <- GPSACQorig %>%
   filter(
-    !(IDCOL == 44172 & DHACQ > as.POSIXct("2023-01-25"))
+    !(V2 == 44172 & as.POSIXct(strptime(V3,format="%d/%m/%Y"),tz="GMT") > as.POSIXct("2023-01-25"))
   )
 
 
@@ -121,7 +121,7 @@ GPSACQ$HEI<-as.numeric(GPSACQ$HEI)
 GPSACQ$DOP<-as.numeric(GPSACQ$DOP)
 GPSACQ$ORI<-as.logical(GPSACQ$ORI == "Collar")
 
-# NA omit et formatage
+# NA omit
 dim(GPSACQ)
 GPSACQ<-na.omit(GPSACQ)
 dim(GPSACQ)
