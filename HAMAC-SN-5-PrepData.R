@@ -21,11 +21,6 @@ GPS_ACT_par_anx <- read.table(
 GPS_ACT_par_anx$DHACQ<-ymd_hms(GPS_ACT_par_anx$DHACQ)
 head(GPS_ACT_par_anx)
 
-#### Retrait Iridium
-dim(GPS_ACT_par_anx)
-dim(GPS_ACT_par_anx[GPS_ACT_par_anx$ORI!=T,])
-GPS_ACT_par_anx<-GPS_ACT_par_anx[GPS_ACT_par_anx$ORI==T,]
-dim(GPS_ACT_par_anx)
 
 #### Calcul des steps et des angles
 hmmdata <- prepData(GPS_ACT_par_anx, type = "LL",coordNames=c("LON","LAT"))

@@ -63,7 +63,6 @@ GPSACQorig <- read.table(
 cat("\nGPS Table:\n")
 print(head(GPSACQorig))
 
-# Remplace 44159 et 44170 par des données qui marchent.
 GPSACQorig <- GPSACQorig %>% subset(GPSACQorig[, 2] != 44159 & GPSACQorig[, 2] != 44170)
 GPS59 <- read.table(
   "./0_raw_data/GPS/GPS_Collar44159_20230706143528.csv",
@@ -78,7 +77,7 @@ rm(GPS59, GPS70)
 
 
 #### Formatage
-# selection des colonnes d'intÃ©ret
+# selection des colonnes d'intÃƒÂ©ret
 GPSACQ <- GPSACQorig[,c(2,3,4,14,13,15,48,7,16)]
 names(GPSACQ)=c("IDCOL","DACQ","HACQ","LON","LAT","HEI","TMP","ORI","DOP")  # Attribution d'un nom aux colonnes
 head(GPSACQ)
@@ -122,7 +121,6 @@ summary(GPSACQ)
 
 
 ###############################################################################
-# A.3. FenÃªtres temporelle et spatiale
 
 #plot(GPSACQ$LON,GPSACQ$LAT,asp=1)
 dim(GPSACQ)
@@ -144,6 +142,12 @@ GPSACQ<-GPSACQ[GPSACQ$LAT>(10),] # retire les  donnees aberrantes
 # boxplot(GPSACQ$DOP)
 # dim(GPSACQ[GPSACQ$DOP>3,])
 # GPSACQ<-GPSACQ[GPSACQ$DOP<3,]
+
+#### Retrait Iridium
+dim(GPSACQ)
+dim(GPSACQ[GPSACQ$ORI!=T,])
+GPSACQ<-GPSACQ[GPSACQ$ORI==T,]
+dim(GPSACQ)
 
 dim(GPSACQ)
 summary(GPSACQ)
@@ -195,9 +199,7 @@ table(GPSACQ$IDCOL)
 
 
 ################################################################################
-# A. Suppression des plages de données où deltaT n'est pas constant
 
-# Pour l'instant à la main. Pourrait être précisé avec une automatisation subtile.
 
 GPSACQ <- GPSACQ %>%
   filter(
