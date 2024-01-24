@@ -46,7 +46,7 @@ dim(hmmdata)
 
 
 ## Enlever les colliers qui merdent
-hmmdata <- subset(hmmdata, IDCOL != 44159 & IDCOL != 44170)
+# hmmdata <- subset(hmmdata, IDCOL != 44159 & IDCOL != 44170)
 
 
 #### Assessments visuels

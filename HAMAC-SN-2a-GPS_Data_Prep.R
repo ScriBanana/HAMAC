@@ -25,6 +25,7 @@ library(stringr)
 library(sf)
 library(dplyr)
 library(ggplot2)
+library(lubridate)
 
 
 rm(list=ls()) # fonction qui permet de virer tous les objets generes anterieurements
@@ -194,13 +195,31 @@ table(GPSACQ$IDCOL)
 
 
 ################################################################################
+# A. Suppression des plages de données où deltaT n'est pas constant
+
+# Pour l'instant à la main. Pourrait être précisé avec une automatisation subtile.
+
+GPSACQ <- GPSACQ %>%
+  filter(
+      !(IDCOL == 44159) &
+      !(IDCOL == 44170 & DHACQ < as.POSIXct("2022-05-25")) &
+      !(IDCOL == 44172 & DHACQ > as.POSIXct("2023-01-25"))
+  )
+
+
+
+
+
+
+################################################################################
 # A.8. Exportation des donnees
 
 # au format txt
-GPSACQ$DHACQ<-as.character(GPSACQ$DHACQ)
-write.table(GPSACQ,paste0(workd1,"/HAMAC-SN-GPS_brutes.csv"),sep=";", row.names=FALSE)
-write.table(GPSACQ,paste0(workd1,"/HAMAC-SN-GPS_brutes.txt"),sep=";", row.names=FALSE)
-
+GPSACQtoSave <- GPSACQ
+GPSACQtoSave$DHACQ<-as.character(GPSACQtoSave$DHACQ)
+write.table(GPSACQtoSave,paste0(workd1,"/HAMAC-SN-GPS_brutes.csv"),sep=";", row.names=FALSE)
+write.table(GPSACQtoSave,paste0(workd1,"/HAMAC-SN-GPS_brutes.txt"),sep=";", row.names=FALSE)
+rm(GPSACQtoSave)
 
 
 
