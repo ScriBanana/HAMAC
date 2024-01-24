@@ -36,7 +36,7 @@ GPS$DHACQ<-ymd_hms(GPS$DHACQ)
 cat("\nGPS Table:\n")
 print(head(GPS))
 
-## Accéléro
+## AccÃ©lÃ©ro
 actSourceDir <- "./1_Data_clean_and_merge/"
 ACT <- read.table(
   paste0(actSourceDir, "HAMAC-SN-ACT_brutes.csv"),
@@ -92,6 +92,7 @@ for (i in 1:nrow(ANX)) {
 # Sauvegardes CSV
 workd1<-"./1_Data_clean_and_merge"
 write.table(GPS_par_anx,paste0(workd1,"/HAMAC-SN-GPSpANX.csv"),sep=";", row.names=FALSE)
+write.table(bind_rows(ACT_par_anx),paste0(workd1,"/HAMAC-SN-ACTpANX.csv"),sep=";", row.names=FALSE)
 for (i in names(ACT_par_anx)) {
   write.table(ACT_par_anx[[i]],paste0(workd1,"/ACTpANX/HAMAC-SN-ACTpANX-", i, ".csv"),sep=";", row.names=FALSE)
 }

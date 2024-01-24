@@ -22,7 +22,11 @@ GPS_par_anx$DHACQ<-ymd_hms(GPS_par_anx$DHACQ)
 head(GPS_par_anx)
 
 # ACT
-# Flemme de faire l'import, juste faire tourner Animal_Segmentation
+ACT_par_anx <- read.table(
+  paste0(sourceDir, "HAMAC-SN-ACTpANX.csv"),
+  sep=";",header=T, skip=0,na.strings = "N/A")
+ACT_par_anx$DHACQ<-ymd_hms(ACT_par_anx$DHACQ)
+head(ACT_par_anx)
 
 
 # Paramètres 
