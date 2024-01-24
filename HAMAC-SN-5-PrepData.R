@@ -21,10 +21,32 @@ GPS_ACT_par_anx <- read.table(
 GPS_ACT_par_anx$DHACQ<-ymd_hms(GPS_ACT_par_anx$DHACQ)
 head(GPS_ACT_par_anx)
 
-
 #### Calcul des steps et des angles
 hmmdata <- prepData(GPS_ACT_par_anx, type = "LL",coordNames=c("LON","LAT"))
 # Step sort en km pour LL, dÃ©pend de l'unitÃ© d'entrÃ©e en UTM
+
+
+#### Alternative de calcul des steps pour vérifications
+# haversine <- function(lon1, lat1, lon2, lat2) {
+#   # Calcule la distance entre deux points sur la surface d'une sphère. (Full ChatGPT, ofc)
+#   R <- 6371 #rayon de la terre
+#   d_lon <- (lon2 - lon1) * (pi/180)
+#   d_lat <- (lat2 - lat1) * (pi/180)
+#   
+#   a <- sin(d_lat/2)^2 + cos(lat1 * (pi/180)) * cos(lat2 * (pi/180)) * sin(d_lon/2)^2
+#   c <- 2 * atan2(sqrt(a), sqrt(1 - a))
+#   dist <- R * c
+#   return(dist)
+# }
+# 
+# datatoplot <- GPS_ACT_par_anx %>% mutate(DIST = haversine(lag(LON), lag(LAT), LON, LAT))
+# hist(datatoplot$DIST, xlab = "Dist de Haversine", main = "",breaks = 50) #, xlim = c(0,2000),ylim=c(0,100000))
+
+# Histogramme des deltaT
+# datadeltaT <- GPS_ACT_par_anx %>% mutate(DELTAT = as.numeric((lag(DHACQ) - DHACQ) / 60))
+# boxplot(datadeltaT$DELTAT, xlab = "deltaT (min)", main = "",breaks = 50) #, xlim = c(0,2000),ylim=c(0,100000))
+# hist(datadeltaT$DELTAT, xlab = "deltaT (min)", main = "",breaks = 50) #, xlim = c(0,2000),ylim=c(0,100000))
+# summary(datadeltaT$DELTAT)
 
 #### Retrait des derniers outliers
 # NA omit

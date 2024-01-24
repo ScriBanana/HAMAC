@@ -246,6 +246,8 @@ table(GPSACQ$IDCOL)
 ################################################################################
 # A.8. Exportation des donnees
 
+GPS <- GPSACQ # Pour Animal segmentation
+
 # au format txt
 GPSACQtoSave <- GPSACQ
 GPSACQtoSave$DHACQ<-as.character(GPSACQtoSave$DHACQ)
