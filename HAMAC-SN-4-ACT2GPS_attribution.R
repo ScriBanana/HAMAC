@@ -40,9 +40,15 @@ calcul_moyenne_accelero <- function(ligne_GPS) {
   closest_rows <- ACT_par_anx[[ligne_GPS$ID]] %>%
     arrange(abs(DHACQ - ligne_GPS$DHACQ)) %>%
     slice_head(n = nbACTpts)
-  mean_data <- colMeans(closest_rows[,noms_col_2_add])
+  mean_data <- colMeans(closest_rows[,noms_col_2_add], na.rm = TRUE)
   
   return(mean_data)
+}
+
+# Function to process a batch of rows
+process_batch <- function(batch_indices) {
+  result_list <- future_map(batch_indices, ~ calcul_moyenne_accelero(GPS_ACT_par_anx[.x, ]))
+  return(result_list)
 }
 
 # GPS_ACT_par_anx <- GPS_par_anx[1:1000,]
@@ -53,22 +59,26 @@ for (col_name in noms_col_2_add) {
 }
 head(GPS_ACT_par_anx)
 
-plan(multisession, workers = 22) # Début parallelisation sur workers threads
+nThreads <- 7
+plan(multisession, workers = nThreads) # Début parallelisation sur workers threads
 
 n <- nrow(GPS_ACT_par_anx)
-result_list <- future_map(1:n, function(i) {
-  if (i %% round(n/10) == 0) {
-    percentage_completion <- round((i / n) * 100)
-    cat(sprintf("Association en cours... %d%%\n", percentage_completion))
-  }
-  calcul_moyenne_accelero(GPS_ACT_par_anx[i, ])
-})
+batch_size <- ceiling(n / nThreads)
+batches <- split(1:n, (seq_along(1:n) - 1) %/% batch_size)
 
-plan(sequential) # Fin parallelisation
+# Process each batch in parallel
+result_list <- future_map(batches, process_batch)
 
+# Flatten the result list
+result_list <- unlist(result_list, recursive = FALSE)
+
+# Update the main data frame
 for (i in 1:n) {
   GPS_ACT_par_anx[i, noms_col_2_add] <- result_list[[i]]
 }
+
+plan(sequential) # Fin parallelisation
+
 rm(result_list)
 head(GPS_ACT_par_anx)
 
