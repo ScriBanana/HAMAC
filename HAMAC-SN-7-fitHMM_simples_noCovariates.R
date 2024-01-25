@@ -46,6 +46,7 @@ AIC(modhmm2Et0Cov)
 CI(modhmm2Et0Cov)
 plot(modhmm2Et0Cov, plotCI = TRUE) # Densités de probabilité vs histogrammes
 # + prob de transition en fonction des covariables
+# + Plot des trajets avec les points de Viterbi (plotTracks = T)
 
 ## Etats à chaque point
 # A rbinder et à concaténer pour enregistrement et valo ??
@@ -102,6 +103,7 @@ AIC(modhmm3Et0Cov)
 CI(modhmm3Et0Cov)
 plot(modhmm3Et0Cov,plotCI = TRUE) # Densités de probabilité vs histogrammes
 # + prob de transition en fonction des covariables
+# + Plot des trajets avec les points de Viterbi (plotTracks = T)
 
 ## Etats à chaque point
 # A rbinder et à concaténer pour enregistrement et valo ??
