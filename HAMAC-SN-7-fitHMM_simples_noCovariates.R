@@ -13,121 +13,78 @@ library(dplyr)
 head(hmmdata)
 summary(hmmdata)
 
-#### Premier essai : 2 états
-############################
 
-### Paramètres de départ
-## Step
-stepMean0 <-c(0.050, 0.300) # initial means (one for each state) dans [0, +∞[
-stepSD0 <- c(0.045,0.200) # dans [0, +∞[
-propzero <- length(which(hmmdata$step == 0))/nrow(hmmdata)
-zeroMass0 <- c(propzero, propzero/100)
-# 0.0001 estimation perso (peu de step à zero dans l'état 2 qui est du mouvement)
+#### Param�tres
 
-## Angle
-angleMean0 <- c(pi, 0) # initial means (one for each state) dans [-π, π]
-angleCon0 <- c(1, 10) # initial concentrations (one for each state) dans [0, +∞[
+nbStates <- 3
+
+switch((nbStates - 1),
+  { ### Si 2 �tats :
+    
+    ## Step
+    stepMean0 <-c(0.050, 0.300) # initial means (one for each state) dans [0, +∞[
+    stepSD0 <- c(0.045,0.200) # dans [0, +∞[
+    propzero <- length(which(hmmdata$step == 0))/nrow(hmmdata)
+    zeroMass0 <- c(propzero, propzero/100)
+    # 0.0001 estimation perso (peu de step à zero dans l'état 2 qui est du mouvement)
+    
+    ## Angle
+    angleMean0 <- c(pi, 0) # initial means (one for each state) dans [-π, π]
+    angleCon0 <- c(1, 10) # initial concentrations (one for each state) dans [0, +∞[
+
+  }, 
+  { ### Si 3 �tats :
+    stepMean0 <-c(0.020, 0.3, 0.900) # initial means (one for each state)
+    stepSD0 <- c(0.02, 0.2, 0.500)
+    propzero <- length(which(hmmdata$step == 0))/nrow(hmmdata)
+    zeroMass0 <- c(propzero, propzero/100, propzero/100)
+    # 0.0001 estimation perso (peu de step à zero dans l'état 2 qui est du mouvement)
+    
+    ## Angle
+    angleMean0 <- c(pi, 0, 0) # initial means (one for each state)
+    angleCon0 <- c(1, 5, 5) # initial concentrations (one for each state)
+
+  }
+)
 
 ### Fitting du modèle
 stepPar0 <- c(stepMean0, stepSD0, zeroMass0)
 anglePar0 <- c(angleMean0, angleCon0)
-modhmm2Et0Cov <- fitHMM_Log(data = hmmdata, nbStates = 2, stepPar0 = stepPar0, anglePar0 = anglePar0)
+modhmm <- fitHMM_Log(data = hmmdata, nbStates = nbStates,
+                            stepPar0 = stepPar0, anglePar0 = anglePar0)
 
 ### Sorties
 ## Estimations des maxima de vraisemblance des paramètres
-modhmm2Et0Cov
+modhmm
 # Sorties de la fonction d'optimisation :
-modhmm2Et0Cov$mod
+modhmm$mod
 # AIC du modèle :
-AIC(modhmm2Et0Cov)
+AIC(modhmm)
 
 ## Intervalle confiance (95%)
-CI(modhmm2Et0Cov)
-plot(modhmm2Et0Cov, plotCI = TRUE) # Densités de probabilité vs histogrammes
+CI(modhmm)
+plot(modhmm, plotCI = TRUE) # Densités de probabilité vs histogrammes
 # + prob de transition en fonction des covariables
 # + Plot des trajets avec les points de Viterbi (plotTracks = T)
 
 ## Etats à chaque point
 # A rbinder et à concaténer pour enregistrement et valo ??
 # Probabilités locales (! moins bien que Viterbi)
-sp <- stateProbs(modhmm2Et0Cov)
+sp <- stateProbs(modhmm)
 head(sp)
 # Séquence décodée
-states <- viterbi(modhmm2Et0Cov)
+states <- viterbi(modhmm)
 states[1:25]
 # Plot
-plotStates(modhmm2Et0Cov)
-plotStates(modhmm2Et0Cov, animals = "VBT11")
+plotStates(modhmm)
+plotStates(modhmm, animals = "VBT11")
 
 ## Probabilité de rester dans chaque état en fonction des covariables
-# plotStationary(modhmm2Et0Cov, plotCI = T)
+# plotStationary(modhmm, plotCI = T)
 
 # compute the pseudo-residuals
-pr <- pseudoRes(modhmm2Et0Cov)
+pr <- pseudoRes(modhmm)
 
 # time series, qq-plots, and ACF of the pseudo-residuals
-plotPR(modhmm2Et0Cov)
+plotPR(modhmm)
 
-
-
-#### Deuxième essai : 3 états
-#############################
-
-### Paramètres de départ
-## Step
-stepMean0 <-c(0.020, 0.3, 0.900) # initial means (one for each state)
-stepSD0 <- c(0.02, 0.2, 0.500)
-propzero <- length(which(hmmdata$step == 0))/nrow(hmmdata)
-zeroMass0 <- c(propzero, propzero/100, propzero/100)
-# 0.0001 estimation perso (peu de step à zero dans l'état 2 qui est du mouvement)
-
-## Angle
-angleMean0 <- c(pi, 0, 0) # initial means (one for each state)
-angleCon0 <- c(1, 5, 5) # initial concentrations (one for each state)
-
-### Fitting du modèle
-stepPar0 <- c(stepMean0, stepSD0,zeroMass0)
-anglePar0 <- c(angleMean0, angleCon0)
-modhmm3Et0Cov <- fitHMM_Log(data = hmmdata, nbStates = 3, stepPar0 = stepPar0, anglePar0 = anglePar0)
-
-### Sorties
-## Estimations des maxima de vraisemblance des paramètres
-modhmm3Et0Cov
-# Sorties de la fonction d'optimisation :
-modhmm3Et0Cov$mod
-# AIC du modèle :
-AIC(modhmm3Et0Cov)
-
-## Intervalle confiance (95%)
-CI(modhmm3Et0Cov)
-plot(modhmm3Et0Cov,plotCI = TRUE) # Densités de probabilité vs histogrammes
-# + prob de transition en fonction des covariables
-# + Plot des trajets avec les points de Viterbi (plotTracks = T)
-
-## Etats à chaque point
-# A rbinder et à concaténer pour enregistrement et valo ??
-# Probabilités locales (! moins bien que Viterbi)
-sp <- stateProbs(modhmm3Et0Cov)
-head(sp)
-# Séquence décodée
-states <- viterbi(modhmm3Et0Cov)
-states[1:25]
-# Plot
-plotStates(modhmm3Et0Cov)
-plotStates(modhmm3Et0Cov, animals = "VBT11")
-
-## Probabilité de rester dans chaque état en fonction des covariables
-plotStationary(modhmm3Et0Cov, plotCI = T)
-
-# compute the pseudo-residuals
-pr <- pseudoRes(modhmm3Et0Cov)
-
-# time series, qq-plots, and ACF of the pseudo-residuals
-plotPR(modhmm3Et0Cov)
-
-
-
-#### Comparaison des modèles
-############################
-
-AIC(modhmm2Et0Cov, modhmm3Et0Cov)
