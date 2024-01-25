@@ -26,9 +26,9 @@ hmmdata <- prepData(GPS_ACT_par_anx, type = "LL",coordNames=c("LON","LAT"))
 # Step sort en km pour LL, dépend de l'unité d'entrée en UTM
 
 
-#### Alternative de calcul des steps pour v�rifications
+#### Alternative de calcul des steps pour v?rifications
 # haversine <- function(lon1, lat1, lon2, lat2) {
-#   # Calcule la distance entre deux points sur la surface d'une sph�re. (Full ChatGPT, ofc)
+#   # Calcule la distance entre deux points sur la surface d'une sph?re. (Full ChatGPT, ofc)
 #   R <- 6371 #rayon de la terre
 #   d_lon <- (lon2 - lon1) * (pi/180)
 #   d_lat <- (lat2 - lat1) * (pi/180)
@@ -51,7 +51,8 @@ hmmdata <- prepData(GPS_ACT_par_anx, type = "LL",coordNames=c("LON","LAT"))
 #### Retrait des derniers outliers
 # NA omit
 nrow(hmmdata)
-# hmmdata <- na.omit(hmmdata)  # Pas certain que ce soit nécessaire, en fait
+# na.omit, mais sans retirer les premiers points :
+hmmdata <- hmmdata[complete.cases(hmmdata[, -which(colnames(hmmdata) == "angle")]),]
 
 # Suppression d'outliers sur la vitesse
 # Désactivé pour l'heure, pour ne pas créer de trous dans la bd
@@ -68,7 +69,7 @@ dim(hmmdata)
 
 #### Assessments visuels
 summary(hmmdata)
-plot(hmmdata, compact=T)
+plot(hmmdata) #, compact=T)
 
 summary(hmmdata$step)
 pdf(paste0(repDonnees, format(Sys.time(), format = "%y%m%d"), '-DistriStepEtAngleHMMdata.pdf'),

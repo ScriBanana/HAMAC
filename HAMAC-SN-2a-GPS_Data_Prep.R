@@ -195,6 +195,7 @@ GPSACQ<-GPSACQ[GPSACQ$LAT>(10),] # retire les  donnees aberrantes
 dim(GPSACQ)
 dim(GPSACQ[GPSACQ$ORI!=T,])
 GPSACQ<-GPSACQ[GPSACQ$ORI==T,]
+GPSACQ$ORI <- NULL
 dim(GPSACQ)
 
 dim(GPSACQ)
@@ -226,7 +227,7 @@ GPSACQ <- cbind(day,GPSACQ)
 GPSACQ$id  <- 1:nrow(GPSACQ)
 GPSACQ <- merge(GPSACQ,SUNTABLE,by="day", all.x=T ,all.y=F)
 GPSACQ <- GPSACQ[order(GPSACQ$id),]
-GPSACQ$DN <- ifelse(GPSACQ$DHACQ>=GPSACQ$sunrise & GPSACQ$DHACQ<=GPSACQ$sunset, "DAY","NIGHT")
+GPSACQ$DAYTM <- ifelse(GPSACQ$DHACQ>=GPSACQ$sunrise & GPSACQ$DHACQ<=GPSACQ$sunset, T, F)
 head(GPSACQ)
 GPSACQ <- GPSACQ[,-c(1,10,11,12)]
 head(GPSACQ)
