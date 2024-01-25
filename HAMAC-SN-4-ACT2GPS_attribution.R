@@ -59,9 +59,11 @@ for (col_name in noms_col_2_add) {
 }
 head(GPS_ACT_par_anx)
 
-nThreads <- 7
+print(paste0("Début d'association : ", date()))
+nThreads <- 22
 plan(multisession, workers = nThreads) # DÃ©but parallelisation sur workers threads
 
+# Divise le jeu de données en nbThreads
 n <- nrow(GPS_ACT_par_anx)
 batch_size <- ceiling(n / nThreads)
 batches <- split(1:n, (seq_along(1:n) - 1) %/% batch_size)
@@ -78,6 +80,7 @@ for (i in 1:n) {
 }
 
 plan(sequential) # Fin parallelisation
+print(paste0("Fin d'association : ", date()))
 
 rm(result_list)
 head(GPS_ACT_par_anx)

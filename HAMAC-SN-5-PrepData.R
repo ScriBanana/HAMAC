@@ -71,9 +71,14 @@ summary(hmmdata)
 plot(hmmdata, compact=T)
 
 summary(hmmdata$step)
+pdf(paste0(repDonnees, format(Sys.time(), format = "%y%m%d"), '-DistriStepEtAngleHMMdata.pdf'),
+    width = 8, height = 10,
+    colormodel = "cmyk",
+    paper = "A4")
+par(mfrow = c(2, 1))
 hist(hmmdata$step, xlab = "step length (km)", main = "",breaks = 50) #, xlim = c(0,2000),ylim=c(0,100000))
-
 hist(hmmdata$angle, breaks = seq(-pi, pi, length = 30), xlab = "angle (rad)", main = "")
+dev.off()
 
 #### Sauvegarde en RDS
 repDonnees<-"./1_Data_clean_and_merge"
