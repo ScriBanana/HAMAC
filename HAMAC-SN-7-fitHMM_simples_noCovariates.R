@@ -73,18 +73,18 @@ plotPR(modhmm2Et0Cov)
 
 ### Paramètres de départ
 ## Step
-stepMean0 <-c(0.001, 0.2, 0.500) # initial means (one for each state)
-stepSD0 <- c(0.05, 0.1, 0.300)
+stepMean0 <-c(0.020, 0.3, 0.900) # initial means (one for each state)
+stepSD0 <- c(0.02, 0.2, 0.500)
 propzero <- length(which(hmmdata$step == 0))/nrow(hmmdata)
 zeroMass0 <- c(propzero, propzero/100, propzero/100)
 # 0.0001 estimation perso (peu de step à zero dans l'état 2 qui est du mouvement)
 
 ## Angle
 angleMean0 <- c(pi, 0, 0) # initial means (one for each state)
-angleCon0 <- c(1, 5, 10) # initial concentrations (one for each state)
+angleCon0 <- c(1, 5, 5) # initial concentrations (one for each state)
 
 ### Fitting du modèle
-stepPar0 <- c(stepMean0, stepSD0, zeroMass0)
+stepPar0 <- c(stepMean0, stepSD0,zeroMass0)
 anglePar0 <- c(angleMean0, angleCon0)
 modhmm3Et0Cov <- fitHMM_Log(data = hmmdata, nbStates = 3, stepPar0 = stepPar0, anglePar0 = anglePar0)
 
