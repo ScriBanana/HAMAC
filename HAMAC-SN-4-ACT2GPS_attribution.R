@@ -5,6 +5,7 @@
 
 library(dplyr)
 library(furrr)
+library(lubridate)
 
 setwd("/home/scriban/Dropbox/Th√®se/DonneesEtSauvegardes/WorkspaceR/HAMAC")
 setwd("D:/USERS/SergeEtArthur/WorkspaceR/hamac")
@@ -59,11 +60,11 @@ for (col_name in noms_col_2_add) {
 }
 head(GPS_ACT_par_anx)
 
-print(paste0("DÈbut d'association : ", date()))
+print(paste0("D?but d'association : ", date()))
 nThreads <- 22
 plan(multisession, workers = nThreads) # D√©but parallelisation sur workers threads
 
-# Divise le jeu de donnÈes en nbThreads
+# Divise le jeu de donn?es en nbThreads
 n <- nrow(GPS_ACT_par_anx)
 batch_size <- ceiling(n / nThreads)
 batches <- split(1:n, (seq_along(1:n) - 1) %/% batch_size)
