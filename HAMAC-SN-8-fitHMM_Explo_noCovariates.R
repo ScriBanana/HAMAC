@@ -57,3 +57,45 @@ whichbest <- which.min(allnllk)
 # Best fitting model
 mbest <- allm[[whichbest]]
 mbest
+
+
+
+
+################################################################
+######## Tentative de parallélisation (ne marche pas encore)
+
+#### Paramètres
+nJeux <- 44
+nThreads <- 22
+nbStates <- 2
+
+#### Définition des fonctions
+process_batch <- function(batch_indices) {
+  result_list <- future_map(batch_indices,
+                            ~ fitHMM_Log(data = hmmdata, nbStates = nbStates,
+                                         stepPar0 = stepPar0, anglePar0 = anglePar0))
+  return(result_list)
+}
+
+
+#### Début parallelisation sur nThreads threads
+plan(multisession, workers = nThreads)
+
+# Divise le jeu de données en nbThreads
+batch_size <- ceiling(nJeux / nThreads)
+batches <- split(1:nJeux, (0:(nJeux - 1)) %/% batch_size)
+
+# Cartesian product of arrays
+stepPar0 <- c(stepMean0, stepSD0, zeroMass0)
+anglePar0 <- c(angleMean0, angleCon0)
+param_combinations <- expand.grid(stepPar0 = stepPar0, anglePar0 = anglePar0)
+
+modhmm <- future_map(param_combinations$stepPar0, ~ {
+  fitHMM_Log(data = hmmdata, nbStates = nbStates, stepPar0 = .x,
+             anglePar0 = param_combinations$anglePar0[which(param_combinations$stepPar0 == .x)])
+})
+
+plan(sequential) # Fin parallelisation
+print(paste0("Fin des calculs : ", date()))
+
+
