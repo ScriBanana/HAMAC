@@ -8,6 +8,8 @@ library(moveHMM)
 library(dplyr)
 
 ### ATTENTION : faire tourner le script Préliminaires_Fits au préalable
+# hmmdataFull <- hmmdata
+# hmmdata <- hmmdataFull[hmmdataFull$ID == "VSR21" , ]
 
 head(hmmdata)
 summary(hmmdata)
