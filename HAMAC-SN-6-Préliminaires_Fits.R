@@ -37,6 +37,10 @@ fitHMM_Log <- function (data, nbStates, stepPar0, anglePar0) {
     sep = ";", col.names = FALSE, row.names = FALSE, append = TRUE
   )
   
+  saveRDS(modhmm, paste0(outDir,
+                         format(Sys.time(), format = "%y%m%d"),
+                         "-HAMAC-SN-ModHMM-", nbStates,"Et.rds"))
+  
   print(paste0("Fin d'execution de FitHMM : ", date()))
   print(Sys.time() - timestamp)
   
