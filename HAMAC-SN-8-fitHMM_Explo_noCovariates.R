@@ -60,8 +60,18 @@ generate_initial_params <- function() {
 # Génère les jeux de paramètres aléatoires
 initial_params_list <- map(1:nJxParamInit, ~ generate_initial_params())
 
+print(paste0("Lancement de la boucle : ", date()))
+tpsDebut <- Sys.time()
+
+#### Début parallelisation sur nThreads threads
+plan(multisession, workers = nThreads)
+
 # Fait tourner fitHMM_Log sur chaque jeu
-result_list <- initial_params_list %>% map(fitWithParam)
+modhmm <- initial_params_list %>% future_map(fitWithParam)
+
+plan(sequential) # Fin parallelisation
+print(paste0("Fin des calculs : ", date()))
+print(Sys.time() - tpsDebut)
 
 
 ################################################################################
@@ -71,4 +81,6 @@ result_list <- initial_params_list %>% map(fitWithParam)
 
 ################################################################################
 #### Sorties
+modhmm %>% map("mle")
+modhmm %>% map("mle") %>% map("stepPar")
 
