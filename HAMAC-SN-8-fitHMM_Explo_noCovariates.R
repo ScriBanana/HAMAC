@@ -85,6 +85,8 @@ print(Sys.time() - tpsDebut)
 # modhmmList %>% map("mle")
 # modhmmList %>% map("mle") %>% map("stepPar")
 # modhmmList %>% map("mod") %>% map("minimum")
+
+# Plots ultra rudimentaires pour comparer les sorties (likelihood, stepMean, angleMean...)
 plot(unlist(modhmmList %>% map("mod") %>% map("minimum")),
      xlab = "Id du jeu de données",
      ylab = "Maximum likelihood")

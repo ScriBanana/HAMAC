@@ -30,7 +30,8 @@ fitHMM_Log <- function (data, nbStates, stepPar0, anglePar0) {
     stepPar <- c(modhmm$mle$stepPar[1,], modhmm$mle$stepPar[2,], modhmm$mle$stepPar[3,])
   }
   
-  ligneLog <- c(as.numeric(timestamp), nbStates, indicateurs, anglePar, stepPar)
+  ligneLog <- c(as.numeric(format(Sys.time(), format = "%y%m%d%H%M%S")),
+                nbStates, indicateurs, anglePar, stepPar, anglePar0, stepPar0)
   
   write.table(
     matrix(ligneLog, ncol = length(ligneLog)), file = paste0(outDir, logFile),
@@ -52,7 +53,7 @@ if (!file.exists(paste0(outDir, logFile))) {
   header <- c(
     "timestamp", "nbStates",
     "modhmm$mod$minimum", "AIC", "modhmm$mod$iterations",
-    "Fit (état par état) : angleMean, angleCon, stepMean, stepSD, zeroMass évnt."
+    "Fit (état par état) : angleMean, angleCon, stepMean, stepSD, zeroMass évnt. + les param�tres init (stepMean0, etc)"
   )
   cat("Pas de fichier de log détecté. Nouveau fichier généré.")
   write.table(matrix(header, ncol = length(header)),
