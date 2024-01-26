@@ -6,6 +6,79 @@ library(furrr)
 ############################ Brouillons et snippets ############################
 
 
+haversine <- function(lon1, lat1, lon2, lat2) {
+  # Calcule la distance entre deux points sur la surface d'une sph�re. (Full ChatGPT, ofc)
+  R <- 6371 #rayon de la terre
+  d_lon <- (lon2 - lon1) * (pi/180)
+  d_lat <- (lat2 - lat1) * (pi/180)
+  
+  a <- sin(d_lat/2)^2 + cos(lat1 * (pi/180)) * cos(lat2 * (pi/180)) * sin(d_lon/2)^2
+  c <- 2 * atan2(sqrt(a), sqrt(1 - a))
+  dist <- R * c
+  return(dist)
+}
+
+
+#### Importation données classées par animal
+repDonnees <- "./1_Data_clean_and_merge/"
+GPS_ACT_par_anx <- read.table(
+  paste0(repDonnees, "HAMAC-SN-GPSnACTpANX.csv"),
+  sep=";",header=T, skip=0,na.strings = "N/A")
+GPS_ACT_par_anx$DHACQ<-ymd_hms(GPS_ACT_par_anx$DHACQ)
+head(GPS_ACT_par_anx)
+
+GPS_ACT_par_anx <- subset(GPS_ACT_par_anx, IDCOL == 44159)
+
+GPS_ACT_par_anx <- GPS_ACT_par_anx %>% mutate(DIST = haversine(lag(LON), lag(LAT), LON, LAT))
+
+hist(GPS_ACT_par_anx$DIST, xlab = "step length", main = "",breaks = 50) #, xlim = c(0,2000),ylim=c(0,100000))
+
+
+
+GPSACQorig <- read.table(
+  "./0_raw_data/GPS/GPS_Collar44159_20230706143528.csv",
+  sep=";",header=T, skip=0,na.strings = "N/A")
+cat("\nGPS Table:\n")
+print(head(GPSACQorig))
+# GPS data
+
+datatoplot <- GPSACQ %>% mutate(DIST = haversine(lag(LON), lag(LAT), LON, LAT))
+hist(datatoplot$DIST, xlab = "Dist de Haversine", main = "",breaks = 50) #, xlim = c(0,2000),ylim=c(0,100000))
+hist(hmm59$step, xlab = "step length", main = "",breaks = 50) #, xlim = c(0,2000),ylim=c(0,100000))
+
+
+datadeltaT <- GPSACQ %>% mutate(DELTAT = as.numeric((lag(DHACQ) - DHACQ) / 60))
+datadeltaT <- datadeltaT[datadeltaT$DELTAT <= 240,]
+datadeltaT <- datadeltaT[datadeltaT$DELTAT > -240,]
+boxplot(datadeltaT$DELTAT, xlab = "deltaT (min)", main = "",breaks = 50) #, xlim = c(0,2000),ylim=c(0,100000))
+hist(datadeltaT$DELTAT, xlab = "deltaT (min)", main = "",breaks = 50) #, xlim = c(0,2000),ylim=c(0,100000))
+summary(datadeltaT$DELTAT)
+
+#### Calcul des steps et des angles
+hmmdata <- prepData(GPS_ACT_par_anx, type = "LL",coordNames=c("LON","LAT"))
+
+
+summary(hmmdata$step)
+hist(hmmdata$step, xlab = "step length (km)", main = "",breaks = 50) #, xlim = c(0,2000),ylim=c(0,100000))
+
+
+# datatoplot <- GPSACQ[GPSACQ$IDCOL == 44163, 1:2]
+plot(GPSACQ[GPSACQ$IDCOL == 44173, 1:2][, "DHACQ"])
+plot(GPSACQ[GPSACQ$IDCOL == 44172, 1:2][(
+  GPSACQ[GPSACQ$IDCOL == 44172, 1:2]$DHACQ > as.POSIXct("2022-12-04") &
+    GPSACQ[GPSACQ$IDCOL == 44172, 1:2]$DHACQ < as.POSIXct("2025-10-01")
+), "DHACQ"])
+
+ggplot(datatoplot, aes(x = (1:nrow(datatoplot)), y = DHACQ)) +
+  geom_point() +
+  labs(title = "Chronological Order Check", x = "id", y = "date") +
+  theme_minimal()
+
+
+
+
+
+
 #### Paramètres
 nJeux <- 44
 nThreads <- 22
