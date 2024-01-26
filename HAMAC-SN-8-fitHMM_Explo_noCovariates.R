@@ -6,6 +6,9 @@
 
 library(moveHMM)
 library(dplyr)
+library(purrr)
+library(furrr)
+library(ggplot2)
 
 ### ATTENTION : faire tourner le script PrÃ©liminaires_Fits au prÃ©alable
 
@@ -27,8 +30,8 @@ fitWithParam <- function(initial_params) { # Simplifie les calls
 
 ################################################################################
 #### ParamÃ¨tres
-nJxParamInit <- 44
-nThreads <- 22
+nJxParamInit <- 22
+nThreads <- 44
 nbStates <- 2
 
 # GÃ©nÃ¨re les jeux de paramÃ¨tres initiaux. Remplir oÃ¹ indiquÃ©
@@ -44,7 +47,7 @@ generate_initial_params <- function() {
                     min = c(0.010, 0.030, 0.100),
                     max = c(0.200, 0.200, 0.300)),
     angleMean0 = rep(0, nbStates),
-    angleCon0 = runif(nbStates, # Et lÃ  :
+    angleCon0 = runif(nbStates, # Et là :
                       min = c(0.5, 3, 5),
                       max = c(2, 10, 15)),
     zeroMass0 = c(propzero, rep(propzero/100, nbStates - 1))
@@ -54,17 +57,16 @@ generate_initial_params <- function() {
 ################################################################################
 #### Execution
 
-# GÃ©nÃ¨re les jeux de paramÃ¨tres alÃ©atoires
+# Génère les jeux de paramètres alÃ©atoires
 initial_params_list <- map(1:nJxParamInit, ~ generate_initial_params())
 
+#### Début parallelisation sur nThreads threads
 print(paste0("Lancement de la boucle : ", date()))
 tpsDebut <- Sys.time()
-
-#### DÃ©but parallelisation sur nThreads threads
 plan(multisession, workers = nThreads)
 
 # Fait tourner fitHMM_Log sur chaque jeu
-modhmm <- initial_params_list %>% future_map(fitWithParam)
+modhmmList <- initial_params_list %>% future_map(fitWithParam)
 
 plan(sequential) # Fin parallelisation
 print(paste0("Fin des calculs : ", date()))
@@ -78,6 +80,26 @@ print(Sys.time() - tpsDebut)
 
 ################################################################################
 #### Sorties
-modhmm %>% map("mle")
-modhmm %>% map("mle") %>% map("stepPar")
 
+# Tu peux décommenter les lignes pour explorer la donnée (ctrl + maj + c)
+# modhmmList %>% map("mle")
+# modhmmList %>% map("mle") %>% map("stepPar")
+# modhmmList %>% map("mod") %>% map("minimum")
+plot(unlist(modhmmList %>% map("mod") %>% map("minimum")),
+     xlab = "Id du jeu de données",
+     ylab = "Maximum likelihood")
+plot(unlist(modhmmList %>% map("mle") %>% map("stepPar") %>% map(1)),
+     xlab = "Id du jeu de données",
+     ylab = "Mean step state 1")
+plot(unlist(modhmmList %>% map("mle") %>% map("stepPar") %>% map(2)),
+     xlab = "Id du jeu de données",
+     ylab = "Mean step state 2")
+plot(unlist(modhmmList %>% map("mle") %>% map("anglePar") %>% map(1)),
+     xlab = "Id du jeu de données",
+     ylab = "Mean angle state 1")
+plot(unlist(modhmmList %>% map("mle") %>% map("anglePar") %>% map(2)),
+     xlab = "Id du jeu de données",
+     ylab = "Mean angle state 2")
+
+# Prévu un ggplot qui donne les valeurs de mean angle/step pour chaque état,
+# avec les CI et par ordre de likelihood.
