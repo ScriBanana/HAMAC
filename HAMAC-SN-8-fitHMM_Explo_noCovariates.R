@@ -33,12 +33,9 @@ nbStates <- 2
 
 # Génère les jeux de paramètres initiaux. Remplir où indiqué
 generate_initial_params <- function() {
-  if (length(which(hmmdata$step == 0)) != 0 ) {
-    propzero <- length(which(hmmdata$step == 0))/nrow(hmmdata)
-  } else {
-    propzero <- 0
-  }
   
+  propzero <- length(which(hmmdata$step == 0))/nrow(hmmdata)
+
   list(
     stepMean0 = runif(nbStates, # Ici :
                       min = c(0.01, 0.05, 0.300),
@@ -48,8 +45,8 @@ generate_initial_params <- function() {
                     max = c(0.200, 0.200, 0.300)),
     angleMean0 = rep(0, nbStates),
     angleCon0 = runif(nbStates, # Et là :
-                      min = c(0.5, 3,5),
-                      max = c(2, 10,15)),
+                      min = c(0.5, 3, 5),
+                      max = c(2, 10, 15)),
     zeroMass0 = c(propzero, rep(propzero/100, nbStates - 1))
   )
 }
