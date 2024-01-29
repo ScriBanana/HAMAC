@@ -2,12 +2,13 @@
 library(moveHMM)
 library(dplyr)
 library(furrr)
+library(ggplot2)
 
 ############################ Brouillons et snippets ############################
 
 
 haversine <- function(lon1, lat1, lon2, lat2) {
-  # Calcule la distance entre deux points sur la surface d'une sphère. (Full ChatGPT, ofc)
+  # Calcule la distance entre deux points sur la surface d'une sph?re. (Full ChatGPT, ofc)
   R <- 6371 #rayon de la terre
   d_lon <- (lon2 - lon1) * (pi/180)
   d_lat <- (lat2 - lat1) * (pi/180)
@@ -63,13 +64,14 @@ hist(hmmdata$step, xlab = "step length (km)", main = "",breaks = 50) #, xlim = c
 
 
 # datatoplot <- GPSACQ[GPSACQ$IDCOL == 44163, 1:2]
-plot(GPSACQ[GPSACQ$IDCOL == 44173, 1:2][, "DHACQ"])
+plot(GPSACQ[GPSACQ$IDCOL == 44169, 1:2][, "DHACQ"])
 plot(GPSACQ[GPSACQ$IDCOL == 44172, 1:2][(
   GPSACQ[GPSACQ$IDCOL == 44172, 1:2]$DHACQ > as.POSIXct("2022-12-04") &
     GPSACQ[GPSACQ$IDCOL == 44172, 1:2]$DHACQ < as.POSIXct("2025-10-01")
 ), "DHACQ"])
 
-ggplot(datatoplot, aes(x = (1:nrow(datatoplot)), y = DHACQ)) +
+datatoplot <- GPS
+ggplot(datatoplot, aes(x = (1:nrow(datatoplot)), y = DHACQ, color = IDCOL)) +
   geom_point() +
   labs(title = "Chronological Order Check", x = "id", y = "date") +
   theme_minimal()

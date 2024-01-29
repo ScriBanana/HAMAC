@@ -72,6 +72,8 @@ summary(hmmdata)
 plot(hmmdata) #, compact=T)
 
 summary(hmmdata$step)
+
+# Enregistrement des distributions en PDF
 pdf(paste0(repDonnees, format(Sys.time(), format = "%y%m%d"), '-DistriStepEtAngleHMMdata.pdf'),
     width = 8, height = 10,
     colormodel = "cmyk",
