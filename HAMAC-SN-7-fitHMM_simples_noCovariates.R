@@ -8,18 +8,29 @@ library(moveHMM)
 library(dplyr)
 
 ### ATTENTION : faire tourner le script Préliminaires_Fits au préalable
- #hmmdata <- hmmdata[hmmdata$ID == "VSR21" , ]
 
 head(hmmdata)
 summary(hmmdata)
 
+#### Sélection d'un subset de données
 
-#### Param�tres
+# Un animal
+hmmdata <- hmmdata[hmmdata$ID == "VSR21" , ]
+
+# Transhumants
+hmmdata <- hmmdata[substr(hmmdata$ID, 3, 3) == "T", ]
+
+# Sédentaires
+hmmdata <- hmmdata[substr(hmmdata$ID, 3, 3) == "T", ]
+
+
+
+#### Param?tres
 
 nbStates <- 3
 
 switch((nbStates - 1),
-  { ### Si 2 �tats :
+  { ### Si 2 ?tats :
     
     ## Step
     stepMean0 <-c(0.050, 0.300) # initial means (one for each state) dans [0, +∞[
@@ -33,7 +44,7 @@ switch((nbStates - 1),
     angleCon0 <- c(1, 10) # initial concentrations (one for each state) dans [0, +∞[
 
   }, 
-  { ### Si 3 �tats :
+  { ### Si 3 ?tats :
     stepMean0 <-c(0.020, 0.3, 0.900) # initial means (one for each state)
     stepSD0 <- c(0.02, 0.2, 0.500)
     propzero <- length(which(hmmdata$step == 0))/nrow(hmmdata)
