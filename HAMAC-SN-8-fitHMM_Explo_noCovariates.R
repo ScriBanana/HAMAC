@@ -30,9 +30,9 @@ fitWithParam <- function(initial_params) { # Simplifie les calls
 
 ################################################################################
 #### ParamÃ¨tres
-nJxParamInit <- 22
-nThreads <- 44
-nbStates <- 2
+nJxParamInit <- 44
+nThreads <- 22
+nbStates <- 3
 
 # GÃ©nÃ¨re les jeux de paramÃ¨tres initiaux. Remplir oÃ¹ indiquÃ©
 generate_initial_params <- function() {
@@ -82,9 +82,10 @@ print(Sys.time() - tpsDebut)
 #### Sorties
 
 # Tu peux décommenter les lignes pour explorer la donnée (ctrl + maj + c)
-# modhmmList %>% map("mle")
-# modhmmList %>% map("mle") %>% map("stepPar")
-# modhmmList %>% map("mod") %>% map("minimum")
+ modhmmList %>% map("mle")
+ modhmmList %>% map("mle") %>% map("stepPar")
+ modhmmList %>% map("mod") %>% map("minimum")
+ modhmmList %>% map("mod") %>% map("iterations")
 
 # Plots ultra rudimentaires pour comparer les sorties (likelihood, stepMean, angleMean...)
 plot(unlist(modhmmList %>% map("mod") %>% map("minimum")),
@@ -105,3 +106,11 @@ plot(unlist(modhmmList %>% map("mle") %>% map("anglePar") %>% map(2)),
 
 # Prévu un ggplot qui donne les valeurs de mean angle/step pour chaque état,
 # avec les CI et par ordre de likelihood.
+
+
+################################################################################
+#### Meilleur modèle
+
+meilleurModeleID <- which.min(unlist(lapply(modhmmList, function(m) m$mod$minimum)))
+meilleurModele <- modhmmList[[meilleurModeleID]]
+
