@@ -69,7 +69,7 @@ plot(GPSACQ[GPSACQ$IDCOL == 44172, 1:2][(
     GPSACQ[GPSACQ$IDCOL == 44172, 1:2]$DHACQ < as.POSIXct("2025-10-01")
 ), "DHACQ"])
 
-ggplot(datatoplot, aes(x = (1:nrow(datatoplot)), y = DHACQ)) +
+ggplot(datatoplot, aes(x = (1:nrow(datatoplot)), y = DHACQ, color = ID)) +
   geom_point() +
   labs(title = "Chronological Order Check", x = "id", y = "date") +
   theme_minimal()
