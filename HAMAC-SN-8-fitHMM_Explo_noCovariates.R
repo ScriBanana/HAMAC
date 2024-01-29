@@ -43,11 +43,11 @@ generate_initial_params <- function() {
     stepMean0 = runif(nbStates, # Ici :
                       min = c(0.010, 0.050, 0.300),
                       max = c(0.100, 0.250, 1.000)),
-    stepSD0 = runif(nbStates, # Là :
+    stepSD0 = runif(nbStates, # L? :
                     min = c(0.010, 0.030, 0.100),
                     max = c(0.200, 0.200, 0.300)),
     angleMean0 = rep(0, nbStates),
-    angleCon0 = runif(nbStates, # Et là :
+    angleCon0 = runif(nbStates, # Et l? :
                       min = c(0.5, 3, 5),
                       max = c(2, 10, 15)),
     zeroMass0 = c(propzero, rep(propzero/100, nbStates - 1))
@@ -57,10 +57,10 @@ generate_initial_params <- function() {
 ################################################################################
 #### Execution
 
-# Génère les jeux de paramètres alÃ©atoires
+# G?n?re les jeux de param?tres alÃ©atoires
 initial_params_list <- map(1:nJxParamInit, ~ generate_initial_params())
 
-#### Début parallelisation sur nThreads threads
+#### D?but parallelisation sur nThreads threads
 print(paste0("Lancement de la boucle : ", date()))
 tpsDebut <- Sys.time()
 plan(multisession, workers = nThreads)
@@ -81,7 +81,7 @@ print(Sys.time() - tpsDebut)
 ################################################################################
 #### Sorties
 
-# Tu peux décommenter les lignes pour explorer la donnée (ctrl + maj + c)
+# Tu peux d?commenter les lignes pour explorer la donn?e (ctrl + maj + c)
  modhmmList %>% map("mle")
  modhmmList %>% map("mle") %>% map("stepPar")
  modhmmList %>% map("mod") %>% map("minimum")
@@ -89,28 +89,39 @@ print(Sys.time() - tpsDebut)
 
 # Plots ultra rudimentaires pour comparer les sorties (likelihood, stepMean, angleMean...)
 plot(unlist(modhmmList %>% map("mod") %>% map("minimum")),
-     xlab = "Id du jeu de données",
+     xlab = "Id du jeu de donn?es",
      ylab = "Maximum likelihood")
 plot(unlist(modhmmList %>% map("mle") %>% map("stepPar") %>% map(1)),
-     xlab = "Id du jeu de données",
+     xlab = "Id du jeu de donn?es",
      ylab = "Mean step state 1")
 plot(unlist(modhmmList %>% map("mle") %>% map("stepPar") %>% map(2)),
-     xlab = "Id du jeu de données",
+     xlab = "Id du jeu de donn?es",
      ylab = "Mean step state 2")
 plot(unlist(modhmmList %>% map("mle") %>% map("anglePar") %>% map(1)),
-     xlab = "Id du jeu de données",
+     xlab = "Id du jeu de donn?es",
      ylab = "Mean angle state 1")
 plot(unlist(modhmmList %>% map("mle") %>% map("anglePar") %>% map(2)),
-     xlab = "Id du jeu de données",
+     xlab = "Id du jeu de donn?es",
      ylab = "Mean angle state 2")
 
-# Prévu un ggplot qui donne les valeurs de mean angle/step pour chaque état,
+# Pr?vu un ggplot qui donne les valeurs de mean angle/step pour chaque ?tat,
 # avec les CI et par ordre de likelihood.
 
 
 ################################################################################
-#### Meilleur modèle
+#### Meilleur mod?le
 
 meilleurModeleID <- which.min(unlist(lapply(modhmmList, function(m) m$mod$minimum)))
 meilleurModele <- modhmmList[[meilleurModeleID]]
+
+
+# Enregistrement des distributions en PDF
+repSorties <- "./2_Fits_outputs/"
+pdf(paste0(repSorties, format(Sys.time(), format = "%y%m%d%H%M%S"), '-AnaSens', nJxParamInit, 'JeuxMeilleurModele.pdf'),
+    width = 8, height = 10,
+    colormodel = "cmyk",
+    paper = "A4")
+par(mfrow = c(2, 1))
+plot(meilleurModele, plotCI = T, ask = F)
+dev.off()
 
