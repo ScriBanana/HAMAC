@@ -21,7 +21,7 @@ hmmdata <- hmmdata[hmmdata$ID == "VSR21" , ]
 hmmdata <- hmmdata[substr(hmmdata$ID, 3, 3) == "T", ]
 
 # Sédentaires
-hmmdata <- hmmdata[substr(hmmdata$ID, 3, 3) == "T", ]
+hmmdata <- hmmdata[substr(hmmdata$ID, 3, 3) == "R", ]
 
 
 
