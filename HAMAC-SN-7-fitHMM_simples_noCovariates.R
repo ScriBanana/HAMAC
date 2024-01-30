@@ -99,3 +99,10 @@ pr <- pseudoRes(modhmm)
 # time series, qq-plots, and ACF of the pseudo-residuals
 plotPR(modhmm)
 
+
+#### Manipulations sur le modèle
+
+# Ajoute aux données une colonne avec les états selon Viterbi
+vit <- viterbi(modhmm)
+hmmdatavit <- modhmm$data %>% mutate(VIT = vit)
+
