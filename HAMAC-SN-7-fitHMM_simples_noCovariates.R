@@ -21,7 +21,7 @@ hmmdata <- hmmdata[hmmdata$ID == "VSR21" , ]
 hmmdata <- hmmdata[substr(hmmdata$ID, 3, 3) == "T", ]
 
 # Sédentaires
-hmmdata <- hmmdata[substr(hmmdata$ID, 3, 3) == "T", ]
+hmmdata <- hmmdata[substr(hmmdata$ID, 3, 3) == "R", ]
 
 
 
@@ -74,7 +74,7 @@ AIC(modhmm)
 
 ## Intervalle confiance (95%)
 CI(modhmm)
-plot(modhmm, plotCI = TRUE) # Densités de probabilité vs histogrammes
+plot(modhmm, plotCI = TRUE, ask = FALSE) # Densités de probabilité vs histogrammes
 # + prob de transition en fonction des covariables
 # + Plot des trajets avec les points de Viterbi (plotTracks = T)
 
