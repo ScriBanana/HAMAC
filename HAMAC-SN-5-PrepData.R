@@ -22,8 +22,10 @@ GPS_ACT_par_anx$DHACQ<-ymd_hms(GPS_ACT_par_anx$DHACQ)
 head(GPS_ACT_par_anx)
 
 #### Calcul des steps et des angles
+debPrepData <- Sys.time()
 hmmdata <- prepData(GPS_ACT_par_anx, type = "LL",coordNames=c("LON","LAT"))
 # Step sort en km pour LL, dépend de l'unité d'entrée en UTM
+print(Sys.time() - debPrepData) # Moins de 2 min
 
 
 #### NA omit
@@ -75,8 +77,15 @@ plot(hmmdata) #, compact=T)
 
 summary(hmmdata$step)
 
-# Enregistrement des distributions en PDF
-pdf(paste0(repDonnees, format(Sys.time(), format = "%y%m%d"), '-DistriStepEtAngleHMMdata.pdf'),
+ggplot(hmmdata, aes(x = (1:nrow(hmmdata)), y = DHACQ, color = ID)) +
+  geom_point() +
+  labs(title = "Chronological Order Check", x = "id", y = "date") +
+  theme_minimal()
+
+
+
+#### Enregistrement des distributions en PDF
+pdf(paste0(repDonnees, "/Out_Graphs/", format(Sys.time(), format = "%y%m%d"), '-DistriStepEtAngleHMMdata.pdf'),
     width = 8, height = 10,
     colormodel = "cmyk",
     paper = "A4")

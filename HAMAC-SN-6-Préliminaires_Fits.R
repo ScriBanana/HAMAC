@@ -63,11 +63,5 @@ if (!file.exists(paste0(outDir, logFile))) {
 #### Importation données sorties de prepData
 hmmdata <- readRDS(paste0(repDonnees,"/HAMAC-SN-HMMDATA.rds"))
 
-# Rétrofit pour vieilles données
-hmmdata$DAYTM <-as.logical(hmmdata$DN == "DAY")
-hmmdata$DN <- NULL
-hmmdata$ORI <- NULL
-hmmdata <- hmmdata[complete.cases(hmmdata[, -which(colnames(hmmdata) == "angle")]),]
-
 head(hmmdata)
 summary(hmmdata)
