@@ -47,6 +47,8 @@ datatoplot <- GPSACQ %>% mutate(DIST = haversine(lag(LON), lag(LAT), LON, LAT))
 hist(datatoplot$DIST, xlab = "Dist de Haversine", main = "",breaks = 50) #, xlim = c(0,2000),ylim=c(0,100000))
 hist(hmm59$step, xlab = "step length", main = "",breaks = 50) #, xlim = c(0,2000),ylim=c(0,100000))
 
+vit <- viterbi(modhmm)
+vitest <- modhmm %>% mutate(VIT = vit)
 
 datadeltaT <- GPSACQ %>% mutate(DELTAT = as.numeric((lag(DHACQ) - DHACQ) / 60))
 datadeltaT <- datadeltaT[datadeltaT$DELTAT <= 240,]
