@@ -26,6 +26,17 @@ hmmdata <- prepData(GPS_ACT_par_anx, type = "LL",coordNames=c("LON","LAT"))
 # Step sort en km pour LL, dépend de l'unité d'entrée en UTM
 
 
+#### NA omit
+nrow(hmmdata)
+# na.omit, mais sans retirer les premiers points :
+hmmdata <- hmmdata[complete.cases(hmmdata[, -which(colnames(hmmdata) == "angle")]),]
+
+#### Sauvegarde avec outliers
+repDonnees<-"./1_Data_clean_and_merge"
+saveRDS(hmmdata, paste0(repDonnees,"/HAMAC-SN-HMMDATA_avec_outliers_vitesse.rds"))
+
+
+
 #### Alternative de calcul des steps pour v?rifications
 # haversine <- function(lon1, lat1, lon2, lat2) {
 #   # Calcule la distance entre deux points sur la surface d'une sph?re. (Full ChatGPT, ofc)
@@ -48,23 +59,14 @@ hmmdata <- prepData(GPS_ACT_par_anx, type = "LL",coordNames=c("LON","LAT"))
 # hist(datadeltaT$DELTAT, xlab = "deltaT (min)", main = "",breaks = 50) #, xlim = c(0,2000),ylim=c(0,100000))
 # summary(datadeltaT$DELTAT)
 
-#### Retrait des derniers outliers
-# NA omit
-nrow(hmmdata)
-# na.omit, mais sans retirer les premiers points :
-hmmdata <- hmmdata[complete.cases(hmmdata[, -which(colnames(hmmdata) == "angle")]),]
 
-# Suppression d'outliers sur la vitesse
+#### Suppression d'outliers sur la vitesse
 # Désactivé pour l'heure, pour ne pas créer de trous dans la bd
 
 dim(hmmdata)
 dim(hmmdata[hmmdata$step>2.25,]) # nombre de locs > 4,5 km/h
 hmmdata<-hmmdata[hmmdata$step<=2.25,]
 dim(hmmdata)
-
-
-## Enlever les colliers qui merdent
-# hmmdata <- subset(hmmdata, IDCOL != 44159 & IDCOL != 44170)
 
 
 #### Assessments visuels

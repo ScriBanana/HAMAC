@@ -10,6 +10,8 @@ library(lubridate)
 setwd("/home/scriban/Dropbox/Th√®se/DonneesEtSauvegardes/WorkspaceR/HAMAC")
 setwd("D:/USERS/SergeEtArthur/WorkspaceR/hamac")
 
+# Compter une trentaines de minutes sur le jeu complet, avec 22 coeurs
+
 # Nettoyer le cache
 rm(list=ls())
 
@@ -72,11 +74,10 @@ print(paste0("Fin d'association : ", date()))
 print(Sys.time() - debAssoc)
 
 n <- nrow(GPS_ACT_par_anx)
-for (i in 1:n) {
+for (i in 1:n) { # Long mais pas parallÈlisable
   GPS_ACT_par_anx[i, noms_col_2_add] <- listesAccMoyenne[[i]]
 }
 
-rm(listesAccMoyenne)
 head(GPS_ACT_par_anx)
 
 
