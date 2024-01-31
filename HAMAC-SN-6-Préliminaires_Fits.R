@@ -33,14 +33,14 @@ fitHMM_Log <- function (data, nbStates, stepPar0, anglePar0) {
   ligneLog <- c(as.numeric(format(Sys.time(), format = "%y%m%d%H%M%S")),
                 nbStates, indicateurs, anglePar, stepPar, anglePar0, stepPar0)
   
+  saveRDS(modhmm, paste0(outDir,
+                         format(Sys.time(), format = "%y%m%d%H%M%S"),
+                         "-HAMAC-SN-ModHMM-", nbStates,"Et.rds"))
+  
   write.table(
     matrix(ligneLog, ncol = length(ligneLog)), file = paste0(outDir, logFile),
     sep = ";", col.names = FALSE, row.names = FALSE, append = TRUE
   )
-  
-  saveRDS(modhmm, paste0(outDir,
-                         format(Sys.time(), format = "%y%m%d%H%M%S"),
-                         "-HAMAC-SN-ModHMM-", nbStates,"Et.rds"))
   
   print(paste0("Fin d'execution de FitHMM : ", date()))
   print(Sys.time() - timestamp)
