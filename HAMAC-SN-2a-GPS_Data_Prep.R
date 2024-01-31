@@ -228,11 +228,14 @@ day <- as.POSIXct(strptime(day,format="%Y-%m-%d"),tz="GMT")
 GPSACQ <- cbind(day,GPSACQ)
 
 GPSACQ$id  <- 1:nrow(GPSACQ)
-GPSACQ <- merge(GPSACQ,SUNTABLE,by="day", all.x=T ,all.y=F)
-GPSACQ <- GPSACQ[order(GPSACQ$id),]
+GPSACQ <- merge(GPSACQ,SUNTABLE, by = "day", all.x = T, all.y = F)
+GPSACQ <- GPSACQ %>% arrange(id)
 GPSACQ$DAYTM <- ifelse(GPSACQ$DHACQ>=GPSACQ$sunrise & GPSACQ$DHACQ<=GPSACQ$sunset, T, F)
 head(GPSACQ)
-GPSACQ <- GPSACQ[,-c(1,10,11,12)]
+GPSACQ$day <- NULL
+GPSACQ$id <- NULL
+GPSACQ$sunrise <- NULL
+GPSACQ$sunset <- NULL
 head(GPSACQ)
 rm(SUNTABLE)
 
