@@ -66,10 +66,11 @@ hist(hmmdata$step, xlab = "step length (km)", main = "",breaks = 50) #, xlim = c
 
 
 # datatoplot <- GPSACQ[GPSACQ$IDCOL == 44163, 1:2]
-plot(GPSACQ[GPSACQ$IDCOL == 44169, 1:2][, "DHACQ"])
-plot(GPSACQ[GPSACQ$IDCOL == 44172, 1:2][(
-  GPSACQ[GPSACQ$IDCOL == 44172, 1:2]$DHACQ > as.POSIXct("2022-12-04") &
-    GPSACQ[GPSACQ$IDCOL == 44172, 1:2]$DHACQ < as.POSIXct("2025-10-01")
+collier <- 44159
+plot(GPSACQ[GPSACQ$IDCOL == collier, 1:2][, "DHACQ"])
+plot(GPSACQ[GPSACQ$IDCOL == collier, 1:2][(
+  GPSACQ[GPSACQ$IDCOL == collier, 1:2]$DHACQ > as.POSIXct("2022-11-20") &
+    GPSACQ[GPSACQ$IDCOL == collier, 1:2]$DHACQ < as.POSIXct("2023-08-10")
 ), "DHACQ"])
 
 datatoplot <- GPS

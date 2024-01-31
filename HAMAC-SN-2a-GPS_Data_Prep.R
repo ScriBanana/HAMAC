@@ -87,41 +87,6 @@ GPSACQorig <- GPSACQorig %>% rbind(GPS59, GPS70)
 rm(GPS59, GPS70)
 
 
-
-#### Suppression des plages o? deltaT n'est pas constant
-# Fait ? la main. runner les plots pour confirmer :
-# plot(GPSACQ[GPSACQ$IDCOL == 44173, 1:2][, "DHACQ"])
-# plot(GPSACQ[GPSACQ$IDCOL == 44172, 1:2][(
-#   GPSACQ[GPSACQ$IDCOL == 44172, 1:2]$DHACQ > as.POSIXct("2022-12-04") &
-#     GPSACQ[GPSACQ$IDCOL == 44172, 1:2]$DHACQ < as.POSIXct("2025-10-01")
-# ), "DHACQ"])
-
-GPSACQorig <- GPSACQorig %>%
-  filter( # Intervalles ? enlever
-    !(V2 == 44159 &
-          as.POSIXct(strptime(V3,format="%d/%m/%Y"),tz="GMT") > as.POSIXct("2022-11-20") &
-          as.POSIXct(strptime(V3,format="%d/%m/%Y"),tz="GMT") < as.POSIXct("2023-08-10") 
-      ) &
-      !(V2 == 44161 &
-          as.POSIXct(strptime(V3,format="%d/%m/%Y"),tz="GMT") > as.POSIXct("2023-02-15")
-      ) &
-      !(V2 == 44164 &
-          as.POSIXct(strptime(V3,format="%d/%m/%Y"),tz="GMT") > as.POSIXct("2022-10-28") &
-          as.POSIXct(strptime(V3,format="%d/%m/%Y"),tz="GMT") < as.POSIXct("2022-12-10")
-      ) &
-      !(V2 == 44164 &
-          as.POSIXct(strptime(V3,format="%d/%m/%Y"),tz="GMT") > as.POSIXct("2023-07-28")
-      ) &
-      !(V2 == 44171 &
-          as.POSIXct(strptime(V3,format="%d/%m/%Y"),tz="GMT") > as.POSIXct("2021-02-09") &
-          as.POSIXct(strptime(V3,format="%d/%m/%Y"),tz="GMT") < as.POSIXct("2021-29-09")
-      ) &
-      !(V2 == 44172 &
-          as.POSIXct(strptime(V3,format="%d/%m/%Y"),tz="GMT") > as.POSIXct("2022-12-04")
-      )
-  )
-
-
 ################################################################################
 #### Formatage
 # selection des colonnes d'intéret
@@ -146,13 +111,57 @@ GPSACQ$HEI<-as.numeric(GPSACQ$HEI)
 GPSACQ$DOP<-as.numeric(GPSACQ$DOP)
 GPSACQ$ORI<-as.logical(GPSACQ$ORI == "Collar")
 
-# NA omit
+
+
+
+################################################################################
+#### NA omit
 dim(GPSACQ)
-GPSACQ<-na.omit(GPSACQ)
+# GPSACQ<-na.omit(GPSACQ)
+naaenlever <- which(rowSums(is.na(GPSACQ[, c("DHACQ", "LAT", "LON")])) > 0)
+length(naaenlever)
+GPSACQ <- GPSACQ[ - naaenlever,]
 dim(GPSACQ)
-head(GPSACQ)
-table(GPSACQ$IDCOL)
-summary(GPSACQ)
+# head(GPSACQ)
+# table(GPSACQ$IDCOL)
+# summary(GPSACQ)
+
+
+################################################################################
+#### Suppression des plages ou deltaT n'est pas constant
+# Fait ? la main. runner les plots pour confirmer :
+# collier <- 44172
+# plot(GPSACQ[GPSACQ$IDCOL == collier, 1:2][, "DHACQ"])
+# plot(GPSACQ[GPSACQ$IDCOL == collier, 1:2][(
+#   GPSACQ[GPSACQ$IDCOL == collier, 1:2]$DHACQ > as.POSIXct("2022-12-04") &
+#     GPSACQ[GPSACQ$IDCOL == collier, 1:2]$DHACQ < as.POSIXct("2025-10-01")
+# ), "DHACQ"])
+
+GPSACQ <- GPSACQ %>%
+  filter( # Intervalles a enlever
+    !(IDCOL == 44159 &
+        DHACQ > ymd_hms("2022-11-20 00:00:00") &
+        DHACQ < ymd_hms("2023-08-10 00:00:00") 
+    ) &
+    !(IDCOL == 44161 &
+        DHACQ > ymd_hms("2023-02-15 00:00:00")
+    ) &
+    !(IDCOL == 44164 &
+        DHACQ > ymd_hms("2022-10-28 00:00:00") &
+        DHACQ < ymd_hms("2022-12-10 00:00:00")
+    ) &
+    !(IDCOL == 44164 &
+        DHACQ > ymd_hms("2023-07-28 00:00:00")
+    ) &
+    !(IDCOL == 44171 &
+        DHACQ > ymd_hms("2021-09-02 00:00:00") &
+        DHACQ < ymd_hms("2021-09-29 00:00:00")
+    ) &
+    !(IDCOL == 44172 &
+        DHACQ > ymd_hms("2022-12-04 00:00:00")
+    )
+  )
+
 
 ##############################################################################
 # A.2. Check doublons éventuels
@@ -161,10 +170,10 @@ dim(GPSACQ)
 dupli<-duplicated(GPSACQ[,c(1:2)])
 summary(dupli)
 GPSACQ<-GPSACQ[dupli==F,]
-table(GPSACQ$IDCOL)
+# table(GPSACQ$IDCOL)
 dim(GPSACQ)
-head(GPSACQ)
-summary(GPSACQ)
+# head(GPSACQ)
+# summary(GPSACQ)
 
 
 ###############################################################################
@@ -196,7 +205,6 @@ dim(GPSACQ)
 dim(GPSACQ[GPSACQ$ORI!=T,])
 GPSACQ<-GPSACQ[GPSACQ$ORI==T,]
 GPSACQ$ORI <- NULL
-dim(GPSACQ)
 
 dim(GPSACQ)
 summary(GPSACQ)
@@ -225,11 +233,14 @@ day <- as.POSIXct(strptime(day,format="%Y-%m-%d"),tz="GMT")
 GPSACQ <- cbind(day,GPSACQ)
 
 GPSACQ$id  <- 1:nrow(GPSACQ)
-GPSACQ <- merge(GPSACQ,SUNTABLE,by="day", all.x=T ,all.y=F)
-GPSACQ <- GPSACQ[order(GPSACQ$id),]
+GPSACQ <- merge(GPSACQ,SUNTABLE, by = "day", all.x = T, all.y = F)
+GPSACQ <- GPSACQ %>% arrange(id)
 GPSACQ$DAYTM <- ifelse(GPSACQ$DHACQ>=GPSACQ$sunrise & GPSACQ$DHACQ<=GPSACQ$sunset, T, F)
 head(GPSACQ)
-GPSACQ <- GPSACQ[,-c(1,10,11,12)]
+GPSACQ$day <- NULL
+GPSACQ$id <- NULL
+GPSACQ$sunrise <- NULL
+GPSACQ$sunset <- NULL
 head(GPSACQ)
 rm(SUNTABLE)
 
@@ -240,7 +251,7 @@ GPSACQ <- GPSACQ %>% arrange(IDCOL, DHACQ)
 
 table(GPSACQ$IDCOL)
 # ggplot(subset(GPSACQ, IDCOL == 44159), aes(x = (1:nrow(subset(GPSACQ, IDCOL == 44159))), y = DHACQ)) +
-# ggplot(GPSACQ, aes(x = (1:nrow(GPSACQ)), y = DHACQ)) +
+# ggplot(GPSACQ, aes(x = (1:nrow(GPSACQ)), y = DHACQ, color = IDCOL)) +
 #   geom_point() +
 #   labs(title = "Chronological Order Check", x = "id", y = "date") +
 #   theme_minimal()

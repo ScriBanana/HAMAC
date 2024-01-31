@@ -33,61 +33,54 @@ head(GPS_par_anx)
 # head(ACT_par_anx)
 
 
-# Param√®tres 
+#### Parametres 
 nbACTpts <- 5 # Nombre de points ACT autour du point GPS
 noms_col_2_add <- c("AcX", "AcY", "AcZ", "TMP")
+nThreads <- 22
 
+
+#### Fonction qui moyenne les donnÈes accÈlÈro
 calcul_moyenne_accelero <- function(ligne_GPS) {
-  closest_rows <- ACT_par_anx[[ligne_GPS$ID]] %>%
-    arrange(abs(DHACQ - ligne_GPS$DHACQ)) %>%
+  closest_rows <- ACT_par_anx[[ligne_GPS[["ID"]]]] %>%
+    arrange(abs(DHACQ - ymd_hms(ligne_GPS[["DHACQ"]]))) %>%
     slice_head(n = nbACTpts)
   mean_data <- colMeans(closest_rows[,noms_col_2_add], na.rm = TRUE)
   
   return(mean_data)
 }
 
-# Function to process a batch of rows
-process_batch <- function(batch_indices) {
-  result_list <- future_map(batch_indices, ~ calcul_moyenne_accelero(GPS_ACT_par_anx[.x, ]))
-  return(result_list)
-}
 
-# GPS_ACT_par_anx <- GPS_par_anx[1:1000,]
+#### Init la table de sortie
 GPS_ACT_par_anx <- GPS_par_anx
+# GPS_ACT_par_anx <- GPS_par_anx[1:100,]
 colnames(GPS_ACT_par_anx)[colnames(GPS_ACT_par_anx) == 'TMP'] <- "GPS_TMP"
 for (col_name in noms_col_2_add) {
   GPS_ACT_par_anx <- mutate(GPS_ACT_par_anx, !!col_name := NA) # ChatGPT magic
 }
 head(GPS_ACT_par_anx)
 
-print(paste0("D?but d'association : ", date()))
-nThreads <- 22
+
+#### Execution
+print(paste0("Debut d'association : ", date()))
+debAssoc <- Sys.time()
 plan(multisession, workers = nThreads) # D√©but parallelisation sur workers threads
 
-# Divise le jeu de donn?es en nbThreads
-n <- nrow(GPS_ACT_par_anx)
-batch_size <- ceiling(n / nThreads)
-batches <- split(1:n, (seq_along(1:n) - 1) %/% batch_size)
-
-# Process each batch in parallel
-result_list <- future_map(batches, process_batch)
-
-# Flatten the result list
-result_list <- unlist(result_list, recursive = FALSE)
-
-# Update the main data frame
-for (i in 1:n) {
-  GPS_ACT_par_anx[i, noms_col_2_add] <- result_list[[i]]
-}
+listesAccMoyenne <- asplit(GPS_ACT_par_anx, 1) %>% future_map(calcul_moyenne_accelero)
 
 plan(sequential) # Fin parallelisation
 print(paste0("Fin d'association : ", date()))
+print(Sys.time() - debAssoc)
 
-rm(result_list)
+n <- nrow(GPS_ACT_par_anx)
+for (i in 1:n) {
+  GPS_ACT_par_anx[i, noms_col_2_add] <- listesAccMoyenne[[i]]
+}
+
+rm(listesAccMoyenne)
 head(GPS_ACT_par_anx)
 
 
-# Enregistrement
+#### Enregistrement
 workd1<-"./1_Data_clean_and_merge"
 write.table(GPS_ACT_par_anx,paste0(workd1,"/HAMAC-SN-GPSnACTpANX.csv"),sep=";", row.names=FALSE)
 

@@ -35,7 +35,7 @@ fitWithParam <- function(initial_params) { # Simplifie les calls
 #### Paramètres
 nJxParamInit <- 44
 nThreads <- 22
-nbStates <- 2
+nbStates <- 3
 
 # Génère les jeux de paramètres initiaux. Remplir où indiqué
 generate_initial_params <- function() {
@@ -44,11 +44,11 @@ generate_initial_params <- function() {
 
   list(
     stepMean0 = runif(nbStates, # Ici :
-                      min = c(0.010, 0.500, 0.300),
-                      max = c(0.500, 1.000, 1.000)),
+                      min = c(0.010, 0.050, 0.300),
+                      max = c(0.100, 0.250, 1.000)),
     stepSD0 = runif(nbStates, # L� :
-                    min = c(0.010, 0.300, 0.100),
-                    max = c(0.200, 0.500, 0.300)),
+                    min = c(0.010, 0.030, 0.100),
+                    max = c(0.200, 0.200, 0.300)),
     angleMean0 = rep(0, nbStates),
     angleCon0 = runif(nbStates, # Et l� :
                       min = c(0.5, 3, 5),
@@ -82,7 +82,6 @@ print(Sys.time() - tpsDebut)
 
 repSauvegardes <- "./2_Fits_outputs/"
 meilleurModele2e <- readRDS(paste0(repSauvegardes,"240129181847-HAMAC-SN-ModHMM-2Et.rds"))
-
 meilleurModele3e <- readRDS(paste0(repSauvegardes,"240127202639-HAMAC-SN-ModHMM-3Et.rds"))
 AIC(meilleurModele2e, meilleurModele3e)
 AIC2 <- AIC(meilleurModele2e)

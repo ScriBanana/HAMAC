@@ -49,7 +49,6 @@ switch((nbStates - 1),
     stepSD0 <- c(0.02, 0.2, 0.500)
     propzero <- length(which(hmmdata$step == 0))/nrow(hmmdata)
     zeroMass0 <- c(propzero, propzero/100, propzero/100)
-    # 0.0001 estimation perso (peu de step à zero dans l'état 2 qui est du mouvement)
     
     ## Angle
     angleMean0 <- c(pi, 0, 0) # initial means (one for each state)
