@@ -6,6 +6,7 @@
 library(dplyr)
 library(furrr)
 library(lubridate)
+library(data.table)
 
 setwd("/home/scriban/Dropbox/Th√®se/DonneesEtSauvegardes/WorkspaceR/HAMAC")
 setwd("D:/USERS/SergeEtArthur/WorkspaceR/hamac")
@@ -39,7 +40,7 @@ noms_col_2_add <- c("AcX", "AcY", "AcZ", "TMP")
 nThreads <- 22
 
 
-#### Fonction qui moyenne les donnÈes accÈlÈro
+#### Fonction qui moyenne les donn?es acc?l?ro
 calcul_moyenne_accelero <- function(ligne_GPS) {
   closest_rows <- ACT_par_anx[[ligne_GPS[["ID"]]]] %>%
     arrange(abs(DHACQ - ymd_hms(ligne_GPS[["DHACQ"]]))) %>%
@@ -71,10 +72,12 @@ plan(sequential) # Fin parallelisation
 print(paste0("Fin d'association : ", date()))
 print(Sys.time() - debAssoc)
 
-n <- nrow(GPS_ACT_par_anx)
-for (i in 1:n) {
-  GPS_ACT_par_anx[i, noms_col_2_add] <- listesAccMoyenne[[i]]
-}
+
+# Convert GPS_ACT_par_anx to data.table
+setDT(GPS_ACT_par_anx)
+
+# Assign the results to the original data.table
+GPS_ACT_par_anx[, (noms_col_2_add) := transpose(listesAccMoyenne)]
 
 rm(listesAccMoyenne)
 head(GPS_ACT_par_anx)
