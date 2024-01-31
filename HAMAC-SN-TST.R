@@ -50,9 +50,9 @@ hist(hmm59$step, xlab = "step length", main = "",breaks = 50) #, xlim = c(0,2000
 vit <- viterbi(modhmm)
 vitest <- modhmm %>% mutate(VIT = vit)
 
-datadeltaT <- GPSACQ %>% mutate(DELTAT = as.numeric((lag(DHACQ) - DHACQ) / 60))
-datadeltaT <- datadeltaT[datadeltaT$DELTAT <= 240,]
-datadeltaT <- datadeltaT[datadeltaT$DELTAT > -240,]
+datadeltaT <- hmmdata %>% mutate(DELTAT = as.numeric((lag(DHACQ) - DHACQ) / 60))
+datadeltaT <- datadeltaT[datadeltaT$DELTAT >= -100,]
+datadeltaT <- datadeltaT[datadeltaT$DELTAT < -35,]
 boxplot(datadeltaT$DELTAT, xlab = "deltaT (min)", main = "",breaks = 50) #, xlim = c(0,2000),ylim=c(0,100000))
 hist(datadeltaT$DELTAT, xlab = "deltaT (min)", main = "",breaks = 50) #, xlim = c(0,2000),ylim=c(0,100000))
 summary(datadeltaT$DELTAT)
