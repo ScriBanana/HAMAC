@@ -60,17 +60,20 @@ for (col_name in noms_col_2_add) {
 }
 head(GPS_ACT_par_anx)
 
-print(paste0("D?but d'association : ", date()))
+print(paste0("Debut d'association : ", date()))
 nThreads <- 22
-plan(multisession, workers = nThreads) # Début parallelisation sur workers threads
-
-# Divise le jeu de donn?es en nbThreads
+# Cr�e des batches d'id correspondant au nombre de thread
 n <- nrow(GPS_ACT_par_anx)
 batch_size <- ceiling(n / nThreads)
 batches <- split(1:n, (seq_along(1:n) - 1) %/% batch_size)
 
+plan(multisession, workers = nThreads) # Début parallelisation sur workers threads
+
 # Process each batch in parallel
 result_list <- future_map(batches, process_batch)
+
+plan(sequential) # Fin parallelisation
+print(paste0("Fin d'association : ", date()))
 
 # Flatten the result list
 result_list <- unlist(result_list, recursive = FALSE)
@@ -79,9 +82,6 @@ result_list <- unlist(result_list, recursive = FALSE)
 for (i in 1:n) {
   GPS_ACT_par_anx[i, noms_col_2_add] <- result_list[[i]]
 }
-
-plan(sequential) # Fin parallelisation
-print(paste0("Fin d'association : ", date()))
 
 rm(result_list)
 head(GPS_ACT_par_anx)
