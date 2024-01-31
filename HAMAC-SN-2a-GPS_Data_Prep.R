@@ -148,11 +148,14 @@ GPSACQ$ORI<-as.logical(GPSACQ$ORI == "Collar")
 
 # NA omit
 dim(GPSACQ)
-GPSACQ<-na.omit(GPSACQ)
+# GPSACQ<-na.omit(GPSACQ)
+naaenlever <- which(rowSums(is.na(GPSACQ[, c("DHACQ", "LAT", "LON")])) > 0)
+length(naaenlever)
+GPSACQ <- GPSACQ[ - naaenlever,]
 dim(GPSACQ)
-head(GPSACQ)
-table(GPSACQ$IDCOL)
-summary(GPSACQ)
+# head(GPSACQ)
+# table(GPSACQ$IDCOL)
+# summary(GPSACQ)
 
 ##############################################################################
 # A.2. Check doublons éventuels
@@ -161,10 +164,10 @@ dim(GPSACQ)
 dupli<-duplicated(GPSACQ[,c(1:2)])
 summary(dupli)
 GPSACQ<-GPSACQ[dupli==F,]
-table(GPSACQ$IDCOL)
+# table(GPSACQ$IDCOL)
 dim(GPSACQ)
-head(GPSACQ)
-summary(GPSACQ)
+# head(GPSACQ)
+# summary(GPSACQ)
 
 
 ###############################################################################
@@ -240,7 +243,7 @@ GPSACQ <- GPSACQ %>% arrange(IDCOL, DHACQ)
 
 table(GPSACQ$IDCOL)
 # ggplot(subset(GPSACQ, IDCOL == 44159), aes(x = (1:nrow(subset(GPSACQ, IDCOL == 44159))), y = DHACQ)) +
-# ggplot(GPSACQ, aes(x = (1:nrow(GPSACQ)), y = DHACQ)) +
+# ggplot(GPSACQ, aes(x = (1:nrow(GPSACQ)), y = DHACQ, color = IDCOL)) +
 #   geom_point() +
 #   labs(title = "Chronological Order Check", x = "id", y = "date") +
 #   theme_minimal()

@@ -16,7 +16,7 @@ logFile <- "HAMAC-SN-Log.csv"
 #### Fonction de fit avec enregistrement dans le log
 fitHMM_Log <- function (data, nbStates, stepPar0, anglePar0) {
   
-  print(paste0("D?but d'execution de FitHMM : ", date()))
+  print(paste0("Debut d'execution de FitHMM : ", date()))
   timestamp <- Sys.time()
   
   modhmm <- fitHMM(data = data, verbose = 1, nbStates = nbStates, anglePar0 = anglePar0, stepPar0 = stepPar0)

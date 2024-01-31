@@ -82,7 +82,6 @@ print(Sys.time() - tpsDebut)
 
 repSauvegardes <- "./2_Fits_outputs/"
 meilleurModele2e <- readRDS(paste0(repSauvegardes,"240129181847-HAMAC-SN-ModHMM-2Et.rds"))
-
 meilleurModele3e <- readRDS(paste0(repSauvegardes,"240127202639-HAMAC-SN-ModHMM-3Et.rds"))
 AIC(meilleurModele2e, meilleurModele3e)
 AIC2 <- AIC(meilleurModele2e)
