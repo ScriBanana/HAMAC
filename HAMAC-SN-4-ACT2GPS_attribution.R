@@ -11,6 +11,8 @@ library(data.table)
 setwd("/home/scriban/Dropbox/Thèse/DonneesEtSauvegardes/WorkspaceR/HAMAC")
 setwd("D:/USERS/SergeEtArthur/WorkspaceR/hamac")
 
+# Compter une trentaines de minutes sur le jeu complet, avec 22 coeurs
+
 # Nettoyer le cache
 rm(list=ls())
 
@@ -79,7 +81,6 @@ setDT(GPS_ACT_par_anx)
 # Assign the results to the original data.table
 GPS_ACT_par_anx[, (noms_col_2_add) := transpose(listesAccMoyenne)]
 
-rm(listesAccMoyenne)
 head(GPS_ACT_par_anx)
 
 
