@@ -55,7 +55,7 @@ calcul_moyenne_accelero <- function(ligne_GPS) {
 
 #### Init la table de sortie
 GPS_ACT_par_anx <- GPS_par_anx
-# GPS_ACT_par_anx <- GPS_par_anx[1:100,]
+# GPS_ACT_par_anx <- GPS_par_anx[1:1000,]
 colnames(GPS_ACT_par_anx)[colnames(GPS_ACT_par_anx) == 'TMP'] <- "GPS_TMP"
 for (col_name in noms_col_2_add) {
   GPS_ACT_par_anx <- mutate(GPS_ACT_par_anx, !!col_name := NA) # ChatGPT magic
@@ -74,13 +74,10 @@ plan(sequential) # Fin parallelisation
 print(paste0("Fin d'association : ", date()))
 print(Sys.time() - debAssoc)
 
-
-# Convert GPS_ACT_par_anx to data.table
-setDT(GPS_ACT_par_anx)
-
-# Assign the results to the original data.table
+setDT(GPS_ACT_par_anx) # Assigne les valeurs calculées à la BD
 GPS_ACT_par_anx[, (noms_col_2_add) := transpose(listesAccMoyenne)]
 
+print(Sys.time() - debAssoc)
 head(GPS_ACT_par_anx)
 
 
