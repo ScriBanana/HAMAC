@@ -93,6 +93,7 @@ pdf(paste0(repSauvegardes, "Out_Graphs/", format(Sys.time(), format = "%y%m%d%H%
     paper = "A4")
 par(mfrow = c(2, 1))
 plot(modhmm, plotCI = TRUE, ask = FALSE)
+plotPR(modhmm)
 dev.off()
 
 
