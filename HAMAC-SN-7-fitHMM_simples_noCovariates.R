@@ -65,8 +65,12 @@ modhmm <- fitHMM_Log(data = hmmdata, nbStates = nbStates,
 
 
 ################################################################################
-
 ### Sorties
+
+## Charger un RDS
+cheminSorties <- "D:/USERS/SergeEtArthur/WorkspaceR/hamac/2_Fits_outputs/"
+modhmm <- readRDS(paste0(cheminSorties ,"240127193238-HAMAC-SN-ModHMM-3Et.rds"))
+
 ## Estimations des maxima de vraisemblance des paramètres
 modhmm
 # Sorties de la fonction d'optimisation :
