@@ -124,4 +124,7 @@ plotPR(modhmm)
 # Ajoute aux données une colonne avec les états selon Viterbi
 vit <- viterbi(modhmm)
 hmmdatavit <- modhmm$data %>% mutate(VIT = vit)
+write.table(hmmdatavit, paste0(
+  "./2_Fits_outputs/", format(Sys.time(), format = "%y%m%d%H%M%S"),
+  "-hmmdatavit.csv"), sep=";", row.names=FALSE)
 
