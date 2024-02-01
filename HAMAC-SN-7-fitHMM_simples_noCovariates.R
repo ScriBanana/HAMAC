@@ -63,6 +63,9 @@ anglePar0 <- c(angleMean0, angleCon0)
 modhmm <- fitHMM_Log(data = hmmdata, nbStates = nbStates,
                             stepPar0 = stepPar0, anglePar0 = anglePar0)
 
+
+################################################################################
+
 ### Sorties
 ## Estimations des maxima de vraisemblance des paramètres
 modhmm
@@ -76,6 +79,18 @@ CI(modhmm)
 plot(modhmm, plotCI = TRUE, ask = FALSE) # Densités de probabilité vs histogrammes
 # + prob de transition en fonction des covariables
 # + Plot des trajets avec les points de Viterbi (plotTracks = T)
+
+
+# Enregistrement des distributions en PDF
+repSauvegardes <- "./2_Fits_outputs/"
+pdf(paste0(repSauvegardes, "Out_Graphs/", format(Sys.time(), format = "%y%m%d%H%M%S"), '-PlotModHMM.pdf'),
+    width = 8, height = 10,
+    colormodel = "cmyk",
+    paper = "A4")
+par(mfrow = c(2, 1))
+plot(modhmm, plotCI = TRUE, ask = FALSE)
+dev.off()
+
 
 ## Etats à chaque point
 # A rbinder et à concaténer pour enregistrement et valo ??
