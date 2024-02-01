@@ -76,26 +76,13 @@ print(Sys.time() - tpsDebut)
 
 
 ################################################################################
-#### Enregistrement
-
-
-repSauvegardes <- "./2_Fits_outputs/"
-meilleurModele2e <- readRDS(paste0(repSauvegardes,"240129181847-HAMAC-SN-ModHMM-2Et.rds"))
-meilleurModele3e <- readRDS(paste0(repSauvegardes,"240127202639-HAMAC-SN-ModHMM-3Et.rds"))
-AIC(meilleurModele2e, meilleurModele3e)
-AIC2 <- AIC(meilleurModele2e)
-AIC3 <- AIC(meilleurModele3e)
-exp((AIC3-AIC2)/2)
-
-
-################################################################################
 #### Sorties
 
-# Tu peux d?commenter les lignes pour explorer la donn?e (ctrl + maj + c)
- modhmmList %>% map("mle")
- modhmmList %>% map("mle") %>% map("stepPar")
- modhmmList %>% map("mod") %>% map("minimum")
- modhmmList %>% map("mod") %>% map("iterations")
+# Tu peux d�commenter les lignes pour explorer la donn�e (ctrl + maj + c)
+ # modhmmList %>% map("mle")
+ # modhmmList %>% map("mle") %>% map("stepPar")
+ # modhmmList %>% map("mod") %>% map("minimum")
+ # modhmmList %>% map("mod") %>% map("iterations")
 
 # Plots ultra rudimentaires pour comparer les sorties (likelihood, stepMean, angleMean...)
 plot(unlist(modhmmList %>% map("mod") %>% map("minimum")),
@@ -123,4 +110,4 @@ plot(unlist(modhmmList %>% map("mle") %>% map("anglePar") %>% map(2)),
 
 meilleurModeleID <- which.min(unlist(lapply(modhmmList, function(m) m$mod$minimum)))
 meilleurModele <- modhmmList[[meilleurModeleID]]
-
+modhmm <- meilleurModele

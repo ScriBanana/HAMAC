@@ -128,3 +128,16 @@ write.table(hmmdatavit, paste0(
   "./2_Fits_outputs/", format(Sys.time(), format = "%y%m%d%H%M%S"),
   "-hmmdatavit.csv"), sep=";", row.names=FALSE)
 
+
+
+################################################################################
+#### Comparaison de modèles
+
+
+repSauvegardes <- "./2_Fits_outputs/"
+meilleurModele2e <- readRDS(paste0(repSauvegardes,"240129181847-HAMAC-SN-ModHMM-2Et.rds"))
+meilleurModele3e <- readRDS(paste0(repSauvegardes,"240127202639-HAMAC-SN-ModHMM-3Et.rds"))
+AIC(meilleurModele2e, meilleurModele3e)
+AIC2 <- AIC(meilleurModele2e)
+AIC3 <- AIC(meilleurModele3e)
+exp((AIC3-AIC2)/2)
