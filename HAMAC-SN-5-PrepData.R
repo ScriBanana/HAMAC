@@ -6,6 +6,7 @@
 library(moveHMM)
 library(dplyr)
 library(lubridate)
+library(ggplot2)
 
 setwd("/home/scriban/Dropbox/Thèse/DonneesEtSauvegardes/WorkspaceR/HAMAC")
 setwd("D:/USERS/SergeEtArthur/WorkspaceR/hamac")
@@ -79,7 +80,7 @@ summary(hmmdata$step)
 
 ggplot(hmmdata, aes(x = (1:nrow(hmmdata)), y = DHACQ, color = ID)) +
   geom_point() +
-  labs(title = "Chronological Order Check", x = "id", y = "date") +
+  labs(title = "Constance des DeltaT", x = "id", y = "date") +
   theme_minimal()
 
 

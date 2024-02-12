@@ -315,4 +315,8 @@ result_list[[1]]$stepPar0
 
 
 
+####
+## Plot des steps animal par animal
+plot(modhmm$data[modhmm$data$ID == "VBT11",]$step)
+plot(hmmdata[hmmdata$ID == "VBT21",]$DHACQ, hmmdata[hmmdata$ID == "VBT21",]$step)
 

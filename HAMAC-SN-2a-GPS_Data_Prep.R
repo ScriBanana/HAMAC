@@ -245,6 +245,26 @@ head(GPSACQ)
 rm(SUNTABLE)
 
 ################################################################################
+# A. Ajout de covariables supplémentaires
+
+GPSACQ$DAT <- format(GPSACQ$DHACQ, "%y-%m-%d")
+GPSACQ$YER <- as.numeric(format(GPSACQ$DHACQ, "%y"))
+GPSACQ$MON <- as.numeric(format(GPSACQ$DHACQ, "%m"))
+GPSACQ$DAY <- as.numeric(format(GPSACQ$DHACQ, "%d"))
+GPSACQ$HUR <- format(GPSACQ$DHACQ, "%H:%M:%S")
+
+# Hivernage: juin-octobre Saison sèche froide: novembre-février Saison sèche chaude: mars-mai
+debutSSc <- 3
+debutSP <- 6
+debutSSf <- 11
+
+attribSeason <- function(idMois) {
+  if (idMois > debutSSc ) {
+    return("SSc")
+  }
+}
+
+################################################################################
 # A.Maintien de l'ordre chronologique. 
 
 GPSACQ <- GPSACQ %>% arrange(IDCOL, DHACQ)
