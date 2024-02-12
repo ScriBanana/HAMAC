@@ -97,3 +97,5 @@ dev.off()
 #### Sauvegarde en RDS
 repDonnees<-"./1_Data_clean_and_merge"
 saveRDS(hmmdata, paste0(repDonnees,"/HAMAC-SN-HMMDATA.rds"))
+write.table(hmmdata,paste0(repDonnees,"/HAMAC-SN-HMMDATA.csv"),sep=";", row.names=FALSE)
+

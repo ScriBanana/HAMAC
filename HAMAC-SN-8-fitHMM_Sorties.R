@@ -17,7 +17,7 @@ rm(list=ls())
 
 ## Charger un RDS
 cheminSorties <- "D:/USERS/SergeEtArthur/WorkspaceR/hamac/2_Fits_outputs/"
-modhmm <- readRDS(paste0(cheminSorties ,"240127193238-HAMAC-SN-ModHMM-3Et.rds"))
+modhmm <- readRDS(paste0(cheminSorties ,"240203062959-HAMAC-SN-ModHMM-3Et.rds"))
 
 ## Estimations des maxima de vraisemblance des param????tres
 modhmm
@@ -28,6 +28,8 @@ AIC(modhmm)
 
 ## Intervalle confiance (95%)
 CI(modhmm)
+
+#### Tracer les plots en 2 deux façons soit pour visualisations sans enregistrements  ou avec en pdf
 plot(modhmm, plotCI = TRUE, ask = FALSE) # Densit????s de probabilit???? vs histogrammes
 # + prob de transition en fonction des covariables
 # + Plot des trajets avec les points de Viterbi (plotTracks = T)
@@ -81,10 +83,10 @@ plotPR(modhmm)
 
 # Ajoute aux donn????es une colonne avec les ????tats selon Viterbi
 vit <- viterbi(modhmm)
-hmmdatavit <- modhmm$data %>% mutate(VIT = vit)
-write.table(hmmdatavit, paste0(
+modhmmdatavit <- modhmm$data %>% mutate(VIT = vit)
+write.table(modhmmdatavit, paste0(
   "./2_Fits_outputs/", format(Sys.time(), format = "%y%m%d%H%M%S"),
-  "-hmmdatavit.csv"), sep=";", row.names=FALSE)
+  "-modhmmdatavit.csv"), sep=";", row.names=FALSE)
 
 
 

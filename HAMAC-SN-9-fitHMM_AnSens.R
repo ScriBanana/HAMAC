@@ -33,7 +33,7 @@ fitWithParam <- function(initial_params) { # Simplifie les calls
 
 ################################################################################
 #### ParamÃ¨tres
-nJxParamInit <- 44
+nJxParamInit <- 110
 nThreads <- 22
 nbStates <- 3
 
@@ -43,16 +43,17 @@ generate_initial_params <- function() {
   propzero <- length(which(hmmdata$step == 0))/nrow(hmmdata)
   list(
     stepMean0 = runif(nbStates, # Ici :
-                      min = c(0.010, 0.050, 0.300),
-                      max = c(0.100, 0.250, 0.600)),
-    stepSD0 = runif(nbStates, # L? :
-                    min = c(0.010, 0.030, 0.100),
-                    max = c(0.200, 0.200, 0.300)),
+                      min = c(0.005, 0.050, 0.300),
+                      max = c(0.100, 0.250, 1.000)),
+    stepSD0 = runif(nbStates, # Là :
+                    min = c(0.005, 0.030, 0.100),
+                    max = c(0.200, 0.200, 0.800)),
     angleMean0 = rep(0, nbStates),
-    angleCon0 = runif(nbStates, # Et l? :
+    angleCon0 = runif(nbStates, # Et là :
                       min = c(0.5, 3, 5),
-                      max = c(2, 5, 10)),
+                      max = c(2, 10, 15)),
     zeroMass0 = c(propzero, rep(propzero/100, nbStates - 1))
+    
   )
 }
 
