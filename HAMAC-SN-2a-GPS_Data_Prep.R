@@ -144,6 +144,9 @@ GPSACQ <- GPSACQ %>%
         DHACQ > ymd_hms("2022-11-20 00:00:00") &
         DHACQ < ymd_hms("2023-08-10 00:00:00") 
     ) &
+    !(IDCOL == 44160 &
+        DHACQ > ymd_hms("2023-06-17 00:00:00") # DeltasT à 1h
+    ) &
     !(IDCOL == 44161 &
         DHACQ > ymd_hms("2023-02-15 00:00:00")
     ) &
