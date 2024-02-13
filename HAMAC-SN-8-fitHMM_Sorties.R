@@ -106,10 +106,20 @@ hmmdatavit <- hmmdatavit %>% arrange(ID, DHACQ)
 hmmdatavit$`(Intercept)` <- NULL
 
 ## Sauvegardes
+repSauvegardes <- "./2_Fits_outputs/"
 write.table(hmmdatavit, paste0(
-  "./2_Fits_outputs/", format(Sys.time(), format = "%y%m%d%H%M%S"),
-  "-HMMDATAVIT.csv"), sep=";", row.names=FALSE)
+  repSauvegardes, format(Sys.time(), format = "%y%m%d%H%M%S"),
+  "-MODHMMDATA.csv"), sep=";", row.names=FALSE)
 
+for (id in unique(hmmdatavit$ID)) {
+  print(id)
+  animalData <- subset(hmmdatavit, ID == id)
+  write.table(animalData, paste0(
+    repSauvegardes, "MODHMMDATA-ParANX/",
+    format(Sys.time(), format = "%y%m%d%H%M%S"),
+    "-", id,
+    "-MODHMMDATA.csv"), sep=";", row.names=FALSE)
+}
 
 
 ################################################################################
