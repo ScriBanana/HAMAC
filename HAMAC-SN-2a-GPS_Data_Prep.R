@@ -26,6 +26,7 @@ library(sf)
 library(dplyr)
 library(ggplot2)
 library(lubridate)
+library(data.table)
 
 
 rm(list=ls()) # fonction qui permet de virer tous les objets generes anterieurements
@@ -247,22 +248,27 @@ rm(SUNTABLE)
 ################################################################################
 # A. Ajout de covariables supplémentaires
 
+#### Décomposition de la date
 GPSACQ$DAT <- format(GPSACQ$DHACQ, "%y-%m-%d")
 GPSACQ$YER <- as.numeric(format(GPSACQ$DHACQ, "%y"))
 GPSACQ$MON <- as.numeric(format(GPSACQ$DHACQ, "%m"))
 GPSACQ$DAY <- as.numeric(format(GPSACQ$DHACQ, "%d"))
 GPSACQ$HUR <- format(GPSACQ$DHACQ, "%H:%M:%S")
 
+#### Saison
 # Hivernage: juin-octobre Saison sèche froide: novembre-février Saison sèche chaude: mars-mai
 debutSSc <- 3
 debutSP <- 6
 debutSSf <- 11
 
 attribSeason <- function(idMois) {
-  if (idMois > debutSSc ) {
-    return("SSc")
-  }
+  ifelse(idMois >= debutSSc & idMois < debutSP, "SSc",
+         ifelse(idMois >= debutSP & idMois < debutSSf, "SP",
+                "SSf"))
 }
+
+setDT(GPSACQ)
+GPSACQ[, SES := attribSeason(MON)]
 
 ################################################################################
 # A.Maintien de l'ordre chronologique. 
