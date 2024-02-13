@@ -90,8 +90,8 @@ for (i in 1:nrow(ANX)) {
   }
   rm(subset_data)
   
-  print(summary(ACT_par_anx[[IDANL]]))
-  cat("\n")
+  # print(summary(ACT_par_anx[[IDANL]]))
+  # cat("\n")
 }
 
 #### Sauvegardes CSV

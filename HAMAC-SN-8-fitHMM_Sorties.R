@@ -15,11 +15,11 @@ setwd("D:/USERS/SergeEtArthur/WorkspaceR/hamac")
 rm(list=ls())
 
 
-## Charger un RDS
+#### Charger un RDS
 cheminSorties <- "./2_Fits_outputs/"
 modhmm <- readRDS(paste0(cheminSorties ,"240203062959-HAMAC-SN-ModHMM-3Et.rds"))
 
-## Estimations des maxima de vraisemblance des param????tres
+## Estimations des maxima de vraisemblance des parametres
 modhmm
 # Sorties de la fonction d'optimisation :
 modhmm$mod
@@ -29,8 +29,9 @@ AIC(modhmm)
 ## Intervalle confiance (95%)
 CI(modhmm)
 
-#### Tracer les plots en 2 deux fa?ons soit pour visualisations sans enregistrements  ou avec en pdf
-plot(modhmm, plotCI = TRUE, ask = FALSE) # Densit????s de probabilit???? vs histogrammes
+## Tracer les plots en 2 deux fa?ons soit pour visualisations sans enregistrements  ou avec en pdf
+# plot(modhmm, plotCI = TRUE, ask = FALSE)
+# Densites de probabilite vs histogrammes
 # + prob de transition en fonction des covariables
 # + Plot des trajets avec les points de Viterbi (plotTracks = T)
 
@@ -54,14 +55,14 @@ sp <- stateProbs(modhmm)
 head(sp)
 
 # S????quence d????cod????e
-states <- viterbi(modhmm)
-states[1:25]
+vit <- viterbi(modhmm)
+# states[1:25]
 
 # R??partition des ??tats
 for (i in 1:nbStates) {
   print(paste0("Etat ", i,
-               " - Nb points : ", table(states)[i],
-               ", prop : ", table(states)[i]/sum(table(states))))
+               " - Nb points : ", table(vit)[i],
+               ", prop : ", table(vit)[i]/sum(table(vit))))
 }
 
 
@@ -69,7 +70,7 @@ for (i in 1:nbStates) {
 plotStates(modhmm)
 plotStates(modhmm, animals = "VBT11")
 
-## Probabilit???? de rester dans chaque ????tat en fonction des covariables
+## Probabilite de rester dans chaque etat en fonction des covariables
 # plotStationary(modhmm, plotCI = T)
 
 # compute the pseudo-residuals
@@ -79,14 +80,27 @@ pr <- pseudoRes(modhmm)
 plotPR(modhmm)
 
 
-#### Manipulations sur le mod????le
+#### Manipulations sur les donnees avec les sorties du modele
 
-# Ajoute aux donn????es une colonne avec les ????tats selon Viterbi
-vit <- viterbi(modhmm)
-modhmmdatavit <- modhmm$data %>% mutate(VIT = vit)
-write.table(modhmmdatavit, paste0(
+## Import des donnees
+repDonnees <- "./1_Data_clean_and_merge/"
+hmmdatavit <- readRDS(paste0(repDonnees,"/HAMAC-SN-HMMDATA.rds"))
+
+## Decomposition de la date pour QGIS
+hmmdatavit$DAT <- format(hmmdatavit$DHACQ, "%y-%m-%d")
+hmmdatavit$YER <- as.numeric(format(hmmdatavit$DHACQ, "%y"))
+hmmdatavit$MON <- as.numeric(format(hmmdatavit$DHACQ, "%m"))
+hmmdatavit$DAY <- as.numeric(format(hmmdatavit$DHACQ, "%d"))
+hmmdatavit$HUR <- format(hmmdatavit$DHACQ, "%H:%M:%S")
+
+## Ajout des états par Viterbi
+# Ajoute aux donnees de sortie une colonne avec les etats selon Viterbi
+modhmmdata <- modhmm$data %>% mutate(VIT = vit)
+
+## Sauvegardes
+write.table(hmmdatavit, paste0(
   "./2_Fits_outputs/", format(Sys.time(), format = "%y%m%d%H%M%S"),
-  "-modhmmdatavit.csv"), sep=";", row.names=FALSE)
+  "-HMMDATAVIT.csv"), sep=";", row.names=FALSE)
 
 
 
