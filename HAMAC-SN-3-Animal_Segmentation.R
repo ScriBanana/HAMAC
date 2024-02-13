@@ -23,9 +23,9 @@ ANX <- read.table(
 ANX$debutPortColl <- dmy_hm(ANX$debutPortColl)
 ANX$finPortColl <- dmy_hm(ANX$finPortColl)
 ANX <- ANX[, c(1, 3, 4, 7, 8, 5, 6)]
-names(ANX) <- c("IDANL", "IDCOL", "IDELV", "TRANS", "IDVIL", "DHDEB", "DHFIN")
+names(ANX) <- c("IDANL", "IDCOL", "IDELV", "TRA", "IDVIL", "DHDEB", "DHFIN")
 cat("ANX Table:\n")
-print(head(ANX))
+print(ANX)
 
 ## GPS
 gpsSourceDir <- "./1_Data_clean_and_merge/"
@@ -53,18 +53,21 @@ print(head(ACT))
 GPS_par_anx <- data.frame()
 
 for (i in 1:nrow(ANX)) {
-  IDANL <- ANX$IDANL[i]
+  idanl <- ANX$IDANL[i]
   idcol <- ANX$IDCOL[i]
-  cat(paste0(IDANL, " ", idcol, "\n"))
+  cat(paste0(idanl, " ", idcol, "\n"))
   start_date <- ANX$DHDEB[i]
   end_date <- ANX$DHFIN[i]
   
   subset_data <- subset(GPS, IDCOL == idcol & DHACQ >= start_date & DHACQ <= end_date)
-  subset_data <- mutate(subset_data, ID = IDANL)
-  print(summary(subset_data))
+  subset_data <- mutate(subset_data, ID = idanl,
+                                     IDELV = ANX$IDELV[i],
+                                     TRA = ANX$TRA[i],
+                                     IDVIL = ANX$IDVIL[i])
+  # print(summary(subset_data))
+  # cat("\n")
   
   GPS_par_anx <- rbind(GPS_par_anx, subset_data)
-  cat("\n")
 }
 
 ## ACT
@@ -90,10 +93,6 @@ for (i in 1:nrow(ANX)) {
   print(summary(ACT_par_anx[[IDANL]]))
   cat("\n")
 }
-
-#### Ajout booleen transhumance
-GPS_par_anx$TRA <- as.logical(substr(GPS_par_anx$ID, 3, 3) == "T")
-
 
 #### Sauvegardes CSV
 workd1<-"./1_Data_clean_and_merge"
