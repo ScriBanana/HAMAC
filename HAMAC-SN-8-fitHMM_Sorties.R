@@ -84,18 +84,26 @@ plotPR(modhmm)
 
 ## Import des donnees
 repDonnees <- "./1_Data_clean_and_merge/"
-hmmdatavit <- readRDS(paste0(repDonnees,"/HAMAC-SN-HMMDATA.rds"))
+hmmdata <- readRDS(paste0(repDonnees,"/HAMAC-SN-HMMDATA.rds"))
+
+if (length(modhmmdata[, 1]) != length(hmmdata[, 1])) {
+  print("ERREUR : Nombre de points différents dans les données d'entrée et celles du modèle")
+}
 
 ## Decomposition de la date pour QGIS
-hmmdatavit$DAT <- format(hmmdatavit$DHACQ, "%y-%m-%d")
-hmmdatavit$YER <- as.numeric(format(hmmdatavit$DHACQ, "%y"))
-hmmdatavit$MON <- as.numeric(format(hmmdatavit$DHACQ, "%m"))
-hmmdatavit$DAY <- as.numeric(format(hmmdatavit$DHACQ, "%d"))
-hmmdatavit$HUR <- format(hmmdatavit$DHACQ, "%H:%M:%S")
+hmmdata$DAT <- format(hmmdata$DHACQ, "%y-%m-%d")
+hmmdata$YER <- as.numeric(format(hmmdata$DHACQ, "%y"))
+hmmdata$MON <- as.numeric(format(hmmdata$DHACQ, "%m"))
+hmmdata$DAY <- as.numeric(format(hmmdata$DHACQ, "%d"))
+hmmdata$HUR <- format(hmmdata$DHACQ, "%H:%M:%S")
 
-## Ajout des �tats par Viterbi
+## Ajout des ?tats par Viterbi
 # Ajoute aux donnees de sortie une colonne avec les etats selon Viterbi
 modhmmdata <- modhmm$data %>% mutate(VIT = vit)
+
+hmmdatavit <- merge(hmmdata, modhmmdata, by = c("ID", "step", "angle", "x", "y"))
+hmmdatavit <- hmmdatavit %>% arrange(ID, DHACQ)
+hmmdatavit$`(Intercept)` <- NULL
 
 ## Sauvegardes
 write.table(hmmdatavit, paste0(
