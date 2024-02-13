@@ -48,7 +48,8 @@ cat("\nACT Table:\n")
 print(head(ACT))
 
 
-#### Segmentation GPS
+#### Segmentation
+## GPS
 GPS_par_anx <- data.frame()
 
 for (i in 1:nrow(ANX)) {
@@ -66,7 +67,7 @@ for (i in 1:nrow(ANX)) {
   cat("\n")
 }
 
-# Segmentation ACT
+## ACT
 ACT_par_anx <- list()
 
 for (i in 1:nrow(ANX)) {
@@ -90,7 +91,11 @@ for (i in 1:nrow(ANX)) {
   cat("\n")
 }
 
-# Sauvegardes CSV
+#### Ajout booleen transhumance
+GPS_par_anx$TRA <- as.logical(substr(GPS_par_anx$ID, 3, 3) == "T")
+
+
+#### Sauvegardes CSV
 workd1<-"./1_Data_clean_and_merge"
 write.table(GPS_par_anx,paste0(workd1,"/HAMAC-SN-GPSpANX.csv"),sep=";", row.names=FALSE)
 write.table(bind_rows(ACT_par_anx),paste0(workd1,"/HAMAC-SN-ACTpANX.csv"),sep=";", row.names=FALSE)
