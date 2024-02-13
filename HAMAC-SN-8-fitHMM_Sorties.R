@@ -100,13 +100,15 @@ hmmdata$HUR <- format(hmmdata$DHACQ, "%H:%M:%S")
 ## Ajout des ?tats par Viterbi
 # Ajoute aux donnees de sortie une colonne avec les etats selon Viterbi
 modhmmdata <- modhmm$data %>% mutate(VIT = vit)
+modhmmdata$`(Intercept)` <- NULL
 
 hmmdatavit <- merge(hmmdata, modhmmdata, by = c("ID", "step", "angle", "x", "y"))
 hmmdatavit <- hmmdatavit %>% arrange(ID, DHACQ)
-hmmdatavit$`(Intercept)` <- NULL
+head(hmmdatavit)
 
 ## Sauvegardes
 repSauvegardes <- "./2_Fits_outputs/"
+saveRDS(hmmdatavit, paste0(repSauvegardes,"/HAMAC-SN-MODHMMDATA.rds"))
 write.table(hmmdatavit, paste0(
   repSauvegardes, format(Sys.time(), format = "%y%m%d%H%M%S"),
   "-MODHMMDATA.csv"), sep=";", row.names=FALSE)
