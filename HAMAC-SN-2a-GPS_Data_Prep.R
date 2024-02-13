@@ -145,7 +145,7 @@ GPSACQ <- GPSACQ %>%
         DHACQ < ymd_hms("2023-08-10 00:00:00") 
     ) &
     !(IDCOL == 44160 &
-        DHACQ > ymd_hms("2023-06-17 00:00:00") # DeltasT à 1h
+        DHACQ > ymd_hms("2023-06-17 00:00:00") # DeltasT de 1h
     ) &
     !(IDCOL == 44161 &
         DHACQ > ymd_hms("2023-02-15 00:00:00")
@@ -249,16 +249,10 @@ head(GPSACQ)
 rm(SUNTABLE)
 
 ################################################################################
-# A. Ajout de covariables supplémentaires
+# A. Covariable de saison
 
-#### Décomposition de la date
-GPSACQ$DAT <- format(GPSACQ$DHACQ, "%y-%m-%d")
-GPSACQ$YER <- as.numeric(format(GPSACQ$DHACQ, "%y"))
 GPSACQ$MON <- as.numeric(format(GPSACQ$DHACQ, "%m"))
-GPSACQ$DAY <- as.numeric(format(GPSACQ$DHACQ, "%d"))
-GPSACQ$HUR <- format(GPSACQ$DHACQ, "%H:%M:%S")
 
-#### Saison
 # Hivernage: juin-octobre Saison sèche froide: novembre-février Saison sèche chaude: mars-mai
 debutSSc <- 3
 debutSP <- 6
@@ -272,6 +266,8 @@ attribSeason <- function(idMois) {
 
 setDT(GPSACQ)
 GPSACQ[, SES := attribSeason(MON)]
+
+GPSACQ$MON <- NULL
 
 ################################################################################
 # A.Maintien de l'ordre chronologique. 
