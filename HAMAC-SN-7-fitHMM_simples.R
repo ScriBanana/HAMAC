@@ -60,10 +60,15 @@ switch((nbStates - 1),
   }
 )
 
+#### Covariables
+formula = 
+  ~1
+  # ~GPS_TMP
+  # ~AcX + AcZ
 
 #### Fit d'un modele
 stepPar0 <- c(stepMean0, stepSD0, zeroMass0)
 anglePar0 <- c(angleMean0, angleCon0)
-modhmm <- fitHMM_Log(data = hmmdata, nbStates = nbStates, formula = ~GPS_TMP,
+modhmm <- fitHMM_Log(data = hmmdata, nbStates = nbStates, formula = formula,
                             stepPar0 = stepPar0, anglePar0 = anglePar0)
 
