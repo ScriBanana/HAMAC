@@ -29,13 +29,6 @@ AIC(modhmm)
 ## Intervalle confiance (95%)
 CI(modhmm)
 
-## Tracer les plots en 2 deux fa?ons soit pour visualisations sans enregistrements  ou avec en pdf
-# plot(modhmm, plotCI = TRUE, ask = FALSE)
-# Densites de probabilite vs histogrammes
-# + prob de transition en fonction des covariables
-# + Plot des trajets avec les points de Viterbi (plotTracks = T)
-
-
 # Enregistrement des distributions en PDF
 repSauvegardes <- "./2_Fits_outputs/"
 pdf(paste0(repSauvegardes, "Out_Graphs/", format(Sys.time(), format = "%y%m%d%H%M%S"), '-PlotModHMM.pdf'),
@@ -43,8 +36,9 @@ pdf(paste0(repSauvegardes, "Out_Graphs/", format(Sys.time(), format = "%y%m%d%H%
     colormodel = "cmyk",
     paper = "A4")
 par(mfrow = c(2, 1))
+plotPR(modhmm, ask = FALSE)
 plot(modhmm, plotCI = TRUE, ask = FALSE)
-plotPR(modhmm)
+plotStates(modhmm)
 dev.off()
 
 
@@ -67,6 +61,13 @@ for (i in 1:nbStates) {
 
 
 # Plot
+
+## Tracer les plots en 2 deux fa?ons soit pour visualisations sans enregistrements  ou avec en pdf
+# plot(modhmm, plotCI = TRUE, ask = FALSE)
+# Densites de probabilite vs histogrammes
+# + prob de transition en fonction des covariables
+# + Plot des trajets avec les points de Viterbi (plotTracks = T)
+
 plotStates(modhmm)
 plotStates(modhmm, animals = "VBT11")
 
@@ -74,21 +75,20 @@ plotStates(modhmm, animals = "VBT11")
 # plotStationary(modhmm, plotCI = T)
 
 # compute the pseudo-residuals
-pr <- pseudoRes(modhmm)
+# pr <- pseudoRes(modhmm)
 
 # time series, qq-plots, and ACF of the pseudo-residuals
 plotPR(modhmm)
 
-
+################################################################################
 #### Manipulations sur les donnees avec les sorties du modele
 
 ## Import des donnees
 repDonnees <- "./1_Data_clean_and_merge/"
 hmmdata <- readRDS(paste0(repDonnees,"/HAMAC-SN-HMMDATA.rds"))
 
-if (length(modhmmdata[, 1]) != length(hmmdata[, 1])) {
-  print("ERREUR : Nombre de points différents dans les données d'entrée et celles du modèle")
-}
+
+# COMMENCER ICI
 
 ## Decomposition de la date pour QGIS
 hmmdata$DAT <- format(hmmdata$DHACQ, "%y-%m-%d")
@@ -101,6 +101,10 @@ hmmdata$HUR <- format(hmmdata$DHACQ, "%H:%M:%S")
 # Ajoute aux donnees de sortie une colonne avec les etats selon Viterbi
 modhmmdata <- modhmm$data %>% mutate(VIT = vit)
 modhmmdata$`(Intercept)` <- NULL
+
+if (length(modhmmdata[, 1]) != length(hmmdata[, 1])) {
+  print("ERREUR : Nombre de points différents dans les données d'entrée et celles du modèle")
+}
 
 hmmdatavit <- merge(hmmdata, modhmmdata, by = c("ID", "step", "angle", "x", "y"))
 hmmdatavit <- hmmdatavit %>% arrange(ID, DHACQ)
