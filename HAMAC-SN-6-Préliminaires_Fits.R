@@ -14,12 +14,14 @@ outDir <- "./2_Fits_outputs/"
 logFile <- "HAMAC-SN-Log.csv"
 
 #### Fonction de fit avec enregistrement dans le log
-fitHMM_Log <- function (data, nbStates, stepPar0, anglePar0) {
+fitHMM_Log <- function (data, nbStates, formula = ~1, stepPar0, anglePar0) {
   
   print(paste0("Debut d'execution de FitHMM : ", date()))
   timestamp <- Sys.time()
   
-  modhmm <- fitHMM(data = data, verbose = 1, nbStates = nbStates, anglePar0 = anglePar0, stepPar0 = stepPar0)
+  modhmm <- fitHMM(data = data, verbose = 0,
+                   nbStates = nbStates, formula = formula,
+                   anglePar0 = anglePar0, stepPar0 = stepPar0)
   
   indicateurs <- c(modhmm$mod$minimum, AIC(modhmm), modhmm$mod$iterations)
   anglePar <- c(modhmm$mle$anglePar[1,], modhmm$mle$anglePar[2,])

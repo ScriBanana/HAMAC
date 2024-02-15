@@ -24,6 +24,9 @@ hmmdata <- hmmdata[substr(hmmdata$ID, 3, 3) == "T", ]
 # Sedentaires
 hmmdata <- hmmdata[substr(hmmdata$ID, 3, 3) == "R", ]
 
+# Un subset des données
+hmmdata <- hmmdata[1:10000, ]
+
 
 #### Parametres initiaux
 
@@ -45,14 +48,14 @@ switch((nbStates - 1),
 
   }, 
   { ### Si 3 ?tats :
-    stepMean0 <-c(0.020, 0.3, 0.900) # initial means (one for each state)
-    stepSD0 <- c(0.02, 0.2, 0.500)
+    stepMean0 <-c(0.013, 0.150, 0.600) # initial means (one for each state)
+    stepSD0 <- c(0.011, 0.130, 0.420)
     propzero <- length(which(hmmdata$step == 0))/nrow(hmmdata)
     zeroMass0 <- c(propzero, propzero/100, propzero/100)
     
     ## Angle
-    angleMean0 <- c(pi, 0, 0) # initial means (one for each state)
-    angleCon0 <- c(1, 5, 5) # initial concentrations (one for each state)
+    angleMean0 <- c(-3.05, 0, 0) # initial means (one for each state)
+    angleCon0 <- c(0.3, 0.06, 1.7) # initial concentrations (one for each state)
 
   }
 )
@@ -61,6 +64,6 @@ switch((nbStates - 1),
 #### Fit d'un modele
 stepPar0 <- c(stepMean0, stepSD0, zeroMass0)
 anglePar0 <- c(angleMean0, angleCon0)
-modhmm <- fitHMM_Log(data = hmmdata, nbStates = nbStates,
+modhmm <- fitHMM_Log(data = hmmdata, nbStates = nbStates, formula = ~GPS_TMP,
                             stepPar0 = stepPar0, anglePar0 = anglePar0)
 
