@@ -48,8 +48,8 @@ switch((nbStates - 1),
 
   }, 
   { ### Si 3 ?tats :
-    stepMean0 <-c(0.013, 0.150, 0.600) # initial means (one for each state)
-    stepSD0 <- c(0.011, 0.130, 0.420)
+    stepMean0 <-c(0.020, 0.150, 0.600) # initial means (one for each state)
+    stepSD0 <- c(0.020, 0.130, 0.420)
     propzero <- length(which(hmmdata$step == 0))/nrow(hmmdata)
     zeroMass0 <- c(propzero, propzero/100, propzero/100)
     

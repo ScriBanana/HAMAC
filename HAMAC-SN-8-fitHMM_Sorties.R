@@ -17,7 +17,7 @@ rm(list=ls())
 
 #### Charger un RDS
 cheminSorties <- "./2_Fits_outputs/"
-modhmm <- readRDS(paste0(cheminSorties ,"240203062959-HAMAC-SN-ModHMM-3Et.rds"))
+modhmm <- readRDS(paste0(cheminSorties ,"240215175224-HAMAC-SN-ModHMM-3Et.rds"))
 
 ## Estimations des maxima de vraisemblance des parametres
 modhmm
