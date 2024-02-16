@@ -38,7 +38,7 @@ pdf(paste0(repSauvegardes, "Out_Graphs/", format(Sys.time(), format = "%y%m%d%H%
 par(mfrow = c(2, 1))
 plotPR(modhmm, ask = FALSE)
 plot(modhmm, plotCI = TRUE, ask = FALSE)
-plotStates(modhmm)
+plotStates(modhmm, ask = FALSE)
 dev.off()
 
 
