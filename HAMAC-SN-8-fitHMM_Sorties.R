@@ -18,6 +18,7 @@ rm(list=ls())
 #### Charger un RDS
 cheminSorties <- "./2_Fits_outputs/"
 modhmm <- readRDS(paste0(cheminSorties ,"240203062959-HAMAC-SN-ModHMM-3Et.rds"))
+nbStates <- length(modhmm$mle$stepPar[1,])
 
 ## Estimations des maxima de vraisemblance des parametres
 modhmm
@@ -55,8 +56,8 @@ vit <- viterbi(modhmm)
 # R??partition des ??tats
 for (i in 1:nbStates) {
   print(paste0("Etat ", i,
-               " - Nb points : ", table(vit)[i],
-               ", prop : ", table(vit)[i]/sum(table(vit))))
+               " - Nb points : ", table(vit)[i], ", prop : ",
+               round(table(vit)[i]/sum(table(vit)) * 100), "%"))
 }
 
 
