@@ -64,7 +64,7 @@ switch((nbStates - 1),
 formula = 
   ~1
   # ~GPS_TMP
-  # ~AcX + AcZ
+  # ~AcX + AcY + AcZ
 
 #### Fit d'un modele
 stepPar0 <- c(stepMean0, stepSD0, zeroMass0)

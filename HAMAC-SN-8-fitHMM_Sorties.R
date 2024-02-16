@@ -22,12 +22,12 @@ modhmm <- readRDS(paste0(cheminSorties ,"240203062959-HAMAC-SN-ModHMM-3Et.rds"))
 ## Estimations des maxima de vraisemblance des parametres
 modhmm
 # Sorties de la fonction d'optimisation :
-modhmm$mod
+# modhmm$mod
 # AIC du mod????le :
 AIC(modhmm)
 
 ## Intervalle confiance (95%)
-CI(modhmm)
+# CI(modhmm)
 
 # Enregistrement des distributions en PDF
 repSauvegardes <- "./2_Fits_outputs/"
@@ -68,8 +68,8 @@ for (i in 1:nbStates) {
 # + prob de transition en fonction des covariables
 # + Plot des trajets avec les points de Viterbi (plotTracks = T)
 
-plotStates(modhmm)
-plotStates(modhmm, animals = "VBT11")
+# plotStates(modhmm)
+# plotStates(modhmm, animals = "VBT11")
 
 ## Probabilite de rester dans chaque etat en fonction des covariables
 # plotStationary(modhmm, plotCI = T)
@@ -78,7 +78,7 @@ plotStates(modhmm, animals = "VBT11")
 # pr <- pseudoRes(modhmm)
 
 # time series, qq-plots, and ACF of the pseudo-residuals
-plotPR(modhmm)
+# plotPR(modhmm)
 
 ################################################################################
 #### Manipulations sur les donnees avec les sorties du modele
