@@ -17,7 +17,7 @@ rm(list=ls())
 
 #### Charger un RDS
 cheminSorties <- "./2_Fits_outputs/"
-modhmm <- readRDS(paste0(cheminSorties ,"240215175224-HAMAC-SN-ModHMM-3Et.rds"))
+modhmm <- readRDS(paste0(cheminSorties ,"240216212430-HAMAC-SN-ModHMM-3Et.rds"))
 nbStates <- length(modhmm$mle$stepPar[1,])
 
 ## Estimations des maxima de vraisemblance des parametres
@@ -37,7 +37,7 @@ pdf(paste0(repSauvegardes, "Out_Graphs/", format(Sys.time(), format = "%y%m%d%H%
     colormodel = "cmyk",
     paper = "A4")
 par(mfrow = c(2, 1))
-plotPR(modhmm, ask = FALSE)
+plotPR(modhmm)
 plot(modhmm, plotCI = TRUE, ask = FALSE)
 plotStates(modhmm, ask = FALSE)
 dev.off()
