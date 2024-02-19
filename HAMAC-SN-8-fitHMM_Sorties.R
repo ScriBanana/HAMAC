@@ -51,7 +51,7 @@ head(sp)
 # S????quence d????cod????e
 vit <- viterbi(modhmm)
 # states[1:25]
-
+#nbStates : le nombre d'états dans onglets 7 à relancer si demande
 # R??partition des ??tats
 for (i in 1:nbStates) {
   print(paste0("Etat ", i,

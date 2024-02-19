@@ -48,8 +48,8 @@ switch((nbStates - 1),
 
   }, 
   { ### Si 3 ?tats :
-    stepMean0 <-c(0.020, 0.150, 0.600) # initial means (one for each state)
-    stepSD0 <- c(0.020, 0.130, 0.420)
+    stepMean0 <-c(0.020, 0.200, 0.800) # initial means (one for each state)
+    stepSD0 <- c(0.020, 0.200, 0.400)
     propzero <- length(which(hmmdata$step == 0))/nrow(hmmdata)
     zeroMass0 <- c(propzero, propzero/100, propzero/100)
     
@@ -61,8 +61,8 @@ switch((nbStates - 1),
 )
 
 #### Covariables
-formula = 
-  ~1
+formula = ~AcX + AcY + AcZ
+  #~1
   # ~GPS_TMP
   # ~AcX + AcY + AcZ
 
