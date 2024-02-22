@@ -61,10 +61,12 @@ switch((nbStates - 1),
 )
 
 #### Covariables
-formula = ~AcX + AcY + AcZ
+formula =
   #~1
   # ~GPS_TMP
   # ~AcX + AcY + AcZ
+  ~AcX + AcY + AcZ + GPS_TMP
+  # ~SES
 
 #### Fit d'un modele
 stepPar0 <- c(stepMean0, stepSD0, zeroMass0)

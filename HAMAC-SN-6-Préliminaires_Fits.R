@@ -66,4 +66,4 @@ if (!file.exists(paste0(outDir, logFile))) {
 hmmdata <- readRDS(paste0(repDonnees,"/HAMAC-SN-HMMDATA.rds"))
 
 head(hmmdata)
-summary(hmmdata)
+# summary(hmmdata)
