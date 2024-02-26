@@ -7,6 +7,7 @@
 library(moveHMM)
 library(dplyr)
 library(ggplot2)
+library(treemap)
 
 
 setwd("/home/scriban/Dropbox/Thèse/DonneesEtSauvegardes/WorkspaceR/HAMAC")
@@ -54,11 +55,28 @@ vit <- viterbi(modhmm)
 # states[1:25]
 #nbStates : le nombre d'?tats dans onglets 7 ? relancer si demande
 # R??partition des ??tats
+tabprop <- data.frame(
+  id = character(nbStates),
+  nb = numeric(nbStates),
+  prc = numeric(nbStates)
+)
 for (i in 1:nbStates) {
+  tabprop[i, "id"] <- paste0("État ", i)
+  tabprop[i, "nb"] <- table(vit)[i]
+  tabprop[i, "prc"] <- table(vit)[i]/sum(table(vit))
   print(paste0("Etat ", i,
                " - Nb points : ", table(vit)[i], ", prop : ",
                round(table(vit)[i]/sum(table(vit)) * 100), "%"))
 }
+tabprop
+
+# treemap(tabprop,
+#         index = 1,
+#         vSize = 2)
+pie(tabprop$nb,
+    labels = paste0(
+      tabprop$id, " : ",
+      round(tabprop$prc * 100), "%"))
 
 
 # Plot
