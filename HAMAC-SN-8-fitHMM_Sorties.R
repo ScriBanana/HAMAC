@@ -17,7 +17,7 @@ rm(list=ls())
 
 #### Charger un RDS
 cheminSorties <- "./2_Fits_outputs/"
-modhmm <- readRDS(paste0(cheminSorties ,"240216212430-HAMAC-SN-ModHMM-3Et.rds"))
+modhmm <- readRDS(paste0(cheminSorties ,"Mod3EtAcc.rds"))
 nbStates <- length(modhmm$mle$stepPar[1,])
 
 ## Estimations des maxima de vraisemblance des parametres
@@ -36,8 +36,8 @@ pdf(paste0(repSauvegardes, "Out_Graphs/", format(Sys.time(), format = "%y%m%d%H%
     width = 8, height = 10,
     colormodel = "cmyk",
     paper = "A4")
-par(mfrow = c(2, 1))
 plotPR(modhmm)
+par(mfrow = c(2, 1))
 plot(modhmm, plotCI = TRUE, ask = FALSE)
 plotStates(modhmm, ask = FALSE)
 dev.off()
@@ -52,7 +52,7 @@ head(sp)
 # S????quence d????cod????e
 vit <- viterbi(modhmm)
 # states[1:25]
-#nbStates : le nombre d'états dans onglets 7 à relancer si demande
+#nbStates : le nombre d'?tats dans onglets 7 ? relancer si demande
 # R??partition des ??tats
 for (i in 1:nbStates) {
   print(paste0("Etat ", i,

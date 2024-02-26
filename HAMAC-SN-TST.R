@@ -320,3 +320,55 @@ result_list[[1]]$stepPar0
 plot(modhmm$data[modhmm$data$ID == "VBT11",]$step)
 plot(hmmdata[hmmdata$ID == "VBT21",]$DHACQ, hmmdata[hmmdata$ID == "VBT21",]$step)
 
+
+##############
+## Figuers diverses
+dataAnalSens <- read.table(
+  "/home/scriban/Dropbox/Thèse/Productions/Articles/Mobi/Figures/Explo106runs3Et.csv",
+  sep=";", skip=34, header = T)
+plot(dataAnalSens$et2.stepmean.1, dataAnalSens$et3.stepmean.1)
+
+## Animove
+n = nrow(dataAnalSens)
+angleMean = matrix(nrow = n * 2, ncol = nbStates)
+angleCon = matrix(nrow = n * 2, ncol = nbStates)
+stepShape = matrix(nrow = n * 2, ncol = nbStates)
+stepScale = matrix(nrow = n * 2, ncol = nbStates)
+nll = vector()
+
+for (i in 1:n) {
+  angleMean[i,] = c(dataAnalSens[i,]$et1.angmean, dataAnalSens[i,]$et2.angmean, dataAnalSens[i,]$et3.angmean)
+  angleCon[i,] = c(dataAnalSens[i,]$et1.angcon, dataAnalSens[i,]$et2.angcon, dataAnalSens[i,]$et3.angcon)
+  stepShape[i,] = c(dataAnalSens[i,]$et1.stepmean, dataAnalSens[i,]$et2.stepmean, dataAnalSens[i,]$et3.stepmean)
+  stepScale[i,] = c(dataAnalSens[i,]$et1.stepSD, dataAnalSens[i,]$et2.stepSD, dataAnalSens[i,]$et3.stepSD)
+  nll[i] = dataAnalSens[i,]$Vraisemblance
+}
+
+for (i in 1:n) {
+  angleMean[i + n,] = c(dataAnalSens[i,]$et1.angmean.1, dataAnalSens[i,]$et2.angmean.1, dataAnalSens[i,]$et3.angmean.1)
+  angleCon[i + n,] = c(dataAnalSens[i,]$et1.angcon.1, dataAnalSens[i,]$et2.angcon.1, dataAnalSens[i,]$et3.angcon.1)
+  stepShape[i + n,] = c(dataAnalSens[i,]$et1.stepmean.1, dataAnalSens[i,]$et2.stepmean.1, dataAnalSens[i,]$et3.stepmean.1)
+  stepScale[i + n,] = c(dataAnalSens[i,]$et1.stepSD.1, dataAnalSens[i,]$et2.stepSD.1, dataAnalSens[i,]$et3.stepSD.1)
+  nll[i + n] = dataAnalSens[i,]$Vraisemblance * 10
+}
+
+par(mfrow = c(2, 2))
+colors = ifelse(nll < 200000, "red",
+                ifelse(nll < 500000, "black", "gray"))
+plot(angleMean[,1], angleMean[,3], col = colors,
+     xlab = "state 1", ylab = "state 3", main = "Angle mean",
+     xlim = c(-pi, pi), ylim = c(-pi, pi))
+plot(angleCon[,1], angleCon[,3], col = colors,
+     xlab = "state 1", ylab = "state 3", main = "Angle concentration",
+     xlim = c(0, 2), ylim = c(0, 15))
+plot(stepShape[,1], stepShape[,3], col = colors,
+     xlab = "state 1", ylab = "state 3", main = "Step Mean",
+     xlim = c(0, 0.1), ylim = c(0.3, 1))
+plot(stepScale[,1], stepScale[,3], col = colors,
+     xlab = "state 1", ylab = "state 3", main = "Step SD",
+     xlim = c(0, 0.2), ylim = c(0, 0.8))
+
+par(mfrow = c(1, 1))
+plot(stepShape[,2], stepShape[,3], col = colors,
+     xlab = "state 2", ylab = "state 3", main = "Step Mean",
+     xlim = c(0, 0.25), ylim = c(0.3, 1))
