@@ -56,8 +56,8 @@ generate_initial_params <- function() {
                   min = c(0.005, 0.050, 0.100),
                   max = c(0.100, 0.500, 1.000)),
     angleMean0 = runif(nbStates, # L? :
-                  min = c(-pi, -pi, -0.5),
-                  max = c(pi, pi, 0.5)),
+                  min = c(-3, -3, -0.5),
+                  max = c(3, 3, 0.5)),
     angleCon0 = runif(nbStates, # Et l? :
                   min = c(0.1, 1.5, 1),
                   max = c(1, 5, 15)),
@@ -79,7 +79,7 @@ tpsDebut <- Sys.time()
 plan(multisession, workers = nThreads)
 
 # Fait tourner fitHMM_Log sur chaque jeu
-modhmmList <- initial_params_list %>% future_map(fitWithParam)
+modhmmList <- initial_params_list %>% future_map(possibly(fitWithParam))
 
 plan(sequential) # Fin parallelisation
 print(paste0("Fin des calculs : ", date()))
