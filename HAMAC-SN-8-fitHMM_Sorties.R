@@ -7,7 +7,6 @@
 library(moveHMM)
 library(dplyr)
 library(ggplot2)
-library(treemap)
 
 
 setwd("/home/scriban/Dropbox/Thèse/DonneesEtSauvegardes/WorkspaceR/HAMAC")
@@ -18,7 +17,7 @@ rm(list=ls())
 
 #### Charger un RDS
 cheminSorties <- "./2_Fits_outputs/"
-modhmm <- readRDS(paste0(cheminSorties ,"Mod3EtAcc.rds"))
+modhmm <- readRDS(paste0(cheminSorties ,"Mod3Et0Cov.rds"))
 nbStates <- length(modhmm$mle$stepPar[1,])
 
 ## Estimations des maxima de vraisemblance des parametres
@@ -152,9 +151,10 @@ for (id in unique(hmmdatavit$ID)) {
 
 
 repSauvegardes <- "./2_Fits_outputs/"
-meilleurModele2e <- readRDS(paste0(repSauvegardes,"240129181847-HAMAC-SN-ModHMM-2Et.rds"))
-meilleurModele3e <- readRDS(paste0(repSauvegardes,"240127202639-HAMAC-SN-ModHMM-3Et.rds"))
-AIC(meilleurModele2e, meilleurModele3e)
+meilleurModele2e <- readRDS(paste0(repSauvegardes,"Mod2Et0Cov.rds"))
+meilleurModele3e <- readRDS(paste0(repSauvegardes,"Mod3Et0Cov.rds"))
+meilleurModeleAcc <- readRDS(paste0(repSauvegardes,"Mod3EtAcc.rds"))
+AIC(meilleurModele2e, meilleurModele3e, meilleurModeleAcc)
 AIC2 <- AIC(meilleurModele2e)
 AIC3 <- AIC(meilleurModele3e)
 exp((AIC3-AIC2)/2)
