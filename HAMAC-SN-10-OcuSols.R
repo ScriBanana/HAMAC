@@ -64,3 +64,17 @@ table(OcuSolsLegende$Legende.finale)
 ## Sauvegarde
 write.csv2(OcuSolsLegende, file =  paste0(cheminDonnees, "OcuSolsClasses.csv"),
             row.names = FALSE)
+
+## Graphs
+OcuSolsLegende <- read.csv2(paste0(cheminDonnees, "OcuSolsClasses.csv"))
+OcuSolsLegende <- OcuSolsLegende[OcuSolsLegende$ID == "VBT51",]
+
+ggplot(OcuSolsLegende, aes(x = SES, fill = Legende.finale)) +
+  facet_grid(VIT ~ .) +
+  geom_bar(position = "fill", stat = "count") +
+  scale_y_continuous(labels = scales::percent_format()) +
+  labs(title = "Proportion de paysage occupé par état des troupeaux et par saison",
+       x = "Season",
+       y = "Proportion",
+       fill = "Occupation du sol")
+
