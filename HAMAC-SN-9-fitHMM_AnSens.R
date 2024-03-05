@@ -43,19 +43,22 @@ generate_initial_params <- function() {
   propzero <- length(which(hmmdata$step == 0))/nrow(hmmdata)
   list(
     stepMean0 = runif(nbStates, # Ici :
-                      min = c(0.005, 0.050, 0.300),
-                      max = c(0.100, 0.250, 1.000)),
-    stepSD0 = runif(nbStates, # Là :
-                    min = c(0.005, 0.030, 0.100),
-                    max = c(0.200, 0.200, 0.800)),
-    angleMean0 = rep(0, nbStates),
-    angleCon0 = runif(nbStates, # Et là :
-                      min = c(0.5, 3, 5),
-                      max = c(2, 10, 15)),
+                  min = c(0.005, 0.050, 0.100),
+                  max = c(0.100, 0.250, 1.000)),
+    stepSD0 = runif(nbStates, # L? :
+                  min = c(0.005, 0.050, 0.100),
+                  max = c(0.100, 0.500, 1.000)),
+    angleMean0 = runif(nbStates, # L? :
+                  min = c(-pi, -pi, -0.5),
+                  max = c(pi, pi, 0.5)),
+    angleCon0 = runif(nbStates, # Et l? :
+                  min = c(0.1, 1.5, 1),
+                  max = c(1, 5, 15)),
     zeroMass0 = c(propzero, rep(propzero/100, nbStates - 1))
-    
   )
 }
+
+# ajouter accÃ©lÃ©ro
 
 ################################################################################
 #### Execution
