@@ -359,15 +359,16 @@ colors = ifelse(nll < 200000, "red",
 plot(angleMean[,1], angleMean[,3], col = colors,
      xlab = "state 1", ylab = "state 3", main = "Angle mean")
     # xlim = c(-pi, pi), ylim = c(-pi, pi))
-plot(angleCon[,1], angleCon[,3], col = colors,
-     xlab = "state 1", ylab = "state 3", main = "Angle concentration")
-   #  xlim = c(0, 2), ylim = c(0, 15))
-plot(stepShape[,1], stepShape[,3], col = colors,
-     xlab = "state 1", ylab = "state 3", main = "Step Mean")
-   #  xlim = c(0, 0.1), ylim = c(0.3, 1))
-plot(stepScale[,1], stepScale[,3], col = colors,
-     xlab = "state 1", ylab = "state 3", main = "Step SD")
-   #  xlim = c(0, 0.2), ylim = c(0, 0.8))
+plot(angleCon[,2], angleCon[,3], col = colors,
+     xlab = "state 2", ylab = "state 3", main = "Angle concentration",
+     xlim = c(0, 5), ylim = c(1, 30))
+plot(stepShape[,2], stepShape[,3], col = colors,
+     xlab = "state 2", ylab = "state 3", main = "Step Mean",
+     xlim = c(0, 1), ylim = c(0, 1))
+plot(stepScale[,1], stepScale[,2], col = colors,
+     xlab = "state 1", ylab = "state 2", main = "Step SD",
+     #xlim = c(0, 0.2),
+     ylim = c(0, 0.5))
 
 par(mfrow = c(1, 1))
 plot(stepShape[,2], stepShape[,3], col = colors,
