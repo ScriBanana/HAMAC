@@ -23,7 +23,7 @@ summary(hmmdata)
 #### Définition des fonctions
 fitWithParam <- function(initial_params) { # Simplifie les calls
   fitHMM_Log(data = hmmdata, nbStates = nbStates,
-             formula = initial_params$formula,
+             formula = formula,
              stepPar0 = c(initial_params$stepMean0,
                           initial_params$stepSD0,
                           initial_params$zeroMass0),
@@ -37,6 +37,12 @@ fitWithParam <- function(initial_params) { # Simplifie les calls
 nJxParamInit <- 110
 nThreads <- 22
 nbStates <- 3
+formula =
+  #~1
+  # ~GPS_TMP
+  ~ AcX + AcY + AcZ
+  # ~AcX + AcY + AcZ + GPS_TMP
+  # ~SES
 
 # Génère les jeux de paramètres initiaux. Remplir où indiqué
 generate_initial_params <- function() {
@@ -55,13 +61,7 @@ generate_initial_params <- function() {
     angleCon0 = runif(nbStates, # Et l? :
                   min = c(0.1, 1.5, 1),
                   max = c(1, 5, 15)),
-    zeroMass0 = c(propzero, rep(propzero/100, nbStates - 1)),
-    formula =
-      #~1
-      # ~GPS_TMP
-      ~ AcX + AcY + AcZ
-    # ~AcX + AcY + AcZ + GPS_TMP
-    # ~SES
+    zeroMass0 = c(propzero, rep(propzero/100, nbStates - 1))
   )
 }
 
