@@ -327,6 +327,7 @@ dataAnalSens <- read.table(
   "/home/scriban/Dropbox/Thèse/Productions/Articles/Mobi/Figures/Explo106runs3Et.csv",
   sep=";", skip=34, header = T)
 plot(dataAnalSens$et2.stepmean.1, dataAnalSens$et3.stepmean.1)
+nbStates <- 3
 
 ## Animove
 n = nrow(dataAnalSens)
@@ -356,19 +357,31 @@ par(mfrow = c(2, 2))
 colors = ifelse(nll < 200000, "red",
                 ifelse(nll < 500000, "black", "gray"))
 plot(angleMean[,1], angleMean[,3], col = colors,
-     xlab = "state 1", ylab = "state 3", main = "Angle mean",
-     xlim = c(-pi, pi), ylim = c(-pi, pi))
+     xlab = "state 1", ylab = "state 3", main = "Angle mean")
+    # xlim = c(-pi, pi), ylim = c(-pi, pi))
 plot(angleCon[,1], angleCon[,3], col = colors,
-     xlab = "state 1", ylab = "state 3", main = "Angle concentration",
-     xlim = c(0, 2), ylim = c(0, 15))
+     xlab = "state 1", ylab = "state 3", main = "Angle concentration")
+   #  xlim = c(0, 2), ylim = c(0, 15))
 plot(stepShape[,1], stepShape[,3], col = colors,
-     xlab = "state 1", ylab = "state 3", main = "Step Mean",
-     xlim = c(0, 0.1), ylim = c(0.3, 1))
+     xlab = "state 1", ylab = "state 3", main = "Step Mean")
+   #  xlim = c(0, 0.1), ylim = c(0.3, 1))
 plot(stepScale[,1], stepScale[,3], col = colors,
-     xlab = "state 1", ylab = "state 3", main = "Step SD",
-     xlim = c(0, 0.2), ylim = c(0, 0.8))
+     xlab = "state 1", ylab = "state 3", main = "Step SD")
+   #  xlim = c(0, 0.2), ylim = c(0, 0.8))
 
 par(mfrow = c(1, 1))
 plot(stepShape[,2], stepShape[,3], col = colors,
      xlab = "state 2", ylab = "state 3", main = "Step Mean",
      xlim = c(0, 0.25), ylim = c(0.3, 1))
+
+
+
+#### histogram
+histodata <- read.csv2("/home/scriban/Bureau/hist106pts.csv", header = F)
+hist(as.numeric(histodata$V1),
+     xlab = "Log-likelihood", main = "")
+
+
+
+
+
