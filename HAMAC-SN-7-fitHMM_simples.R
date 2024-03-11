@@ -65,8 +65,9 @@ formula =
   #~1
   # ~GPS_TMP
   # ~AcX + AcY + AcZ
-  ~AcX + AcY + AcZ + GPS_TMP
+  # ~AcX + AcY + AcZ + GPS_TMP
   # ~SES
+  ~ HMS
 
 #### Fit d'un modele
 stepPar0 <- c(stepMean0, stepSD0, zeroMass0)

@@ -34,15 +34,16 @@ fitWithParam <- function(initial_params) { # Simplifie les calls
 
 ################################################################################
 #### Paramètres
-nJxParamInit <- 110
+nJxParamInit <- 22
 nThreads <- 22
 nbStates <- 3
 formula =
   #~1
   # ~GPS_TMP
-  ~ AcX + AcY + AcZ
+  # ~ AcX + AcY + AcZ
   # ~AcX + AcY + AcZ + GPS_TMP
   # ~SES
+  ~AcX + AcY + AcZ + HMS
 
 # Génère les jeux de paramètres initiaux. Remplir où indiqué
 generate_initial_params <- function() {

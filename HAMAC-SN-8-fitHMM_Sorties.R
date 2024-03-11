@@ -17,7 +17,7 @@ rm(list=ls())
 
 #### Charger un RDS
 cheminSorties <- "./2_Fits_outputs/"
-modhmm <- readRDS(paste0(cheminSorties ,"Mod3Et0Cov.rds"))
+modhmm <- readRDS(paste0(cheminSorties ,"240306144524-HAMAC-SN-ModHMM-3Et.rds"))
 nbStates <- length(modhmm$mle$stepPar[1,])
 
 ## Estimations des maxima de vraisemblance des parametres
@@ -114,6 +114,9 @@ hmmdata$YER <- as.numeric(format(hmmdata$DHACQ, "%y"))
 hmmdata$MON <- as.numeric(format(hmmdata$DHACQ, "%m"))
 hmmdata$DAY <- as.numeric(format(hmmdata$DHACQ, "%d"))
 hmmdata$HUR <- format(hmmdata$DHACQ, "%H:%M:%S")
+hmmdata$HMS <- as.numeric(format(hmmdata$DHACQ, "%H")) * 10000 +
+              as.numeric(format(hmmdata$DHACQ, "%M")) * 100 +
+              as.numeric(format(hmmdata$DHACQ, "%S"))
 
 ## Ajout des ?tats par Viterbi
 # Ajoute aux donnees de sortie une colonne avec les etats selon Viterbi
