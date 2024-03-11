@@ -115,8 +115,10 @@ hmmdata$MON <- as.numeric(format(hmmdata$DHACQ, "%m"))
 hmmdata$DAY <- as.numeric(format(hmmdata$DHACQ, "%d"))
 hmmdata$HUR <- format(hmmdata$DHACQ, "%H:%M:%S")
 hmmdata$HMS <- as.numeric(format(hmmdata$DHACQ, "%H")) * 10000 +
-              as.numeric(format(hmmdata$DHACQ, "%M")) * 100 +
-              as.numeric(format(hmmdata$DHACQ, "%S"))
+  as.numeric(format(hmmdata$DHACQ, "%M")) * 100 +
+  as.numeric(format(hmmdata$DHACQ, "%S"))
+hmmdata$HRM <- as.numeric(format(hmmdata$DHACQ, "%H")) +
+  as.numeric(format(hmmdata$DHACQ, "%M")) / 60
 
 ## Ajout des ?tats par Viterbi
 # Ajoute aux donnees de sortie une colonne avec les etats selon Viterbi

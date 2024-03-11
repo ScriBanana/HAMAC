@@ -43,7 +43,7 @@ formula =
   # ~ AcX + AcY + AcZ
   # ~AcX + AcY + AcZ + GPS_TMP
   # ~SES
-  ~AcX + AcY + AcZ + HMS
+  ~AcX + AcY + AcZ + HRM
 
 # Génère les jeux de paramètres initiaux. Remplir où indiqué
 generate_initial_params <- function() {
