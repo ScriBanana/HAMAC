@@ -105,22 +105,7 @@ pie(tabprop$nb,
 repDonnees <- "./1_Data_clean_and_merge/"
 hmmdata <- readRDS(paste0(repDonnees,"/HAMAC-SN-HMMDATA.rds"))
 
-
 # COMMENCER ICI
-
-## Decomposition de la date pour QGIS
-hmmdata$DAT <- format(hmmdata$DHACQ, "%y-%m-%d")
-hmmdata$YER <- as.numeric(format(hmmdata$DHACQ, "%y"))
-hmmdata$MON <- as.numeric(format(hmmdata$DHACQ, "%m"))
-hmmdata$DAY <- as.numeric(format(hmmdata$DHACQ, "%d"))
-hmmdata$MND <- as.numeric(format(hmmdata$DHACQ, "%m")) +
-  as.numeric(format(hmmdata$DHACQ, "%d")) / 31
-hmmdata$HUR <- format(hmmdata$DHACQ, "%H:%M:%S")
-# hmmdata$HMS <- as.numeric(format(hmmdata$DHACQ, "%H")) * 10000 +
-#   as.numeric(format(hmmdata$DHACQ, "%M")) * 100 +
-#   as.numeric(format(hmmdata$DHACQ, "%S"))
-hmmdata$HRM <- as.numeric(format(hmmdata$DHACQ, "%H")) +
-  as.numeric(format(hmmdata$DHACQ, "%M")) / 60
 
 ## Ajout des ?tats par Viterbi
 # Ajoute aux donnees de sortie une colonne avec les etats selon Viterbi
