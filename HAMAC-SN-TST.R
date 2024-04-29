@@ -382,7 +382,24 @@ histodata <- read.csv2("/home/scriban/Bureau/hist106pts.csv", header = F)
 hist(as.numeric(histodata$V1),
      xlab = "Log-likelihood", main = "")
 
+#### histogramme des états par heure de la journée
+ggplot(hmmdatavit, aes(x = factor(floor(HRM)), fill = factor(VIT))) +
+  # facet_grid(VIT ~ .) +
+  geom_bar(position = "fill", stat = "count") +
+  # scale_y_continuous(labels = scales::percent_format()) +
+  labs(title = "Proportion de paysage occupÃ© par Ã©tat des troupeaux et par saison",
+       x = "Season",
+       y = "Proportion",
+       fill = "Occupation du sol")
 
 
-
+# Boxplot températures par mois
+hmmdatavitTMP <- hmmdatavit[hmmdatavit$GPS_TMP!=0,]
+ggplot(hmmdatavitTMP, aes(x = factor(ceiling(MND)), y = GPS_TMP)) +
+  facet_grid(DAYTM ~ TRA ) +
+  geom_boxplot() +
+  # scale_y_continuous(labels = scales::percent_format()) + # Pour stacker à 100%
+  labs(title = "",
+       x = "Month",
+       y = "Temperature (°C)")
 
