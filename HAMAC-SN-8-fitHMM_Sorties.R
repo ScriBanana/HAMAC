@@ -17,7 +17,7 @@ rm(list=ls())
 
 #### Charger un RDS
 cheminSorties <- "./2_Fits_outputs/"
-modhmm <- readRDS(paste0(cheminSorties ,"240306144524-HAMAC-SN-ModHMM-3Et.rds"))
+modhmm <- readRDS(paste0(cheminSorties ,"240312032645-HAMAC-SN-ModHMM-3Et.rds"))
 nbStates <- length(modhmm$mle$stepPar[1,])
 
 ## Estimations des maxima de vraisemblance des parametres
@@ -98,12 +98,15 @@ pie(tabprop$nb,
 # time series, qq-plots, and ACF of the pseudo-residuals
 # plotPR(modhmm)
 
+
 ################################################################################
 #### Manipulations sur les donnees avec les sorties du modele
 
 ## Import des donnees
 repDonnees <- "./1_Data_clean_and_merge/"
 hmmdata <- readRDS(paste0(repDonnees,"/HAMAC-SN-HMMDATA.rds"))
+
+hmmdata$MND <- as.numeric(format(hmmdata$DHACQ, "%j")) / 365 * 12
 
 # COMMENCER ICI
 
@@ -119,6 +122,60 @@ if (length(modhmmdata[, 1]) != length(hmmdata[, 1])) {
 hmmdatavit <- merge(hmmdata, modhmmdata, by = c("ID", "step", "angle", "x", "y"))
 hmmdatavit <- hmmdatavit %>% arrange(ID, DHACQ)
 head(hmmdatavit)
+
+hmmdatavit$SES <- factor(hmmdatavit$SES, levels = c("SP", "SSf", "SSc")) # TODO mettre les labels
+hmmdatavit$DAYTM <- factor(hmmdatavit$DAYTM, labels = c("Nighttime", "Daytime"))
+hmmdatavit$TRA <- factor(hmmdatavit$TRA, labels = c("Résidents", "Transhumant"))
+
+#### histogramme des états par heure de la journée
+ggplot(hmmdatavit, aes(x = factor(floor(HRM)), fill = factor(VIT))) +
+  facet_grid(SES ~ TRA) +
+  geom_bar(stat = "count",
+           position = "fill" # Pour stacker à 100%
+  ) +
+  scale_y_continuous(labels = scales::percent_format()) + # Pour stacker à 100%
+  labs(title = "Fréquence des états par heure et par saison",
+       x = "Heure",
+       y = "Proportion",
+       fill = "Etat")
+
+#### histogramme des états par mois de l'année
+ggplot(hmmdatavit, aes(x = factor(ceiling(MND)), fill = factor(VIT))) +
+  facet_grid(. ~ TRA) +
+  geom_bar(stat = "count",
+           position = "fill" # Pour stacker à 100%
+  ) +
+  scale_y_continuous(labels = scales::percent_format()) + # Pour stacker à 100%
+  labs(title = "Fréquence des états par mois",
+       x = "Mois",
+       y = "Proportion",
+       fill = "Etat")
+
+#### histogramme des états le jour et la nuit
+ggplot(hmmdatavit, aes(x = DAYTM, fill = factor(VIT))) +
+  facet_grid(SES ~ TRA) +
+  geom_bar(stat = "count",
+           position = "fill" # Pour stacker à 100%
+  ) +
+  scale_y_continuous(labels = scales::percent_format()) + # Pour stacker à 100%
+  labs(title = "Fréquence des états le jour et la nuit",
+       x = "",
+       y = "Proportion",
+       fill = "Etat")
+
+
+#### histogramme des états le jour et la nuit par mois
+ggplot(hmmdatavit, aes(x = factor(ceiling(MND)), fill = factor(VIT))) +
+  facet_grid(DAYTM ~ TRA) +
+  geom_bar(stat = "count",
+           position = "fill" # Pour stacker à 100%
+  ) +
+  scale_y_continuous(labels = scales::percent_format()) + # Pour stacker à 100%
+  labs(title = "Fréquence des états le jour et la nuit par mois",
+       x = "Mois",
+       y = "Proportion",
+       fill = "Etat")
+
 
 ## Sauvegardes
 repSauvegardes <- "./2_Fits_outputs/"
