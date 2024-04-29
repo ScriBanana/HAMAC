@@ -43,25 +43,39 @@ formula =
   # ~ AcX + AcY + AcZ
   # ~AcX + AcY + AcZ + GPS_TMP
   # ~SES
-  ~AcX + AcY + AcZ + HRM
+  # ~AcX + AcY + AcZ + HRM
+  # ~AcX + AcY + AcZ + MND
+  ~HRM + MND
 
 # Génère les jeux de paramètres initiaux. Remplir où indiqué
 generate_initial_params <- function() {
   
   propzero <- length(which(hmmdata$step == 0))/nrow(hmmdata)
   list(
-    stepMean0 = runif(nbStates, # Ici :
-                  min = c(0.005, 0.050, 0.100),
-                  max = c(0.100, 0.250, 1.000)),
-    stepSD0 = runif(nbStates, # L? :
-                  min = c(0.005, 0.050, 0.100),
-                  max = c(0.100, 0.500, 1.000)),
-    angleMean0 = runif(nbStates, # L? :
-                  min = c(-3, -3, -0.5),
-                  max = c(3, 3, 0.5)),
-    angleCon0 = runif(nbStates, # Et l? :
-                  min = c(0.1, 1.5, 1),
-                  max = c(1, 5, 15)),
+  #   stepMean0 = runif(nbStates, # Ici :
+  #                 min = c(0.005, 0.050, 0.100),
+  #                 max = c(0.100, 0.250, 1.000)),
+  #   stepSD0 = runif(nbStates, # L? :
+  #                 min = c(0.005, 0.050, 0.100),
+  #                 max = c(0.100, 0.500, 1.000)),
+  #   angleMean0 = runif(nbStates, # L? :
+  #                 min = c(-3, -3, -0.5),
+  #                 max = c(3, 3, 0.5)),
+  #   angleCon0 = runif(nbStates, # Et l? :
+  #                 min = c(0.1, 1.5, 1),
+  #                 max = c(1, 5, 15)),
+  stepMean0 = runif(nbStates, # Ici :
+                    min = c(0.005, 0.050, 0.100, 0.300),
+                    max = c(0.100, 0.250, 0.800, 1.000)),
+  stepSD0 = runif(nbStates, # L? :
+                  min = c(0.005, 0.050, 0.100, 0.400),
+                  max = c(0.100, 0.500, 0.800, 1.000)),
+  angleMean0 = runif(nbStates, # L? :
+                     min = c(-3, -3, -3, -0.5),
+                     max = c(3, 3, 3, 0.5)),
+  angleCon0 = runif(nbStates, # Et l? :
+                    min = c(0.1, 0.5, 1, 1),
+                    max = c(1, 5, 5, 15)),
     zeroMass0 = c(propzero, rep(propzero/100, nbStates - 1))
   )
 }
