@@ -382,7 +382,7 @@ histodata <- read.csv2("/home/scriban/Bureau/hist106pts.csv", header = F)
 hist(as.numeric(histodata$V1),
      xlab = "Log-likelihood", main = "")
 
-#### histogramme des états par heure de la journée
+#### histogramme des ?tats par heure de la journ?e
 ggplot(hmmdatavit, aes(x = factor(floor(HRM)), fill = factor(VIT))) +
   # facet_grid(VIT ~ .) +
   geom_bar(position = "fill", stat = "count") +
@@ -393,13 +393,25 @@ ggplot(hmmdatavit, aes(x = factor(floor(HRM)), fill = factor(VIT))) +
        fill = "Occupation du sol")
 
 
-# Boxplot températures par mois
+# Boxplot temp?ratures par mois
 hmmdatavitTMP <- hmmdatavit[hmmdatavit$GPS_TMP!=0,]
 ggplot(hmmdatavitTMP, aes(x = factor(ceiling(MND)), y = GPS_TMP)) +
   facet_grid(DAYTM ~ TRA ) +
   geom_boxplot() +
-  # scale_y_continuous(labels = scales::percent_format()) + # Pour stacker à 100%
+  # scale_y_continuous(labels = scales::percent_format()) + # Pour stacker ? 100%
   labs(title = "",
        x = "Month",
-       y = "Temperature (°C)")
+       y = "Temperature (?C)")
+
+
+
+#### Test simData
+stepPar <- c(0.0135348774, 1.801552e-01, 6.854884e-01,0.0119984945, 1.492473e-01, 4.398711e-01,
+             0.0004213871, 9.060636e-15, 7.128825e-12) # mean1, mean2, sd1, sd2, z1, z2
+anglePar <- c(-3.0534134, 5.344411e-05, -0.01464707,  0.2928482, 1.874756e-01,  1.95541075) # mean1, mean2, k1, k2
+stepDist <- "gamma"
+angleDist <- "vm"
+data <- simData(nbAnimals=5,nbStates=3,stepDist=stepDist,angleDist=angleDist,stepPar=stepPar,
+                anglePar=anglePar,nbCovs=2,zeroInflation=TRUE,obsPerAnimal=c(50,100))
+plot(data)
 
