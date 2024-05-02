@@ -17,7 +17,7 @@ rm(list=ls())
 
 #### Charger un RDS
 cheminSorties <- "./2_Fits_outputs/"
-modhmm <- readRDS(paste0(cheminSorties ,"240430204148-HAMAC-SN-ModHMM-5Et.rds"))
+modhmm <- readRDS(paste0(cheminSorties ,"240312032645-HAMAC-SN-ModHMM-3Et.rds"))
 nbStates <- length(modhmm$mle$stepPar[1,])
 
 ## Estimations des maxima de vraisemblance des parametres
@@ -125,12 +125,12 @@ hmmdatavit <- hmmdatavit %>% arrange(ID, DHACQ)
 head(hmmdatavit)
 
 # Labels pour les différentes variables
-hmmdatavit$SES <- factor(
-  hmmdatavit$SES,
+OcuSolsLegende$SES <- factor(
+  OcuSolsLegende$SES,
   levels = c("SP", "SSf", "SSc"),
-  labels = c("Rainy season", "Cold dry season", "Warm dry season"))
+  labels = c("RS", "CDS", "WDS"))
 hmmdatavit$DAYTM <- factor(hmmdatavit$DAYTM, labels = c("Nighttime", "Daytime"))
-hmmdatavit$TRA <- factor(hmmdatavit$TRA, labels = c("Résidents", "Transhumant"))
+hmmdatavit$TRA <- factor(hmmdatavit$TRA, labels = c("Resident herds", "Transhuming herds"))
 hmmdatavit$VIT <- factor(hmmdatavit$VIT, labels = c("Resting", "Foraging", "Moving"))
 
 #### histogramme des ?tats par heure de la journ?e
@@ -183,10 +183,11 @@ ggplot(hmmdatavit, aes(x = factor(ceiling(MND)), fill = factor(VIT))) +
        fill = "Etat")
 
 ## Heatmap des fréquences d'état par heure
-ggplot(hmmdatavit, aes(x = factor(VIT), y = factor(HRM.y), fill = ..count..)) +
-  geom_tile() +
+ggplot(hmmdatavit, aes(x = VIT, y = factor(floor(HRM)))) +
+  facet_grid(. ~ SES) +
+  geom_bin2d() +
   labs(x = "VIT Value", y = "Hour", fill = "Frequency") +
-  scale_fill_gradient(low = "white", high = "blue") +
+  scale_fill_gradient(low = "white", high = "red") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
