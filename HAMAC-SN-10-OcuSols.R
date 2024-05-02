@@ -20,7 +20,7 @@ legende <- read.csv(
   sep=";",header = T, skip = 0,na.strings = "#N/A")
 ## Importation base
 BaseOcusols <- read.csv(
-  paste0(cheminDonnees, "occusol_part1_2.csv"),
+  paste0(cheminDonnees, "all_occusols_1_2.csv"),
   sep=";",header = T, skip = 0)
 
 head(BaseOcusols)
@@ -46,9 +46,9 @@ summary(OcuSolsLegende$Classe.y)
 summary(OcuSolsLegende$Classe.x)
 
 ## Donne la meilleure classe
-OcuSolsLegende$Classe.finale <- ifelse(OcuSolsLegende$Classe.x == 0,
+OcuSolsLegende$Classe.finale <- ifelse(is.na(OcuSolsLegende$Classe.x),
                                        OcuSolsLegende$Classe.y, OcuSolsLegende$Classe.x)
-OcuSolsLegende$Legende.finale <- ifelse(OcuSolsLegende$Classe.x == 0,
+OcuSolsLegende$Legende.finale <- ifelse(is.na(OcuSolsLegende$Classe.x),
                                        OcuSolsLegende$Légende, OcuSolsLegende$LUSurfaces)
 
 OcuSolsLegende$Classe.x <- NULL
@@ -57,6 +57,7 @@ OcuSolsLegende$GRIDCODE <- NULL
 OcuSolsLegende$LUSurfaces <- NULL
 OcuSolsLegende$Légende <- NULL
 OcuSolsLegende$Couleur..html. <- NULL
+summary(OcuSolsLegende)
 table(OcuSolsLegende$Classe.finale)
 table(OcuSolsLegende$Legende.finale)
 
@@ -67,10 +68,10 @@ write.csv2(OcuSolsLegende, file =  paste0(cheminDonnees, "OcuSolsClasses.csv"),
 
 ## Graphs
 OcuSolsLegende <- read.csv2(paste0(cheminDonnees, "OcuSolsClasses.csv"))
-OcuSolsLegende <- OcuSolsLegende[OcuSolsLegende$ID == "VBT51",]
+# OcuSolsLegende <- OcuSolsLegende[OcuSolsLegende$ID == "VBT51",]
 
 ggplot(OcuSolsLegende, aes(x = SES, fill = Legende.finale)) +
-  facet_grid(VIT ~ .) +
+  facet_grid(VIT ~ TRA) + # Ajouter factor et labels
   geom_bar(position = "fill", stat = "count") +
   scale_y_continuous(labels = scales::percent_format()) +
   labs(title = "Proportion de paysage occupé par état des troupeaux et par saison",
