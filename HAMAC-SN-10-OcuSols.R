@@ -36,6 +36,7 @@ OcuSolsLegende <- OcuSolsLegende %>% arrange(fid)
 # OcuSolsLegende <- OcuSolsLegende[!is.na(OcuSolsLegende$ID),]
 # dim(OcuSolsLegende)
 
+## Partie inutile de légende
 OcuSolsLegende$Classe.finale <- NULL
 OcuSolsLegende$Légende.1 <- NULL
 OcuSolsLegende$Couleur..html..1 <- NULL
@@ -51,12 +52,15 @@ OcuSolsLegende$Classe.finale <- ifelse(is.na(OcuSolsLegende$Classe.x),
 OcuSolsLegende$Legende.finale <- ifelse(is.na(OcuSolsLegende$Classe.x),
                                        OcuSolsLegende$Légende, OcuSolsLegende$LUSurfaces)
 
+OcuSolsLegende$path <- NULL
 OcuSolsLegende$Classe.x <- NULL
 OcuSolsLegende$Classe.y <- NULL
 OcuSolsLegende$GRIDCODE <- NULL
 OcuSolsLegende$LUSurfaces <- NULL
 OcuSolsLegende$Légende <- NULL
 OcuSolsLegende$Couleur..html. <- NULL
+
+head(OcuSolsLegende)
 summary(OcuSolsLegende)
 table(OcuSolsLegende$Classe.finale)
 table(OcuSolsLegende$Legende.finale)
@@ -70,12 +74,21 @@ write.csv2(OcuSolsLegende, file =  paste0(cheminDonnees, "OcuSolsClasses.csv"),
 OcuSolsLegende <- read.csv2(paste0(cheminDonnees, "OcuSolsClasses.csv"))
 # OcuSolsLegende <- OcuSolsLegende[OcuSolsLegende$ID == "VBT51",]
 
+# Labels pour les différentes variables
+OcuSolsLegende$SES <- factor(
+  OcuSolsLegende$SES,
+  levels = c("SP", "SSf", "SSc"),
+  labels = c("RS", "CDS", "WDS"))
+OcuSolsLegende$DAYTM <- factor(OcuSolsLegende$DAYTM, labels = c("Nighttime", "Daytime"))
+OcuSolsLegende$TRA <- factor(OcuSolsLegende$TRA, labels = c("Resident herds", "Transhumant herds"))
+OcuSolsLegende$VIT <- factor(OcuSolsLegende$VIT, labels = c("Resting", "Foraging", "Moving"))
+
 ggplot(OcuSolsLegende, aes(x = SES, fill = Legende.finale)) +
   facet_grid(VIT ~ TRA) + # Ajouter factor et labels
   geom_bar(position = "fill", stat = "count") +
   scale_y_continuous(labels = scales::percent_format()) +
   labs(title = "Proportion de paysage occupé par état des troupeaux et par saison",
        x = "Season",
-       y = "Proportion",
+       y = "Observations proportion",
        fill = "Occupation du sol")
 
