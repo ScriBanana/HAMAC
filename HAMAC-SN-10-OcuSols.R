@@ -70,6 +70,8 @@ table(OcuSolsLegende$Legende.finale)
 write.csv2(OcuSolsLegende, file =  paste0(cheminDonnees, "OcuSolsClasses.csv"),
             row.names = FALSE)
 
+#### REPRISE ICI
+
 ## Graphs
 OcuSolsLegende <- read.csv2(paste0(cheminDonnees, "OcuSolsClasses.csv"))
 # OcuSolsLegende <- OcuSolsLegende[OcuSolsLegende$ID == "VBT51",]
@@ -80,9 +82,13 @@ OcuSolsLegende$SES <- factor(
   levels = c("SP", "SSf", "SSc"),
   labels = c("RS", "CDS", "WDS"))
 OcuSolsLegende$DAYTM <- factor(OcuSolsLegende$DAYTM, labels = c("Nighttime", "Daytime"))
-OcuSolsLegende$TRA <- factor(OcuSolsLegende$TRA, labels = c("Resident herds", "Transhumant herds"))
-OcuSolsLegende$VIT <- factor(OcuSolsLegende$VIT, labels = c("Resting", "Foraging", "Moving"))
+OcuSolsLegende$TRA <- factor(OcuSolsLegende$TRA, labels = c("Resident herds", "Transhuming herds"))
+OcuSolsLegende$VIT <- factor(OcuSolsLegende$VIT, labels = c("Resting", "Grazing", "Travelling"))
+OcuSolsLegende$Legende.finale <- factor(OcuSolsLegende$Legende.finale, labels = c(
+  "Trees", "Lowlands", "Dwellings", "Bushfields", "Homefields", "Rivers",
+  "Fallows", "Gardens", "Ponds", "Rangelands", "Roads", "Naked ground"))
 
+## Figure globale
 ggplot(OcuSolsLegende, aes(x = SES, fill = Legende.finale)) +
   facet_grid(VIT ~ TRA) + # Ajouter factor et labels
   geom_bar(position = "fill", stat = "count") +
@@ -91,4 +97,44 @@ ggplot(OcuSolsLegende, aes(x = SES, fill = Legende.finale)) +
        x = "Season",
        y = "Observations proportion",
        fill = "Occupation du sol")
+
+
+## Explo
+# [OcuSolsLegende$TRA == 'Resident herds',]
+ggplot(OcuSolsLegende,
+       aes(x = factor(VIT, labels = c("RST", "GRZ", "TVL")), fill = Legende.finale)) +
+  facet_grid(
+    TRA ~ SES + factor(DAYTM, levels = c("Daytime", "Nighttime"), labels = c("DT", "NT")),
+    scales = "free_y"
+    ) +
+  geom_bar(stat = "count") +
+  scale_fill_brewer(palette = "Set3") +
+  theme_minimal() +
+  # scale_y_continuous(labels = scales::percent_format()) +
+  labs(x = "Activity state",
+       y = "Amount of observations",
+       fill = "Land use")
+
+
+
+## Histogramme des distances parcourues la nuit pour les transhumants par éleveur
+ggplot(OcuSolsLegende, aes(x =
+                             SES,
+                             # factor(MON, labels = c(
+                             #   "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                             #   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")),
+  y = step,# group = ID,
+  fill = VIT)) +
+  facet_grid(DAYTM ~ .) +
+  geom_col() +
+  # scale_y_continuous(labels = scales::percent_format()) + # Pour stacker ? 100%
+  labs(title = "Distances observées parcourues par mois",
+       x = "Month",
+       y = "Distance (km)",
+       fill = "Etat") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+
+
+
 
