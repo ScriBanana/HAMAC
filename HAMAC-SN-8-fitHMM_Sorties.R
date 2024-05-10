@@ -125,13 +125,13 @@ hmmdatavit <- hmmdatavit %>% arrange(ID, DHACQ)
 head(hmmdatavit)
 
 # Labels pour les différentes variables
-OcuSolsLegende$SES <- factor(
-  OcuSolsLegende$SES,
+hmmdatavit$SES <- factor(
+  hmmdatavit$SES,
   levels = c("SP", "SSf", "SSc"),
   labels = c("RS", "CDS", "WDS"))
 hmmdatavit$DAYTM <- factor(hmmdatavit$DAYTM, labels = c("Nighttime", "Daytime"))
 hmmdatavit$TRA <- factor(hmmdatavit$TRA, labels = c("Resident herds", "Transhuming herds"))
-hmmdatavit$VIT <- factor(hmmdatavit$VIT, labels = c("Resting", "Foraging", "Moving"))
+hmmdatavit$VIT <- factor(hmmdatavit$VIT, labels = c("Resting", "Grazing", "Travelling"))
 
 #### histogramme des ?tats par heure de la journ?e
 ggplot(hmmdatavit, aes(x = factor(floor(HRM)), fill = factor(VIT))) +
@@ -140,10 +140,10 @@ ggplot(hmmdatavit, aes(x = factor(floor(HRM)), fill = factor(VIT))) +
            position = "fill" # Pour stacker ? 100%
   ) +
   scale_y_continuous(labels = scales::percent_format()) + # Pour stacker ? 100%
-  labs(title = "Fr?quence des ?tats par heure et par saison",
-       x = "Heure",
-       y = "Proportion",
-       fill = "Etat")
+  labs(#title = "State frequency",
+       x = "Hour of the day",
+       y = "Proportion of observations",
+       fill = "Activity state")
 
 #### histogramme des ?tats par mois de l'ann?e
 ggplot(hmmdatavit, aes(x = factor(ceiling(MND)), fill = factor(VIT))) +
@@ -152,10 +152,10 @@ ggplot(hmmdatavit, aes(x = factor(ceiling(MND)), fill = factor(VIT))) +
            position = "fill" # Pour stacker ? 100%
   ) +
   scale_y_continuous(labels = scales::percent_format()) + # Pour stacker ? 100%
-  labs(title = "Fr?quence des ?tats par mois",
-       x = "Mois",
-       y = "Proportion",
-       fill = "Etat")
+  labs(#title = "Fr?quence des ?tats par mois",
+       x = "Month",
+       y = "Proportion of observations",
+       fill = "Activity state")
 
 #### histogramme des ?tats le jour et la nuit
 ggplot(hmmdatavit, aes(x = DAYTM, fill = factor(VIT))) +
