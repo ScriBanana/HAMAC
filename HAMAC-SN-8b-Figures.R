@@ -13,16 +13,9 @@ setwd("/home/scriban/Dropbox/Thèse/DonneesEtSauvegardes/WorkspaceR/HAMAC")
 
 rm(list=ls())
 
-repDonnees <- "./1_Data_clean_and_merge/"
-data <- readRDS(paste0(repDonnees,"/HAMAC-SN-HMMDATA.rds"))
-
-
-cheminSorties <- "./2_Fits_outputs/"
-m <- readRDS(paste0(cheminSorties ,"240213150956-HAMAC-SN-ModHMM-3Et.rds"))
-
-
 addDensityPlot <- function (
-    m, distxmax, distymax, angymax, stepylab, angylab, graphtitle
+    m, distxmax, distymax, angymax,
+    stepylab, angylab, graphtitle, dispLegend = FALSE
     ) {
   
   nbStates <- ncol(m$mle$stepPar)
@@ -73,7 +66,7 @@ addDensityPlot <- function (
   
   # setup line options
   legText <- c(paste("state", 1:nbStates), "total")
-  legText <- c("Resting", "Grazing", "Travelling", "Total")
+  # legText <- c("Resting", "Grazing", "Travelling", "Total")
   lty <- c(rep(1, nbStates), 2)
   lwd <- c(rep(1, nbStates), 2)
   lineCol <- c(col, "black")
@@ -99,7 +92,9 @@ addDensityPlot <- function (
     lines(distData$step$step, distData$step[,i+1], col = lineCol[i],
           lty = lty[i], lwd = lwd[i])
   }
-  # legend("top", legText, lwd = lwd, col = lineCol, lty = lty, bty = "n")
+  if (dispLegend) {
+    legend("top", legText, lwd = lwd, col = lineCol, lty = lty, bty = "n")
+  }
   
   # define ymax and breaks for angle histogram
   h1 <- hist(m$data$angle, plot = FALSE, breaks = breaks)
@@ -125,9 +120,18 @@ addDensityPlot <- function (
 
 
 ### Figure
+
+cheminSorties <- "./2_Fits_outputs/"
+m <- readRDS(paste0(cheminSorties ,"240213150956-HAMAC-SN-ModHMM-3Et.rds"))
+
+# À calibrer
 distxmax <- 1.0
 distymax <- 8
 angymax <- 0.28
+
+png(paste0("/home/scriban/Dropbox/Thèse/Productions/Articles/Mobi/Figures/",
+  format(Sys.time(), format = "%y%m%d"), "-DensiPlot.png"),
+  width = 1000, height = 500)
 
 par(mfcol = c(2, 3))
 addDensityPlot(
@@ -136,9 +140,12 @@ addDensityPlot(
   )
 addDensityPlot(
   readRDS(paste0(cheminSorties ,"240131195610-HAMAC-SN-ModHMM-3EtTranshu.rds")),
-               distxmax, distymax, angymax, "", "", "Transhumant herds"
+               distxmax, distymax, angymax, "", "", "Transhumant herds", TRUE
 )
 addDensityPlot(
   readRDS(paste0(cheminSorties ,"240201190315-HAMAC-SN-ModHMM-3EtResid.rds")),
                distxmax, distymax, angymax, "", "", "Resident herds"
 )
+
+dev.off()
+
