@@ -394,14 +394,15 @@ ggplot(hmmdatavit, aes(x = factor(floor(HRM)), fill = factor(VIT))) +
 
 
 # Boxplot temp?ratures par mois
-hmmdatavitTMP <- hmmdatavit[hmmdatavit$GPS_TMP!=0,]
-ggplot(hmmdatavitTMP, aes(x = factor(ceiling(MND)), y = GPS_TMP)) +
-  facet_grid(DAYTM ~ TRA ) +
+hmmdatavitTMP <- hmmdatavit[hmmdatavit$GPS_TMP.x!=0,]
+ggplot(hmmdatavitTMP, aes(x = factor(ceiling(MND)), y = GPS_TMP.x)) +
+  facet_grid(TRA ~ factor(DAYTM, levels = c("Daytime", "Nighttime")) ) +
   geom_boxplot() +
+  theme_minimal() +
   # scale_y_continuous(labels = scales::percent_format()) + # Pour stacker ? 100%
-  labs(title = "",
+  labs(#title = "",
        x = "Month",
-       y = "Temperature (?C)")
+       y = "Temperature (°C)")
 
 
 

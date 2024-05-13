@@ -125,6 +125,7 @@ hmmdatavit <- hmmdatavit %>% arrange(ID, DHACQ)
 head(hmmdatavit)
 
 # Labels pour les différentes variables
+# TODO Fusionner avec OcuSols
 hmmdatavit$SES <- factor(
   hmmdatavit$SES,
   levels = c("SP", "SSf", "SSc"),
@@ -134,16 +135,20 @@ hmmdatavit$TRA <- factor(hmmdatavit$TRA, labels = c("Resident herds", "Transhumi
 hmmdatavit$VIT <- factor(hmmdatavit$VIT, labels = c("Resting", "Grazing", "Travelling"))
 
 #### histogramme des ?tats par heure de la journ?e
-ggplot(hmmdatavit, aes(x = factor(floor(HRM)), fill = factor(VIT))) +
+ggplot(hmmdatavit, aes(x = factor(floor(HRM)),
+                       fill = VIT)) +
   facet_grid(SES ~ TRA) +
   geom_bar(stat = "count",
            position = "fill" # Pour stacker ? 100%
   ) +
+  theme_minimal() +
+  scale_fill_brewer(palette = "Greens") +
   scale_y_continuous(labels = scales::percent_format()) + # Pour stacker ? 100%
   labs(#title = "State frequency",
        x = "Hour of the day",
        y = "Proportion of observations",
-       fill = "Activity state")
+       fill = "Activity state") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 #### histogramme des ?tats par mois de l'ann?e
 ggplot(hmmdatavit, aes(x = factor(ceiling(MND)), fill = factor(VIT))) +

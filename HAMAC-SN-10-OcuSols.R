@@ -79,14 +79,14 @@ OcuSolsLegende <- read.csv2(paste0(cheminDonnees, "OcuSolsClasses.csv"))
 # Labels pour les différentes variables
 OcuSolsLegende$SES <- factor(
   OcuSolsLegende$SES,
-  levels = c("SP", "SSf", "SSc"),
-  labels = c("RS", "CDS", "WDS"))
+  levels = c("SSf", "SSc", "SP"),
+  labels = c("CDS", "WDS", "RS"))
 OcuSolsLegende$DAYTM <- factor(OcuSolsLegende$DAYTM, labels = c("Nighttime", "Daytime"))
 OcuSolsLegende$TRA <- factor(OcuSolsLegende$TRA, labels = c("Resident herds", "Transhuming herds"))
 OcuSolsLegende$VIT <- factor(OcuSolsLegende$VIT, labels = c("Resting", "Grazing", "Travelling"))
 OcuSolsLegende$Legende.finale <- factor(OcuSolsLegende$Legende.finale, labels = c(
-  "Trees", "Lowlands", "Dwellings", "Bushfields", "Homefields", "Rivers",
-  "Fallows", "Gardens", "Ponds", "Rangelands", "Roads", "Naked ground"))
+  "Trees", "Lowlands", "Dwellings", "Bushfields", "Homefields*", "Rivers",
+  "Fallows*", "Gardens*", "Ponds*", "Rangelands", "Roads*", "Naked ground"))
 
 ## Figure globale
 ggplot(OcuSolsLegende, aes(x = SES, fill = Legende.finale)) +
@@ -104,7 +104,9 @@ ggplot(OcuSolsLegende, aes(x = SES, fill = Legende.finale)) +
 ggplot(OcuSolsLegende,
        aes(x = factor(VIT, labels = c("RST", "GRZ", "TVL")), fill = Legende.finale)) +
   facet_grid(
-    TRA ~ SES + factor(DAYTM, levels = c("Daytime", "Nighttime"), labels = c("DT", "NT")),
+    TRA ~
+      SES +
+      factor(DAYTM, levels = c("Daytime", "Nighttime"), labels = c("DT", "NT")),
     scales = "free_y"
     ) +
   geom_bar(stat = "count") +
