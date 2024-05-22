@@ -55,7 +55,7 @@ if (!file.exists(paste0(outDir, logFile))) {
   header <- c(
     "timestamp", "nbStates",
     "modhmm$mod$minimum", "AIC", "modhmm$mod$iterations",
-    "Fit (état par état) : angleMean, angleCon, stepMean, stepSD, zeroMass évnt. + les param�tres init (stepMean0, etc)"
+    "Fit (état par état) : angleMean, angleCon, stepMean, stepSD, zeroMass évnt. + les param?tres init (stepMean0, etc)"
   )
   cat("Pas de fichier de log détecté. Nouveau fichier généré.")
   write.table(matrix(header, ncol = length(header)),
@@ -79,6 +79,20 @@ hmmdata$HUR <- format(hmmdata$DHACQ, "%H:%M:%S")
 hmmdata$HRM <- as.numeric(format(hmmdata$DHACQ, "%H")) +
   as.numeric(format(hmmdata$DHACQ, "%M")) / 60
 
+combine_season_year <- function(SES, YER) {
+  combined <- paste0(YER, SES)
+  if (SES == "SSf") {
+    # If winter, check if it spans over two years
+    next_year <- YER + 1
+    next_year_season <- paste0(next_year, "SSf")
+    if (next_year_season %in% combined) {
+      combined <- paste0(YER, "-", next_year, "SSf")
+    }
+  }
+  return(combined)
+}
+
+hmmdata$SSY <- mapply(combine_season_year, hmmdata$SES, hmmdata$YER)
 
 head(hmmdata)
 # summary(hmmdata)
