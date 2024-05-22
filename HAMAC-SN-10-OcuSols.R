@@ -14,6 +14,8 @@ rm(list=ls())
 
 #### Importations données
 cheminDonnees <- "../../../Productions/Articles/Mobi/PartageCGPS/OcuSols/"
+
+
 ## Importation métadonnées
 legende <- read.csv(
   paste0(cheminDonnees, "Legendesx2Ocusols.csv"),
@@ -83,10 +85,68 @@ OcuSolsLegende$SES <- factor(
   labels = c("CDS", "WDS", "RS"))
 OcuSolsLegende$DAYTM <- factor(OcuSolsLegende$DAYTM, labels = c("Nighttime", "Daytime"))
 OcuSolsLegende$TRA <- factor(OcuSolsLegende$TRA, labels = c("Resident herds", "Transhuming herds"))
-OcuSolsLegende$VIT <- factor(OcuSolsLegende$VIT, labels = c("Resting", "Grazing", "Travelling"))
+OcuSolsLegende$VIT <- factor(OcuSolsLegende$VIT, labels = c("Resting", "Foraging", "Travelling"))
 OcuSolsLegende$Legende.finale <- factor(OcuSolsLegende$Legende.finale, labels = c(
-  "Trees", "Lowlands", "Dwellings", "Bushfields", "Homefields*", "Rivers",
-  "Fallows*", "Gardens*", "Ponds*", "Rangelands", "Roads*", "Naked ground"))
+  # "Trees", "Lowlands", "Dwellings", "Bushfields", "Homefields*", "Rivers",
+  # "Fallows*", "Gardens*", "Ponds*", "Rangelands", "Roads*", "Naked ground"))
+  "Other", "Lowlands", "Other", "Bushfields", "Homefields*", "Other",
+  "Fallows*", "Other", "Other", "Rangelands", "Other", "Other"))
+
+## Explo
+# [OcuSolsLegende$TRA == 'Resident herds',]
+ggplot(OcuSolsLegende,
+       aes(x = factor(VIT, labels = c("RST", "FRG", "TVL")),
+           fill = factor(Legende.finale, levels = c(
+             "Other", "Lowlands", "Rangelands", "Fallows*", "Bushfields", "Homefields*")))) +
+  facet_grid(
+    TRA ~
+      SES +
+      factor(DAYTM, levels = c("Daytime", "Nighttime"), labels = c("DT", "NT")),
+    scales = "free_y"
+    ) +
+  geom_bar(stat = "count") +
+  scale_y_continuous(
+    name = "Amount of observations",
+    labels = function(x) paste0(x / 1000, "k"),
+    # sec.axis = sec_axis(~ . * 100, name = "Percentage of observations")
+  ) +
+  scale_fill_brewer(palette = "BrBG") +
+  theme_minimal() +
+  theme(
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank()
+  ) +
+  labs(x = "Activity state",
+       y = "Amount of observations",
+       fill = "Land use")
+
+### Alternative avec des pourcentages
+OcuSolsLegendePercent <- OcuSolsLegende %>%
+  group_by(TRA, SES, DAYTM, VIT, Legende.finale) %>%
+  summarise(count = n(), .groups = 'drop') %>%
+  group_by(TRA, SES, DAYTM) %>%
+  mutate(percentage = count / sum(count))
+
+ggplot(OcuSolsLegendePercent,
+       aes(x = factor(VIT, labels = c("RST", "FRG", "TVL")), y = percentage,
+           fill = factor(Legende.finale, levels = c(
+         "Other", "Lowlands", "Rangelands", "Fallows*", "Bushfields", "Homefields*")))) +
+  facet_grid(
+    TRA ~ SES + factor(DAYTM, levels = c("Daytime", "Nighttime"), labels = c("DT", "NT")),
+    scales = "free_y"
+  ) +
+  geom_bar(stat = "identity", position = "stack") +
+  scale_fill_brewer(palette = "BrBG") +
+  theme_minimal() +
+  theme(
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank()
+  ) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  labs(x = "Activity state",
+       y = "Percentage of observations in each state",
+       fill = "Land use")
+
 
 ## Figure globale
 ggplot(OcuSolsLegende, aes(x = SES, fill = Legende.finale)) +
@@ -97,25 +157,6 @@ ggplot(OcuSolsLegende, aes(x = SES, fill = Legende.finale)) +
        x = "Season",
        y = "Observations proportion",
        fill = "Occupation du sol")
-
-
-## Explo
-# [OcuSolsLegende$TRA == 'Resident herds',]
-ggplot(OcuSolsLegende,
-       aes(x = factor(VIT, labels = c("RST", "GRZ", "TVL")), fill = Legende.finale)) +
-  facet_grid(
-    TRA ~
-      SES +
-      factor(DAYTM, levels = c("Daytime", "Nighttime"), labels = c("DT", "NT")),
-    scales = "free_y"
-    ) +
-  geom_bar(stat = "count") +
-  scale_fill_brewer(palette = "Set3") +
-  theme_minimal() +
-  # scale_y_continuous(labels = scales::percent_format()) +
-  labs(x = "Activity state",
-       y = "Amount of observations",
-       fill = "Land use")
 
 
 

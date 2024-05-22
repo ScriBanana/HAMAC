@@ -132,7 +132,7 @@ hmmdatavit$SES <- factor(
   labels = c("RS", "CDS", "WDS"))
 hmmdatavit$DAYTM <- factor(hmmdatavit$DAYTM, labels = c("Nighttime", "Daytime"))
 hmmdatavit$TRA <- factor(hmmdatavit$TRA, labels = c("Resident herds", "Transhuming herds"))
-hmmdatavit$VIT <- factor(hmmdatavit$VIT, labels = c("Resting", "Grazing", "Travelling"))
+hmmdatavit$VIT <- factor(hmmdatavit$VIT, labels = c("Resting", "Foraging", "Travelling"))
 
 #### histogramme des ?tats par heure de la journ?e
 ggplot(hmmdatavit, aes(x = factor(floor(HRM)),
