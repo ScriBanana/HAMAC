@@ -36,7 +36,7 @@ plotSim <- function(nbPts, stepPar, anglePar) {
   
   # plot tracks
   plot(NA, xlim = xlim, ylim = ylim,
-       xlab = "", ylab = "", asp = 1)
+       xlab = "km", ylab = "km", asp = 1)
   for(zoo in animalsInd) {
     ID <- unique(data$ID)[zoo]
     x <- data$x[which(data$ID == ID)]
@@ -51,13 +51,15 @@ plotSim <- function(nbPts, stepPar, anglePar) {
 #            format(Sys.time(), format = "%y%m%d"), "-Simplots.png"),
 #     width = 1000, height = 500)
 
-par(mfcol = c(1, 3))
+par(mfcol = c(3, 3))
 
-xlim <- c(-0.5, 4)
-ylim <- c(-0.5, 4)
+xlim <- c(-0.1, 4.1)
+ylim <- c(-0.1, 1.1)
 
 for (i in 1:3) {
-  plotSim(10, c(stepPar[i], stepPar[i + 3], stepPar[i + 6]), c(anglePar[i], anglePar[i + 3]))
+  for (i in 1:3) {
+    plotSim(10, c(stepPar[i], stepPar[i + 3], stepPar[i + 6]), c(anglePar[i], anglePar[i + 3]))
+  }
 }
 
 # dev.off()

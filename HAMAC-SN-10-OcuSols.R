@@ -75,6 +75,7 @@ write.csv2(OcuSolsLegende, file =  paste0(cheminDonnees, "OcuSolsClasses.csv"),
 #### REPRISE ICI
 
 ## Graphs
+cheminDonnees <- "../../../Productions/Articles/Mobi/PartageCGPS/OcuSols/"
 OcuSolsLegende <- read.csv2(paste0(cheminDonnees, "OcuSolsClasses.csv"))
 # OcuSolsLegende <- OcuSolsLegende[OcuSolsLegende$ID == "VBT51",]
 
@@ -82,7 +83,7 @@ OcuSolsLegende <- read.csv2(paste0(cheminDonnees, "OcuSolsClasses.csv"))
 OcuSolsLegende$SES <- factor(
   OcuSolsLegende$SES,
   levels = c("SSf", "SSc", "SP"),
-  labels = c("CDS", "WDS", "RS"))
+  labels = c("Cold dry season", "Warm dry season", "Rainy season"))
 OcuSolsLegende$DAYTM <- factor(OcuSolsLegende$DAYTM, labels = c("Nighttime", "Daytime"))
 OcuSolsLegende$TRA <- factor(OcuSolsLegende$TRA, labels = c("Resident herds", "Transhuming herds"))
 OcuSolsLegende$VIT <- factor(OcuSolsLegende$VIT, labels = c("Resting", "Foraging", "Travelling"))
@@ -132,7 +133,7 @@ ggplot(OcuSolsLegendePercent,
            fill = factor(Legende.finale, levels = c(
          "Other", "Lowlands", "Rangelands", "Fallows*", "Bushfields", "Homefields*")))) +
   facet_grid(
-    TRA ~ SES + factor(DAYTM, levels = c("Daytime", "Nighttime"), labels = c("DT", "NT")),
+    SES ~ TRA + factor(DAYTM, levels = c("Daytime", "Nighttime")),
     scales = "free_y"
   ) +
   geom_bar(stat = "identity", position = "stack") +

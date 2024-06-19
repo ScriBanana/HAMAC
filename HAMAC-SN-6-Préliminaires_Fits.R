@@ -4,7 +4,7 @@
 #  Arthur SCRIBAN - JANVIER 2024
 
 
-setwd("/home/scriban/Dropbox/Thèse/DonneesEtSauvegardes/WorkspaceR/HAMAC")
+setwd("~/Dropbox/These/GPS/HAMAC")
 setwd("D:/USERS/SergeEtArthur/WorkspaceR/hamac")
 
 rm(list=ls())
