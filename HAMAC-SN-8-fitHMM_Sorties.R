@@ -108,8 +108,6 @@ hmmdata <- readRDS(paste0(repDonnees,"/HAMAC-SN-HMMDATA.rds"))
 
 hmmdata$MND <- as.numeric(format(hmmdata$DHACQ, "%j")) / 365 * 12
 
-# COMMENCER ICI
-
 ## Ajout des ?tats par Viterbi
 # Ajoute aux donnees de sortie une colonne avec les etats selon Viterbi
 vit <- viterbi(modhmm)
@@ -124,18 +122,25 @@ hmmdatavit <- merge(hmmdata, modhmmdata, by = c("ID", "step", "angle", "x", "y")
 hmmdatavit <- hmmdatavit %>% arrange(ID, DHACQ)
 head(hmmdatavit)
 
+# COMMENCER ICI
+
+setwd("~/Dropbox/These/GPS/HAMAC")
+repSauvegardes <- "./2_Fits_outputs/"
+hmmdatavit <- readRDS(paste0(repSauvegardes,"/HAMAC-SN-MODHMMDATA.rds"))
+head(hmmdatavit)
+
 # Labels pour les différentes variables
 # TODO Fusionner avec OcuSols
 hmmdatavit$SES <- factor(
   hmmdatavit$SES,
-  levels = c("SP", "SSf", "SSc"),
-  labels = c("RS", "CDS", "WDS"))
+  levels = c("SSf", "SSc", "SP"),
+  labels = c("Cold dry season", "Warm dry season", "Rainy season"))
 hmmdatavit$DAYTM <- factor(hmmdatavit$DAYTM, labels = c("Nighttime", "Daytime"))
-hmmdatavit$TRA <- factor(hmmdatavit$TRA, labels = c("Resident herds", "Transhuming herds"))
+hmmdatavit$TRA <- factor(hmmdatavit$TRA, labels = c("Resident herds", "Transhumant herds"))
 hmmdatavit$VIT <- factor(hmmdatavit$VIT, labels = c("Resting", "Foraging", "Travelling"))
 
 #### histogramme des ?tats par heure de la journ?e
-ggplot(hmmdatavit, aes(x = factor(floor(HRM)),
+ggplot(hmmdatavit, aes(x = factor(floor(HRM + 1)),
                        fill = VIT)) +
   facet_grid(SES ~ TRA) +
   geom_bar(stat = "count",
@@ -146,7 +151,7 @@ ggplot(hmmdatavit, aes(x = factor(floor(HRM)),
   scale_y_continuous(labels = scales::percent_format()) + # Pour stacker ? 100%
   labs(#title = "State frequency",
        x = "Hour of the day",
-       y = "Proportion of observations",
+       y = "Proportions of observations",
        fill = "Activity state") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
