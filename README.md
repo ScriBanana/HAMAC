@@ -1,6 +1,11 @@
 # HAMAC Routine
 The Herds Activity Mapping and Analytical Classification (HAMAC) routine was designed to format, clean, concatenate and classify GPS and accelerometer data gathered from tracking livestock.
 
+## Citation
+To cite this routine, use the following:
+À faire
+Scriban, A., Nabeneza, S., …. Herds Activity Mapping and Analytical Classification.
+
 ## Usage
 #### A. Nettoyage des données
 1. Whole_Dir permet de scanner toutes les données extraites depuis le début de la manip. Il est optionnel pour GPS, nécessaire pour ACT.
@@ -21,4 +26,5 @@ The Herds Activity Mapping and Analytical Classification (HAMAC) routine was des
 - MoveHMM
 
 ## License
+CCBY, licence à rajouter
 _For open source projects, say how it is licensed._
