@@ -24,7 +24,7 @@ hmmdata <- hmmdata[substr(hmmdata$ID, 3, 3) == "T", ]
 # Sedentaires
 hmmdata <- hmmdata[substr(hmmdata$ID, 3, 3) == "R", ]
 
-# Un subset des données
+# Un subset des donn?es
 hmmdata <- hmmdata[1:10000, ]
 
 
@@ -60,14 +60,23 @@ switch((nbStates - 1),
   }
 )
 
+stepMean0 <-c( 0.200) # initial means (one for each state)
+stepSD0 <- c( 0.200)
+propzero <- length(which(hmmdata$step == 0))/nrow(hmmdata)
+zeroMass0 <- c(propzero)
+
+## Angle
+angleMean0 <- c(0) # initial means (one for each state)
+angleCon0 <- c(0.3) # initial concentrations (one for each state)
+
 #### Covariables
 formula =
-  #~1
+  ~1
   # ~GPS_TMP
   # ~AcX + AcY + AcZ
   # ~AcX + AcY + AcZ + GPS_TMP
   # ~SES
-  ~ HMS
+  # ~ HMS
 
 #### Fit d'un modele
 stepPar0 <- c(stepMean0, stepSD0, zeroMass0)
