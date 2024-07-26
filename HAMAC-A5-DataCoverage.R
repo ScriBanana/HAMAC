@@ -1,20 +1,22 @@
+###################
+## HAMAC Routine ##
+###################
 
-#  SENEGAL CATTLE GPS DATA
-#  DATA EXPLORATION CODE / SUMMARY GRAPHS
-#  Daniel CORNELIS - JUILLET 2023
+## SUMMARY GRAPHS
+## Daniel CORNELIS - JUILLET 2023
 
-library(MASS)
-library(chron)
-library(adehabitatHR)
-library(futile.matrix)
-library(rgdal)
-library(dplyr)
-library(lubridate)
+### Libraries
+
+### Paths
+inDir <- "./1_IntermeData"
+graphDir <- "./4_VisualOutputs"
+fileName <- "HAMAC-SN-HMMDATA.csv"
 
 
-rm(list=ls()) # fonction qui permet de virer tous les objets generes anterieurements
-date()
-workd4<-"./1_Data_clean_and_merge"
+### Functions
+
+
+### Execution
 
 #### Choisir ACT ou GPS ####
 # (ACT pas fonctionnel pour l'instant)
@@ -32,7 +34,7 @@ STUDY_DURATION <- 950  # days  (fin d?cembre 2014)
 
 # Choisir :
 # LOC<-read.table(paste0(workd4,"/HAMAC-SN-",dataType,"_brutes.csv"),sep=";",header=T, skip=0,na.strings = "N/A")
-LOC<-read.table(paste0(workd4,"/HAMAC-SN-HMMDATA.csv"),sep=";",header=T, skip=0,na.strings = "N/A")
+LOC<-read.table(paste0(inDir, "/", fileName),sep=";",header=T, skip=0,na.strings = "N/A")
 
 
 #LOC$DHACQ <- as.POSIXct(strptime(LOC$DHACQ, "%Y-%m-%d %H:%M:%S"))
@@ -79,7 +81,7 @@ head(GRAPH)
 # Subset by collar 
 
 for(i in 1:length(LIST_NAME)){
-#i=1
+  #i=1
   
   SUB<- subset(LOC, subset = IDCOL == LIST_NAME[i])
   # SUB<- subset(LOC, subset = ID == LIST_NAME[i])
@@ -90,10 +92,10 @@ for(i in 1:length(LIST_NAME)){
   ## A.1.1.  synthetic dataframe  (daily rather than hourly)
   
   DACQ<-na.omit(as.data.frame(unique(SUB$DACQ)))
-  LON<-as.data.frame(tapply(SUB$LON,SUB$DACQ, mean))
-  LAT<-as.data.frame(tapply(SUB$LAT,SUB$DACQ, mean))
-  # LON<-as.data.frame(tapply(SUB$x,SUB$DACQ, mean))
-  # LAT<-as.data.frame(tapply(SUB$y,SUB$DACQ, mean))
+  # LON<-as.data.frame(tapply(SUB$LON,SUB$DACQ, mean))
+  # LAT<-as.data.frame(tapply(SUB$LAT,SUB$DACQ, mean))
+  LON<-as.data.frame(tapply(SUB$x,SUB$DACQ, mean))
+  LAT<-as.data.frame(tapply(SUB$y,SUB$DACQ, mean))
   SUCESS_ABS<-as.data.frame(tapply(SUB$COUNT,SUB$DACQ, sum))
   
   SUB1<-cbind(DACQ,LON,LAT,SUCESS_ABS)
@@ -122,7 +124,7 @@ x<-time(SUB1$DACQ)
 y<-seq(1,length(LIST_NAME),1)
 #myPal <- colorRampPalette( c("red","green") )
 
-filename<-paste0(workd4,"/Out_Graphs/","Synoptic",dataType,".jpg")
+filename<-paste0(graphDir, "/Synoptic",dataType,".jpg")
 jpeg(file=filename,height=21,width=29,units="cm",res=300)
 
 par(mar=c(3,6,5,3))
@@ -133,11 +135,8 @@ axis(side=3,at=(time(SUB1$DACQ)[label.index1]),labels=c(paste(format(SUB1$DACQ[l
 axis(side=1,at=(time(SUB1$DACQ)[label.index1]),labels=c(paste(format(SUB1$DACQ[label.index1],"%b"),format(SUB1$DACQ[label.index1],"%y"))),cex.axis=0.8)
 axis(side=2,at=y,labels=colnames(GRAPH),cex.axis=0.8,las=1)
 title(main=paste0(
-    "Suivi GPS de bovins transhumants et sédentaires dans le Ferlo et le Bassin Arachidier du Sénégal (2021-2023) - Couverture ",
-    dataType),
+  "Suivi GPS de bovins transhumants et sédentaires dans le Ferlo et le Bassin Arachidier du Sénégal (2021-2023) - Couverture ",
+  dataType),
   line=4,cex.main=1)
 
 dev.off()
-
-
-

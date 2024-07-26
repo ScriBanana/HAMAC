@@ -1,23 +1,29 @@
+###################
+## HAMAC Routine ##
+###################
 
-#  SENEGAL CATTLE GPS DATA
-#  DATA EXPLORATION CODE / Calcul des steps et des angles et préparation du jeu pour les fits
-#  Serge NABENEZA & A. SCRIBAN - JANVIER 2024
+## Calcul des steps et des angles et préparation du jeu pour les fits
+## Serge NABENEZA & A. SCRIBAN - JANVIER 2024
 
-library(moveHMM)
-library(dplyr)
+### Libraries
 library(lubridate)
+library(moveHMM)
 library(ggplot2)
 
-setwd("/home/scriban/Dropbox/Thèse/DonneesEtSauvegardes/WorkspaceR/HAMAC")
-setwd("D:/USERS/SergeEtArthur/WorkspaceR/hamac")
+### Paths
+inDir <- "./1_IntermeData"
+outDir <- "./1_IntermeData"
+graphDir <- "./4_VisualOutputs"
+filesPrefix <- "/HAMAC-SN-"
 
-rm(list=ls())
+
+### Functions
 
 
+### Execution
 #### Importation données classées par animal
-repDonnees <- "./1_Data_clean_and_merge/"
 GPS_ACT_par_anx <- read.table(
-  paste0(repDonnees, "HAMAC-SN-GPSnACTpANX.csv"),
+  paste0(inDir, filesPrefix, "GPSnACTpANX.csv"),
   sep=";",header=T, skip=0,na.strings = "N/A")
 GPS_ACT_par_anx$DHACQ<-ymd_hms(GPS_ACT_par_anx$DHACQ)
 head(GPS_ACT_par_anx)
@@ -33,12 +39,11 @@ print(Sys.time() - debPrepData) # Moins de 2 min
 nrow(hmmdata)
 # na.omit, mais sans retirer les premiers points :
 hmmdata <- hmmdata[complete.cases(hmmdata[, -which(colnames(hmmdata) == "angle")]),]
+nrow(hmmdata)
 
 #### Sauvegarde avec outliers
-repDonnees<-"./1_Data_clean_and_merge"
-saveRDS(hmmdata, paste0(repDonnees,"/HAMAC-SN-HMMDATA_avec_outliers_vitesse.rds"))
-
-
+saveRDS(hmmdata, paste0(outDir, filesPrefix,
+                        "HMMDATA_avec_outliers_vitesse.rds"))
 
 #### Alternative de calcul des steps pour v?rifications
 # haversine <- function(lon1, lat1, lon2, lat2) {
@@ -95,8 +100,8 @@ hist(hmmdata$step, xlab = "step length (km)", main = "",breaks = 50) #, xlim = c
 hist(hmmdata$angle, breaks = seq(-pi, pi, length = 30), xlab = "angle (rad)", main = "")
 dev.off()
 
-#### Sauvegarde en RDS
-repDonnees<-"./1_Data_clean_and_merge"
-saveRDS(hmmdata, paste0(repDonnees,"/HAMAC-SN-HMMDATA.rds"))
-write.table(hmmdata,paste0(repDonnees,"/HAMAC-SN-HMMDATA.csv"),sep=";", row.names=FALSE)
 
+#### Intermediate data save
+
+saveRDS(hmmdata, paste0(outDir, filesPrefix, "HMMDATA.rds"))
+write.table(hmmdata,paste0(outDir, filesPrefix, "HMMDATA.csv"),sep=";", row.names=FALSE)

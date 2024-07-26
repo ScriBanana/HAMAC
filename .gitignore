@@ -3,7 +3,10 @@
 .RDataTmp
 .Rproj.user
 .README.md.kate-swp
-0_raw_data/*
-0_raw_data.zip
-1_Data_clean_and_merge/*
-2_Fits_outputs/*
+0_RawData/*
+0_RawData.zip
+1_IntermeData/*
+2_OutFits/*
+3_OutData/*
+4_VisualOutputs/*
+HAMAC-SN-TST.R

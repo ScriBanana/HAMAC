@@ -1,26 +1,23 @@
+###################
+## HAMAC Routine ##
+###################
 
-#  SENEGAL CATTLE GPS DATA
-#  ACT DATA CLEAN AND MERGE CODE 
-#  A. SCRIBAN - Janvier 2024
+## Accelero data clean and format
+## A. SCRIBAN - Janvier 2024
 
-library(lubridate)
-library(stringr)
+### Libraries
 library(ggplot2)
 
-setwd("/home/scriban/Dropbox/Thèse/DonneesEtSauvegardes/WorkspaceR/HAMAC")
-setwd("D:/USERS/SergeEtArthur/WorkspaceR/hamac")
+### Paths
+inDir <- "./1_IntermeData"
+outDir <- "./1_IntermeData"
+filesPrefix <- "/HAMAC-SN-"
 
-# rm(list=ls())
-date()
 
-workd0<-"./0_raw_data/ACT"
-workd1<-"./1_Data_clean_and_merge"
+### Functions
 
-################################################################################
-## A. Concatenation et mise en forme des donnees ACT acquises
-################################################################################
 
-################################################################################
+### Execution
 # A.1. Lecture, concatenation et mise en forme des données ACT
 
 # Concaténation
@@ -35,11 +32,10 @@ workd1<-"./1_Data_clean_and_merge"
 
 
 # Scan automatique whole dir
-gpsSourceDir <- "./1_Data_clean_and_merge/"
 ACTACQorig <- read.table(
-  paste0(gpsSourceDir, "HAMAC-SN-ACT_WholeDir.csv"),
+  paste0(inDir, filesPrefix, "ACT_WholeDir.csv"),
   sep=";",header=T, skip=0,na.strings = "N/A")
-cat("\nGPS Table:\n")
+cat("\nACT Table:\n")
 print(head(ACTACQorig))
 
 # selection des colonnes d'intéret
@@ -97,22 +93,24 @@ dim(ACTACQ)
 summary(ACTACQ)
 
 
-################################################################################
 # A.Maintien de l'ordre chronologique. 
 
 ACTACQ <- ACTACQ %>% arrange(IDCOL, DHACQ)
 
 ggplot(subset(ACTACQ, IDCOL == 44159), aes(x = (1:nrow(subset(ACTACQ, IDCOL == 44159))), y = DHACQ)) +
-# ggplot(ACTACQ, aes(x = (1:nrow(ACTACQ)), y = DHACQ)) +
+  # ggplot(ACTACQ, aes(x = (1:nrow(ACTACQ)), y = DHACQ)) +
   geom_point() +
   labs(title = "Chronological Order Check", x = "id", y = "date") +
   theme_minimal()
 
-################################################################################
-# A.8. Exportation des donnees
+
+#### Intermediate data save
 
 # au format txt
 ACTACQ$DHACQ<-as.character(ACTACQ$DHACQ)
-write.table(ACTACQ,paste0(workd1,"/HAMAC-SN-ACT_brutes.csv"),sep=";", row.names=FALSE)
-write.table(ACTACQ,paste0(workd1,"/HAMAC-SN-ACT_brutes.txt"),sep=";", row.names=FALSE)
-
+write.table(ACTACQ,
+            paste0(outDir, filesPrefix, "ACT_brutes.csv"),
+            row.names=FALSE)
+write.table(ACTACQ,
+            paste0(outDir, filesPrefix, "ACT_brutes.txt"),
+            row.names=FALSE)

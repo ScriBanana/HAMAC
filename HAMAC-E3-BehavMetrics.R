@@ -1,17 +1,24 @@
+###################
+## HAMAC Routine ##
+###################
 
-#  SENEGAL CATTLE GPS DATA
-#  PLOTS - Freely adapted from moveHMM source code
-#  Arthur SCRIBAN & ChatGPS - MAI 2024
+## Diverse metrics on trajectories given the states
+## Arthur SCRIBAN & ChatGPS - MAI 2024
 
+### Libraries
 library(dplyr)
 
-setwd("/home/scriban/Dropbox/Thèse/DonneesEtSauvegardes/WorkspaceR/HAMAC")
-# setwd("D:/USERS/SergeEtArthur/WorkspaceR/hamac")
+### Paths
+inDir <- "./3_OutData"
+graphDir <- "./4_VisualOutputs"
+filesPrefix <- "/HAMAC-SN-"
 
-# rm(list=ls())
 
-repSauvegardes <- "./2_Fits_outputs/"
-hmmdatavit <- readRDS(paste0(repSauvegardes,"/HAMAC-SN-MODHMMDATA.rds"))
+### Functions
+
+
+### Execution
+hmmdatavit <- readRDS(paste0(inDir, filesPrefix, "MODHMMDATA.rds"))
 head(hmmdatavit)
 
 ## Distances parcourues
@@ -70,3 +77,5 @@ average_time_spent_by_TRA <- hmmdatavit %>%
 
 # View the result
 print(average_time_spent)
+
+#### Intermediate data save

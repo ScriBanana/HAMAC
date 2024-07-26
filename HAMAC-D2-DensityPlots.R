@@ -1,22 +1,26 @@
+###################
+## HAMAC Routine ##
+###################
 
-#  SENEGAL CATTLE GPS DATA
-#  PLOTS - Freely adapted from moveHMM source code
-#  Arthur SCRIBAN - JANVIER 2024
+## PLOTS - Freely adapted from moveHMM source code
+## Arthur SCRIBAN - JANVIER 2024
 
-
+### Libraries
 library(moveHMM)
-library(ggplot2)
+
+### Paths
+inDir <- "./2_OutFits"
+globModFileName <- "240213150956-HAMAC-SN-ModHMM-3Et"
+transModFileName <- "240131195610-HAMAC-SN-ModHMM-3EtTranshu"
+residModFileName <- "240201190315-HAMAC-SN-ModHMM-3EtResid"
+graphDir <- "./4_VisualOutputs"
 
 
-setwd("/home/scriban/Dropbox/Thèse/DonneesEtSauvegardes/WorkspaceR/HAMAC")
-# setwd("D:/USERS/SergeEtArthur/WorkspaceR/hamac")
-
-rm(list=ls())
-
+### Functions
 addDensityPlot <- function (
-    m, distxmax, distymax, angymax,
-    stepylab, angylab, graphtitle, dispLegend = FALSE
-    ) {
+  m, distxmax, distymax, angymax,
+  stepylab, angylab, graphtitle, dispLegend = FALSE
+) {
   
   nbStates <- ncol(m$mle$stepPar)
   animals <- NULL
@@ -119,33 +123,32 @@ addDensityPlot <- function (
 }
 
 
-### Figure
-
-cheminSorties <- "./2_Fits_outputs/"
-m <- readRDS(paste0(cheminSorties ,"240213150956-HAMAC-SN-ModHMM-3Et.rds"))
+### Execution
 
 # À calibrer
 distxmax <- 1.0
 distymax <- 8
 angymax <- 0.28
 
-png(paste0("/home/scriban/Dropbox/Thèse/Productions/Articles/Mobi/Figures/",
-  format(Sys.time(), format = "%y%m%d"), "-DensiPlot.png"),
-  width = 1000, height = 500)
+png(paste0(graphDir,
+           format(Sys.time(), format = "%y%m%d"), "-DensiPlot.png"),
+    width = 1000, height = 500)
 
 par(mfcol = c(2, 3))
 addDensityPlot(
-  readRDS(paste0(cheminSorties ,"240213150956-HAMAC-SN-ModHMM-3Et.rds")),
+  readRDS(paste0(inDir, "/", globModFileName, ".rds")),
   distxmax, distymax, angymax, "Density", "Density", "Global HMM"
-  )
-addDensityPlot(
-  readRDS(paste0(cheminSorties ,"240131195610-HAMAC-SN-ModHMM-3EtTranshu.rds")),
-               distxmax, distymax, angymax, "", "", "Transhumant herds", TRUE
 )
 addDensityPlot(
-  readRDS(paste0(cheminSorties ,"240201190315-HAMAC-SN-ModHMM-3EtResid.rds")),
-               distxmax, distymax, angymax, "", "", "Resident herds"
+  readRDS(paste0(inDir, "/", transModFileName, ".rds")),
+  distxmax, distymax, angymax, "", "", "Transhumant herds", TRUE
+)
+addDensityPlot(
+  readRDS(paste0(inDir, "/", residModFileName, ".rds")),
+  distxmax, distymax, angymax, "", "", "Resident herds"
 )
 
 dev.off()
 
+
+#### Intermediate data save

@@ -1,22 +1,29 @@
+###################
+## HAMAC Routine ##
+###################
 
-#  SENEGAL CATTLE GPS DATA
-#  DATA EXPLORATION CODE / ANIMAL ASSOCIATION
-#  Arthur SCRIBAN - JANVIER 2024
+## ANIMAL ASSOCIATION
+## A. SCRIBAN & ChatGPT - Janvier 2024
 
-
+### Libraries
 library(lubridate)
-library(dplyr)
 library(stringr)
+library(dplyr)
 
-setwd("/home/scriban/Dropbox/Thèse/DonneesEtSauvegardes/WorkspaceR/HAMAC")
-setwd("D:/USERS/SergeEtArthur/WorkspaceR/hamac")
+### Paths
+inDir <- "./0_RawData"
+outDir <- "./1_IntermeData"
+filesPrefix <- "/HAMAC-SN-"
 
-rm(list=ls())
-date()
+
+### Functions
+
+
+### Execution
 
 #### Importation données
 ## Animaux
-metaSourceDir <- "./0_raw_data/METADATA/"
+metaSourceDir <- paste0(inDir, "/METADATA/")
 ANX <- read.table(
   paste0(metaSourceDir, "AnimalSegmentationTable.csv"),
   sep=";",header=T, skip=0,na.strings = "N/A")
@@ -25,21 +32,21 @@ ANX$finPortColl <- dmy_hm(ANX$finPortColl)
 ANX <- ANX[, c(1, 3, 4, 7, 8, 5, 6)]
 names(ANX) <- c("IDANL", "IDCOL", "IDELV", "TRA", "IDVIL", "DHDEB", "DHFIN")
 cat("ANX Table:\n")
-print(ANX)
+print(head(ANX))
 
 ## GPS
-gpsSourceDir <- "./1_Data_clean_and_merge/"
+gpsSourceDir <- paste0(outDir, filesPrefix)
 GPS <- read.table(
-  paste0(gpsSourceDir, "HAMAC-SN-GPS_brutes.csv"),
+  paste0(gpsSourceDir, "GPS_brutes.csv"),
   sep=";",header=T, skip=0,na.strings = "N/A")
 GPS$DHACQ<-ymd_hms(GPS$DHACQ)
 cat("\nGPS Table:\n")
 print(head(GPS))
 
 ## Accéléro
-actSourceDir <- "./1_Data_clean_and_merge/"
+actSourceDir <- paste0(outDir, filesPrefix)
 ACT <- read.table(
-  paste0(actSourceDir, "HAMAC-SN-ACT_brutes.csv"),
+  paste0(actSourceDir, "ACT_brutes.csv"),
   sep=";",header=T, skip=0,na.strings = "N/A")
 ACT$DHACQ <- ifelse (str_length(ACT$DHACQ)==10,paste(ACT$DHACQ," 00:00:00",sep=""),ACT$DHACQ)
 # parse_ymd_hms(ACT$DHACQ)
@@ -61,9 +68,9 @@ for (i in 1:nrow(ANX)) {
   
   subset_data <- subset(GPS, IDCOL == idcol & DHACQ >= start_date & DHACQ <= end_date)
   subset_data <- mutate(subset_data, ID = idanl,
-                                     IDELV = ANX$IDELV[i],
-                                     TRA = ANX$TRA[i],
-                                     IDVIL = ANX$IDVIL[i])
+                        IDELV = ANX$IDELV[i],
+                        TRA = ANX$TRA[i],
+                        IDVIL = ANX$IDVIL[i])
   # print(summary(subset_data))
   # cat("\n")
   
@@ -94,12 +101,11 @@ for (i in 1:nrow(ANX)) {
   # cat("\n")
 }
 
-#### Sauvegardes CSV
-workd1<-"./1_Data_clean_and_merge"
-write.table(GPS_par_anx,paste0(workd1,"/HAMAC-SN-GPSpANX.csv"),sep=";", row.names=FALSE)
-write.table(bind_rows(ACT_par_anx),paste0(workd1,"/HAMAC-SN-ACTpANX.csv"),sep=";", row.names=FALSE)
+#### Sauvegardes CSV.
+write.table(GPS_par_anx,paste0(outDir, filesPrefix, "GPSpANX.csv"),sep=";", row.names=FALSE)
+write.table(bind_rows(ACT_par_anx),paste0(outDir, filesPrefix, "ACTpANX.csv"),sep=";", row.names=FALSE)
 for (i in names(ACT_par_anx)) {
-  write.table(ACT_par_anx[[i]],paste0(workd1,"/ACTpANX/HAMAC-SN-ACTpANX-", i, ".csv"),sep=";", row.names=FALSE)
+  write.table(ACT_par_anx[[i]],paste0(outDir,"/ACTpANX/HAMAC-SN-ACTpANX-", i, ".csv"),sep=";", row.names=FALSE)
 }
 
 
