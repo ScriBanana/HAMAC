@@ -11,7 +11,7 @@ library(dplyr)
 ### Paths
 inDir <- "./0_RawData/METADATA"
 outDir <- "./1_IntermeData"
-
+# outDir <- "./3_OutData"
 
 ### Functions
 
@@ -49,6 +49,58 @@ head(OcuSolsLegende)
 summary(OcuSolsLegende$GRIDCODE)
 summary(OcuSolsLegende$Classe.y)
 summary(OcuSolsLegende$Classe.x)
+
+
+## Data cleaning for dataverse posting
+# OcuSolsLegende$path <- NULL
+# OcuSolsLegende$Couleur..html. <- NULL
+# OcuSolsLegende$Classe.x <- NULL
+# OcuSolsLegende$LUSurfaces <- NULL
+# OcuSolsLegende$AcX.x <- NULL
+# OcuSolsLegende$AcY.x <- NULL
+# OcuSolsLegende$AcZ.x <- NULL
+# OcuSolsLegende$AcX.y <- NULL
+# OcuSolsLegende$AcY.y <- NULL
+# OcuSolsLegende$AcZ.y <- NULL
+# OcuSolsLegende$layer <- NULL
+# OcuSolsLegende$DAY <- NULL
+# OcuSolsLegende$MON <- NULL
+# OcuSolsLegende$YER <- NULL
+# OcuSolsLegende$DHACQ <- NULL
+# OcuSolsLegende$IDVIL <- NULL
+# OcuSolsLegende$GRIDCODE <- NULL
+# OcuSolsLegende$IDELV <- NULL
+# OcuSolsLegende$GPS_TMP <- NULL
+# OcuSolsLegende$Classe.y <- NULL
+# 
+# OcuSolsLegende <- rename(OcuSolsLegende, ANID = ID)
+# OcuSolsLegende <- rename(OcuSolsLegende, FID = fid)
+# OcuSolsLegende <- rename(OcuSolsLegende, LON = x)
+# OcuSolsLegende <- rename(OcuSolsLegende, LAT = y)
+# OcuSolsLegende <- rename(OcuSolsLegende, STEP = step)
+# OcuSolsLegende <- rename(OcuSolsLegende, ANGLE = angle)
+# OcuSolsLegende <- rename(OcuSolsLegende, OCUSOL = Légende)
+# 
+# table(OcuSolsLegende$OCUSOL)
+# OcuSolsLegende <- OcuSolsLegende %>%
+#   mutate(OCUSOL = recode(OCUSOL,
+#                          "Champs de brousse" = "Bushfields",
+#                          "Cours d'eau" = "River",
+#                          "Sol nu" = "Naked ground",
+#                          "Bas fonds" = "Lowlands",
+#                          "Arbres" = "Trees",
+#                          "Parcours" = "Rangelands"))
+# 
+# head(OcuSolsLegende)
+# 
+# OcuSolsLegende <- select(OcuSolsLegende, FID, ANID, TRA, IDCOL, DAT, HUR, LON, LAT, HEI, DOP, STEP, ANGLE, VIT, TMP, SES, DAYTM, OCUSOL, everything())
+# 
+# head(OcuSolsLegende)
+# 
+# 
+# write.csv2(OcuSolsLegende, file =  paste0(outDir, "/240819-GPSHMMSen.csv"),
+#            row.names = FALSE)
+
 
 ## Donne la meilleure classe
 OcuSolsLegende$Classe.finale <- ifelse(is.na(OcuSolsLegende$Classe.x),
