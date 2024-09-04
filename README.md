@@ -1,12 +1,13 @@
 # HAMAC Routine
-The Herds Activity Mapping and Analytical Classification (HAMAC) routine was designed to format, clean, concatenate and classify GPS and accelerometer data gathered from tracking livestock to train behaviour models and exploit the resulting data in diverse ways.
+The Herds Activity Mapping and Analytical Classification (HAMAC) routine prepares, classifies into activities and produces variouss representations of GPS and accelerometer data gathered from tracking livestock to train behaviour models and exploit the resulting data in diverse ways. It makes use of parallel computing and leverages the Hidden Markov Model framework to classify activities. The later part relies heavily on the moveHMM R package
 
 ## Citation
-To cite this routine, use the following:
-_À faire_
-Scriban, A., Nabeneza, S., …. Herds Activity Mapping and Analytical Classification. https://gitlab.cirad.fr/selmet/hamac
+To cite this routine, please use the following:
+Scriban, A., Nabeneza, S., Cornelis, D., Salgado, P., 2024. Herds Activity Mapping and Analytical Classification. Cirad, Montpellier, France. https://gitlab.cirad.fr/selmet/hamac.
 
 ## Usage
+The routine is divided into functional blocks, each containing individual script pages, each corresponding to a unitary operation. The order of the groups and script pages is sequential, yet all elements are optional. Intermediate data saves within each group allow modular execution, as required. Here is a breakdown of what each group and individual script does:
+
 #### A. Data cleaning and formatting
 A1. Scans a directory to load all GPS and Accelerometer data files from tracking
 A2. Cleans and formats GPS data
@@ -36,16 +37,8 @@ E3. Diverse behavioural metrics
 E4. Associates position and activity data to land-use data
 E5. Repartition of activities over land-use and seasons
 
-
-## Authors and acknowledgment
-- Daniel
-- Serge
-- Arthur
-- MoveHMM
-
 ## License
-CCBY, licence à rajouter en sus
-_For open source projects, say how it is licensed._
+This code is made open-source under the [CeCILL-B](https://cecill.info/licences.en.html) licence.
 
 ## Relevant publication and datasets
 Scriban, A., Nabeneza, S., Cornélis, D., Delay, É., Vayssières, J., Cesaro, J.-D., Salgado, P., 2024. GPS-based hidden Markov models to document pastoral mobility in the Sahel. Sensors. Submitted.
