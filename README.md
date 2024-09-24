@@ -10,47 +10,47 @@ Scriban, A., Nabeneza, S., Cornelis, D., Salgado, P., 2024. Herds Activity Mappi
 The routine is divided into functional blocks, each containing individual script pages, each corresponding to a unitary operation. The order of the groups and script pages is sequential, yet all elements are optional. Intermediate data saves within each group allow modular execution, as required. Here is a breakdown of what each group and individual script does:
 
 #### A. Data cleaning and formatting
-A1. Scans a directory to load all GPS and Accelerometer data files from tracking
+[A1](HAMAC-A1-GatherGPSnACT.R). Scans a directory to load all GPS and Accelerometer data files from tracking
 
-A2. Cleans and formats GPS data
+[A2](HAMAC-A2-GPSCleanFormat.R). Cleans and formats GPS data
 
-A3. Adds additional environmental variables to the GPS data
+[A3](HAMAC-A3-GPSPrepData.R). Adds additional environmental variables to the GPS data
 
-A4. Cleans and formats accelero data
+[A4](HAMAC-A4-ACTCleanFormat.R). Cleans and formats accelero data
 
-A5. Graphical representation of the temporal data coverage
+[A5](HAMAC-A5-DataCoverage.R). Graphical representation of the temporal data coverage
 
 #### B. Data association and preparation
-B1. Associates GPS data to the animals
+[B1](HAMAC-B1-AnimalSegm.R). Associates GPS data to the animals
 
-B2. Associates GPS and accelerometer data
+[B2](HAMAC-B2-AttribACT2GPS.R). Associates GPS and accelerometer data
 
-B3. Computes trajectory metrics to fit HMMs on
+[B3](HAMAC-B3-TrajMetrics.R). Computes trajectory metrics to fit HMMs on
 
 #### C. Model training
-C1. Preliminary script to load the fit function and the data and prime the log
+[C1](HAMAC-C1-PrelimFits.R). Preliminary script to load the fit function and the data and prime the log
 
-C2. Runs a single fitting process on a given parameter set
+[C2](HAMAC-C2-SingleFit.R). Runs a single fitting process on a given parameter set
 
-C3. Parameter space exploration and sampling of fits to ensure the optimal likelihood
+[C3](HAMAC-C3-FitSampling.R). Parameter space exploration and sampling of fits to ensure the optimal likelihood
 
 #### D. Exploiting model outputs
-D1. Quality of fit and trajectory metrics
+[D1](HAMAC-D1-ModelOutputs.R). Quality of fit and trajectory metrics
 
-D2. Plots of the density of probability for trajectory metrics
+[D2](HAMAC-D2-DensityPlots.R). Plots of the density of probability for trajectory metrics
 
-D3. Simulating virtual mobility
+[D3](HAMAC-D3-SimData.R). Simulating virtual mobility
 
 #### E. Exploiting activity data
-E1. Preliminary script to merge GPS data and activity from a model
+[E1](HAMAC-E1-MergeBehavData.R). Preliminary script to merge GPS data and activity from a model
 
-E2. Graphical representations of the temporal repartition of activities
+[E2](HAMAC-E2-BehavDataPlot.R). Graphical representations of the temporal repartition of activities
 
-E3. Diverse behavioural metrics
+[E3](HAMAC-E3-BehavMetrics.R). Diverse behavioural metrics
 
-E4. Associates position and activity data to land-use data
+[E4](HAMAC-E4-LandUsePrep.R). Associates position and activity data to land-use data
 
-E5. Repartition of activities over land-use and seasons
+[E5](HAMAC-E5-LandUsePlot.R). Repartition of activities over land-use and seasons
 
 ## License
 This code is made open-source under the [CeCILL-B](https://cecill.info/licences.en.html) licence.
