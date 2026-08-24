@@ -110,7 +110,9 @@ ggplot(subset(ACTACQ, IDCOL == 44159), aes(x = (1:nrow(subset(ACTACQ, IDCOL == 4
 ACTACQ$DHACQ<-as.character(ACTACQ$DHACQ)
 write.table(ACTACQ,
             paste0(outDir, filesPrefix, "ACT_brutes.csv"),
+            sep=";",
             row.names=FALSE)
 write.table(ACTACQ,
             paste0(outDir, filesPrefix, "ACT_brutes.txt"),
+            sep=";",
             row.names=FALSE)
