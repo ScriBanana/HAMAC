@@ -104,6 +104,7 @@ for (i in 1:nrow(ANX)) {
 #### Sauvegardes CSV.
 write.table(GPS_par_anx,paste0(outDir, filesPrefix, "GPSpANX.csv"),sep=";", row.names=FALSE)
 write.table(bind_rows(ACT_par_anx),paste0(outDir, filesPrefix, "ACTpANX.csv"),sep=";", row.names=FALSE)
+mkdir(paste0(outDir,"/ACTpANX"))
 for (i in names(ACT_par_anx)) {
   write.table(ACT_par_anx[[i]],paste0(outDir,"/ACTpANX/HAMAC-SN-ACTpANX-", i, ".csv"),sep=";", row.names=FALSE)
 }
