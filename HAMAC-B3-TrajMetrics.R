@@ -91,7 +91,7 @@ ggplot(hmmdata, aes(x = (1:nrow(hmmdata)), y = DHACQ, color = ID)) +
 
 
 #### Enregistrement des distributions en PDF
-pdf(paste0(repDonnees, "/Out_Graphs/", format(Sys.time(), format = "%y%m%d"), '-DistriStepEtAngleHMMdata.pdf'),
+pdf(paste0(graphDir, format(Sys.time(), format = "%y%m%d"), '-DistriStepEtAngleHMMdata.pdf'),
     width = 8, height = 10,
     colormodel = "cmyk",
     paper = "A4")
