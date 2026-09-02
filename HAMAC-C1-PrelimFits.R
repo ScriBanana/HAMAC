@@ -6,7 +6,7 @@
 ## Arthur SCRIBAN - JANVIER 2024
 
 ### Libraries
-
+library(moveHMM)
 
 ### Paths
 inDir <- "./1_IntermeData"
